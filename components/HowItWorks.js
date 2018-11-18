@@ -1,4 +1,4 @@
-import '../howitworks.scss'
+import '../scss/howitworks.scss'
 import Heading from '../components/Heading'
 import Button from '../components/Button'
 import Link from 'next/link'

@@ -1,4 +1,4 @@
-import '../hero.scss'
+import '../scss/hero.scss'
 
 const Hero = (props) => (
   <React.Fragment>

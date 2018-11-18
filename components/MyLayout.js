@@ -1,4 +1,4 @@
-import '../mylayout.scss'
+import '../scss/mylayout.scss'
 
 const Layout = (props) => (
   <div className={ props.alignment }>

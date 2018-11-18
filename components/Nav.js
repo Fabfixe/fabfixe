@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
-import '../nav.scss'
+import '../scss/nav.scss'
 const classnames = require('classnames')
 
 const navStyle = {
