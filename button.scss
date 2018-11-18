@@ -1,12 +1,14 @@
-.button {
+button.button {
   box-sizing: border-box;
   padding: 0 25px;
   height: 50px;
   background-color: black;
+  border: 0;
   color: white;
   font-size: 20px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   &.select {
     background-color: white;
@@ -18,4 +20,10 @@
       color: white;
     }
   }
+}
+
+.options-container button.button {
+  width: 300px;
+  text-align: center;
+  margin-top: 20px;
 }

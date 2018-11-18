@@ -27,7 +27,7 @@ class Form extends Component {
     const display = this.state.isConfirmed ? 'block' : 'none'
 
     return (
-      <form>
+      <form id="signup">
         <input type='text' name='firstName' placeholder='FIRST NAME'></input>
         <input type='text' name='lastName' placeholder='LAST NAME'></input>
         <input type='text' name='email' id='email' placeholder='EMAIL ADDRESS'></input>
@@ -40,10 +40,8 @@ class Form extends Component {
           </div>
           <span>By clicking "Create Account" you agree to FabFixe Privacy Policy and Terms of service</span>
         </div>
-        <label>I'm signing up as a:</label>
         <div className="button-container">
-          <Button isSelect={ true }>Artist</Button>
-          <Button isSelect={ true }>Pupil</Button>
+          <Button type="submit" form="signup">Create Account</Button>
         </div>
       </form>
     )

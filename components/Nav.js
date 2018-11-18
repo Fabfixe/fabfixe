@@ -62,10 +62,13 @@ const NavLinks = (props) => (
       <Link href="">
         <a>Browse Artists</a>
       </Link>
+      { props.userType === "client" || <Link href="/artists">
+        <a>For Artists</a>
+      </Link> }
     </React.Fragment>
     ) : (
       <React.Fragment>
-        <Link href="/create-account">
+        <Link href="/joining-as">
           <a>Sign Up</a>
         </Link>
         <Link href="/how-it-works">
@@ -74,6 +77,9 @@ const NavLinks = (props) => (
         <Link href="">
           <a>Browse Artists</a>
         </Link>
+        { props.userType === "client" || <Link href="/artists">
+          <a>For Artists</a>
+        </Link> }
       </React.Fragment>
     )
 )
@@ -85,7 +91,7 @@ const Nav = (props) => (
     </Link>
     <div className="nav-links" style={ navLinksStyle }>
       <div className="nav-links__inner">
-        <NavLinks isLoggedIn={ false } />
+        <NavLinks display={ props.display } isLoggedIn={ false } />
       </div>
       <Hamburger { ...props }/>
     </div>

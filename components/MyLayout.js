@@ -1,8 +1,7 @@
-const layoutStyle = {
-}
+import '../mylayout.scss'
 
 const Layout = (props) => (
-  <div style={layoutStyle}>
+  <div className={ props.alignment }>
     {props.children}
   </div>
 )

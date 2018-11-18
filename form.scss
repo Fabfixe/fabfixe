@@ -35,23 +35,13 @@ form {
   display: flex;
   flex-wrap: wrap;
 
-  @media (min-width: 375px) {
-    width: 50%;
-  }
-
   label {
     font-style: italic;
     display: block;
   }
 
+  .button,
   .button-container {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-
-    a {
-      margin-right: 10px;
-    }
+    margin: 0 auto;
   }
 }

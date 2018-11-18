@@ -23,14 +23,12 @@ class Button extends Component {
     const buttonClasses = cn('button', { "select": this.props.isSelect, "isSelected": this.state.isSelected })
     return (
       <div onClick={ this.handleClick }>
-      <a onClick={this.props.onClick} className={ buttonClasses }>
+      <button type={ this.props.type } form={ this.props.form } onClick={this.props.onClick} className={ buttonClasses }>
         {this.props.children}
-      </a>
+      </button>
       </div>
     )
-
   }
-
 }
 
 export default Button
