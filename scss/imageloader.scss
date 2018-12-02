@@ -1,5 +1,36 @@
 .image-uploader {
-  input {
+  border: solid 1px black;
+  position: relative;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  .fade-in {
+    overflow: hidden;
+    width: 168px;
+    height: 168px;
+  }
+
+  label {
+    display: inline-flex;
+    width: 168px;
+    margin: 0 auto;
+    background: lightgray;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -60px;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+  }
+
+  .delete {
+    position: absolute;
+    left: 3px;
+    top: 3px;
   }
 }

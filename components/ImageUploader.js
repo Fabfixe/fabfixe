@@ -4,13 +4,24 @@ import { API_URL } from '../config'
 import fetch from 'isomorphic-unfetch'
 import '../scss/imageloader.scss'
 
+
 const AddButton = (props) => {
+  const imageStyle = {
+    width: '168px',
+    height: '168px',
+    margin: '0 auto',
+    border: 'solid 1px black'
+  }
+
   return (
     <div>
-      <input type='file' id='single' placeholder='Add Photo' onChange={props.onChange} />
+      <div className="placeholder" style={imageStyle} />
+      <input type='file' id='single' style={{ display: 'none' }} placeholder='Add Photo' onChange={props.onChange} />
+      <label for='single'>Add Photo </label>
     </div>
   )
 }
+
 export default class ImageUploader extends Component {
   state = {
     uploading: false,
@@ -23,7 +34,9 @@ export default class ImageUploader extends Component {
 
     const formData = new FormData()
 
+    // Modify files here
     files.forEach((file, i) => {
+      console.log(file)
       formData.append(i, file)
     })
 
