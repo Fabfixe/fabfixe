@@ -14,8 +14,8 @@ export default () => (
     </Head>
     <MyLayout>
       <Nav />
-      <HowItWorks actionLink="/create-account-pupil" />
-      <HowItWorks actionLink="/create-account-artist" />
+      <HowItWorks heading="For Pupils" actionLink="/create-account-pupil" />
+      <HowItWorks heading="For Artists" actionLink="/create-account-artist" />
       <Footer />
     </MyLayout>
   </div>
