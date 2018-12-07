@@ -16,7 +16,7 @@ const AddButton = (props) => {
   return (
     <div>
       <div className="placeholder" style={imageStyle} />
-      <input type='file' id='single' style={{ display: 'none' }} placeholder='Add Photo' onChange={props.onChange} />
+      <input type='file' id='single' style={{ display: 'none' }} placeholder='Add Photo' accept='image/*' onChange={props.onChange} />
       <label for='single'>Add Photo </label>
     </div>
   )
@@ -25,7 +25,8 @@ const AddButton = (props) => {
 export default class ImageUploader extends Component {
   state = {
     uploading: false,
-    images: []
+    images: [],
+    error: '',
   }
 
   onChange = e => {
@@ -33,24 +34,50 @@ export default class ImageUploader extends Component {
     this.setState({ uploading: true })
 
     const formData = new FormData()
+    const types = ['image/png', 'image/jpeg', 'image/gif']
 
     // Modify files here
     files.forEach((file, i) => {
-      console.log(file)
+
+      if (types.every(type => file.type !== type)) {
+        this.setState({
+          error: 'File must be a .png, .jpg or .gif'
+        })
+      } else if(file.size > 150000) {
+        this.setState({
+          error: 'File size must be under 150MB'
+        })
+      }
+
       formData.append(i, file)
     })
 
-    fetch(`${API_URL}/image-upload-single`, {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(images => {
-      this.setState({
-        uploading: false,
-        images
+    if(this.state.error == '') {
+      fetch(`${API_URL}/image-upload-single`, {
+        method: 'POST',
+        body: formData
       })
-    })
+      .then(res => {
+        if (!res.ok) {
+          throw res
+        }
+
+        return res.json()
+      })
+      .then(images => {
+        this.setState({
+          uploading: false,
+          images,
+          error: ''
+        })
+      })
+      .catch(err => {
+        err.json().then(e => {
+          this.setState({ uploading: false,
+          error: 'Something went wrong, try again' })
+        })
+      })
+    }
   }
 
   removeImage = id => {
@@ -60,12 +87,19 @@ export default class ImageUploader extends Component {
   }
 
   render() {
-    const { uploading, images } = this.state
+    const { uploading, images, error } = this.state
 
     const content = () => {
       switch(true) {
         case uploading:
           return <div>Loading</div>
+        case !!error:
+          return (
+            <React.Fragment>
+              <AddButton onChange={this.onChange} />
+              <p className="error-message">{this.state.error}</p>
+            </React.Fragment>
+          )
         case images.length > 0:
           return <Images images={images} removeImage={this.removeImage} />
         default:
