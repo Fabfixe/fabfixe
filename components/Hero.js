@@ -1,5 +1,3 @@
-import '../scss/hero.scss'
-
 const Hero = (props) => (
   <React.Fragment>
     <div className="hero-container">

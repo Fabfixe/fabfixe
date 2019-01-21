@@ -1,4 +1,3 @@
-import '../scss/button.scss'
 import React, { Component } from 'react'
 const cn = require('classnames')
 

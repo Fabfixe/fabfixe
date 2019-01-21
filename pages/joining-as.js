@@ -1,4 +1,3 @@
-import "../scss/reset.scss"
 import Head from 'next/head'
 import Link from 'next/link'
 import MyLayout from '../components/MyLayout'

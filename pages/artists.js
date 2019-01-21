@@ -1,4 +1,3 @@
-import "../scss/reset.scss"
 import Head from 'next/head'
 import MyLayout from '../components/MyLayout'
 import Nav from '../components/Nav'

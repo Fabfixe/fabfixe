@@ -1,4 +1,3 @@
-import '../scss/form.scss'
 import React, { Component } from 'react'
 import Button from '../components/Button'
 

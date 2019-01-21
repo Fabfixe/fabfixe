@@ -1,5 +1,3 @@
-import '../scss/mylayout.scss'
-
 const Layout = (props) => (
   <div className={ props.alignment }>
     {props.children}

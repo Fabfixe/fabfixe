@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
-import '../scss/nav.scss'
 import { connect } from 'react-redux'
 const classnames = require('classnames')
 

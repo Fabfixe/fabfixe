@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Images from '../components/Images'
 import { API_URL } from '../config'
 import fetch from 'isomorphic-unfetch'
-import '../scss/imageloader.scss'
 
 
 const AddButton = (props) => {
