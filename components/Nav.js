@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
 import '../scss/nav.scss'
+import { connect } from 'react-redux'
 const classnames = require('classnames')
 
 const navStyle = {
@@ -18,12 +19,17 @@ const navLinksStyle = {
 
 class Hamburger extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isActive: false
     }
 
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  static getInitialProps({store, isServer, pathname, query}) {
+    store.dispatch({ type: 'FOO', payload: 'foo' }) // component will be able to read from store's state when rendered
+    return { custom: 'custom' } // you can pass some custom props to component from here
   }
 
   handleClick() {
@@ -84,18 +90,23 @@ const NavLinks = (props) => (
     )
 )
 
-const Nav = (props) => (
-  <nav style={ navStyle }>
-    <Link href="/">
-      <a className="nav-logo">logo</a>
-    </Link>
-    <div className="nav-links" style={ navLinksStyle }>
-      <div className="nav-links__inner">
-        <NavLinks display={ props.display } isLoggedIn={ false } />
-      </div>
-      <Hamburger { ...props }/>
-    </div>
-  </nav>
-)
+const mapStateToProps = (wtv) => (wtv)
 
-export default Nav
+const Nav = (props) => {
+
+  return (
+    <nav style={ navStyle }>
+      <Link href="/">
+        <a className="nav-logo">logo</a>
+      </Link>
+      <div className="nav-links" style={ navLinksStyle }>
+        <div className="nav-links__inner">
+          <NavLinks display={ props.display } isLoggedIn={ props.isLoggedIn } />
+        </div>
+        <Hamburger { ...props }/>
+      </div>
+    </nav>
+  )
+}
+
+export default connect(mapStateToProps)(Nav)
