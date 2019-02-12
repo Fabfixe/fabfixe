@@ -2,18 +2,44 @@ import React, { Component } from 'react'
 import Button from '../components/Button'
 
 const Field = () => (
-    <input></input>
+  <input></input>
 )
-
 
 class Form extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      password_confirm: '',
+      errors: {},
       isConfirmed: false
     }
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleInputChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const user = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password_confirm: this.state.password_confirm
+    }
+
+    console.log(user);
   }
 
   handleClick() {
@@ -27,10 +53,42 @@ class Form extends Component {
 
     return (
       <form id="signup">
-        <input type='text' name='firstName' placeholder='FIRST NAME'></input>
-        <input type='text' name='lastName' placeholder='LAST NAME'></input>
-        <input type='text' name='email' id='email' placeholder='EMAIL ADDRESS'></input>
-        <input type='password' name='password' placeholder='PASSWORD'></input>
+        <input
+        type='text'
+        name='firstName'
+        placeholder='FIRST NAME'
+        onChange={ this.handleInputChange }
+        value={ this.state.firstName }
+        />
+        <input
+          type='text'
+          name='lastName'
+          placeholder='LAST NAME'
+          onChange={ this.handleInputChange }
+          value={ this.state.lastName }
+        />
+        <input
+          type='text'
+          name='email'
+          id='email'
+          placeholder='EMAIL ADDRESS'
+          onChange={ this.handleInputChange }
+          value={ this.state.email }
+        />
+        <input type='password'
+          name='password'
+          placeholder='PASSWORD'
+          onChange={ this.handleInputChange }
+          value={ this.state.password }
+        />
+        <input type='password'
+          name='password_confirm'
+          placeholder='CONFIRM PASSWORD'
+          onChange={ this.handleInputChange }
+          value={ this.state.password }
+          onChange={ this.handleInputChange }
+          value={ this.state.password_confirm }
+        />
         <div className='terms'>
           <div className='box' onClick={ this.handleClick }>
             <svg style={{ display }} id="icon-check" viewBox="0 0 24 24" width="100%" height="100%">
