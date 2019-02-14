@@ -6,6 +6,7 @@ import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
 import Form from '../components/Form'
 import Footer from '../components/Footer'
+import { registerUser } from '../actions/authentication'
 
 export default () => (
   <React.Fragment>
@@ -15,7 +16,7 @@ export default () => (
     <Nav />
     <MyLayout alignment="center">
     <Heading style={{ marginTop: '80px' }}>Create an Account</Heading>
-    <Form />
+    <Form registerUser={registerUser}/>
     </MyLayout>
   </React.Fragment>
 )

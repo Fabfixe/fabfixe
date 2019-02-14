@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Button from '../components/Button'
-
-const Field = () => (
-  <input></input>
-)
+import { connect } from 'react-redux'
+import { withRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import { registerUser } from '../actions/authentication'
 
 class Form extends Component {
   constructor(props) {
@@ -38,8 +38,15 @@ class Form extends Component {
       password: this.state.password,
       password_confirm: this.state.password_confirm
     }
+    this.props.registerUser(user)
+  }
 
-    console.log(user);
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      })
+    }
   }
 
   handleClick() {
@@ -50,9 +57,10 @@ class Form extends Component {
 
   render() {
     const display = this.state.isConfirmed ? 'block' : 'none'
+    const { errors } = this.state
 
     return (
-      <form id="signup">
+      <form id="signup" onSubmit={ this.handleSubmit }>
         <input
         type='text'
         name='firstName'
@@ -98,11 +106,19 @@ class Form extends Component {
           <span>By clicking "Create Account" you agree to FabFixe Privacy Policy and Terms of service</span>
         </div>
         <div className="button-container">
-          <Button type="submit" form="signup">Create Account</Button>
+          <Button type="submit">Create Account</Button>
         </div>
       </form>
     )
   }
 }
 
-export default Form
+Form.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  errors: state.errors
+})
+
+export default connect(mapStateToProps)(Form)
