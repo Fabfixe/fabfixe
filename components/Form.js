@@ -121,4 +121,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 })
 
-export default connect(mapStateToProps)(Form)
+export default connect(mapStateToProps, { registerUser} )(Form)

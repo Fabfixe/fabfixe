@@ -8,6 +8,6 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
 
 const initialState = {}
 
-const makeStore = () => createStore(rootReducer, initialState, compose(devtools, applyMiddleware(thunk)))
+const makeStore = () => createStore(rootReducer, initialState, compose(applyMiddleware(thunk), devtools))
 
 export default makeStore

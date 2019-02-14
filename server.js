@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const config = require('./db')
 
+const users = require('./routes/user')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
   () => { console.log('Database is connected') },
@@ -22,26 +23,16 @@ mongoose.connect(config.DB, { useNewUrlParser: true }).then(
 app.prepare()
 .then(() => {
   const server = express()
-
-  server.get('/p/:id', (req, res) => {
-    const actualPage = '/post'
-    const queryParams = { id: req.params.id }
-    app.render(req, res, actualPage, queryParams)
-  })
-
-  server.get('*', (req, res) => {
-    return handle(req, res)
-  })
-
+  server.use(cors({
+    origin: CLIENT_ORIGIN
+  }))
   cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET
   })
 
-  server.use(cors({
-    origin: CLIENT_ORIGIN
-  }))
+
 
   server.use(formData.parse())
 
@@ -64,8 +55,16 @@ app.prepare()
   })
 
   // Authentication bit
+  server.use(passport.initialize())
+  require('./passport')(passport)
+
   server.use(bodyParser.urlencoded({ extended: false }))
   server.use(bodyParser.json())
+
+  server.use('/api/users', users)
+  server.get('*', (req, res) => {
+    return handle(req, res)
+  })
 
   server.listen(3000, (err) => {
     if (err) throw err

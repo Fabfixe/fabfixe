@@ -3,8 +3,8 @@ import { createStore, compose, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import App, { Container } from 'next/app'
 import withRedux from 'next-redux-wrapper'
-import thunk from 'redux-thunk'
 import '../scss/index.scss'
+import thunk from 'redux-thunk'
 
 const reducer = (state = { foo: '' }, action) => {
   switch (action.type) {
@@ -32,7 +32,7 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
   ? window.__REDUX_DEVTOOLS_EXTENSION__()
   : f => f
 
-  const makeStore = () => createStore(reducer, initialState, compose(devtools, applyMiddleware(thunk)))
+  const makeStore = () => createStore(reducer, initialState, compose(applyMiddleware(thunk), devtools))
 
 class Fabfixe extends App {
 
