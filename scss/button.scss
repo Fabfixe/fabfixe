@@ -20,6 +20,10 @@ button.button {
       color: white;
     }
   }
+
+  &:disabled {
+    opacity: 0.75;
+  }
 }
 
 .options-container button.button {

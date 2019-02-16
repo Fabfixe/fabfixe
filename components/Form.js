@@ -7,7 +7,7 @@ import { registerUser } from '../actions/authentication'
 
 class Form extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       firstName: '',
@@ -16,7 +16,8 @@ class Form extends Component {
       password: '',
       password_confirm: '',
       errors: {},
-      isConfirmed: false
+      isConfirmed: false,
+      submitted: false,
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -31,13 +32,18 @@ class Form extends Component {
   }
 
   handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
+    this.setState({ submitted: true })
+    if(!this.state.isConfirmed) return
+
     const user = {
-      name: this.state.name,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
       email: this.state.email,
       password: this.state.password,
       password_confirm: this.state.password_confirm
     }
+
     this.props.registerUser(user)
   }
 
@@ -68,6 +74,7 @@ class Form extends Component {
         onChange={ this.handleInputChange }
         value={ this.state.firstName }
         />
+        {errors.firstName && (<div className="invalid-feedback">{errors.firstName}</div>)}
         <input
           type='text'
           name='lastName'
@@ -75,6 +82,7 @@ class Form extends Component {
           onChange={ this.handleInputChange }
           value={ this.state.lastName }
         />
+        {errors.lastName && (<div className="invalid-feedback">{errors.lastName}</div>)}
         <input
           type='text'
           name='email'
@@ -83,12 +91,14 @@ class Form extends Component {
           onChange={ this.handleInputChange }
           value={ this.state.email }
         />
+        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
         <input type='password'
           name='password'
           placeholder='PASSWORD'
           onChange={ this.handleInputChange }
           value={ this.state.password }
         />
+        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
         <input type='password'
           name='password_confirm'
           placeholder='CONFIRM PASSWORD'
@@ -97,6 +107,7 @@ class Form extends Component {
           onChange={ this.handleInputChange }
           value={ this.state.password_confirm }
         />
+        {errors.password_confirm && (<div className="invalid-feedback">{errors.password_confirm}</div>)}
         <div className='terms'>
           <div className='box' onClick={ this.handleClick }>
             <svg style={{ display }} id="icon-check" viewBox="0 0 24 24" width="100%" height="100%">
@@ -104,6 +115,7 @@ class Form extends Component {
             </svg>
           </div>
           <span>By clicking "Create Account" you agree to FabFixe Privacy Policy and Terms of service</span>
+          {this.state.submitted && !this.state.isConfirmed && <div className="invalid-feedback">Required</div>}
         </div>
         <div className="button-container">
           <Button type="submit">Create Account</Button>

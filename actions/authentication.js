@@ -2,7 +2,6 @@ import axios from 'axios'
 import { GET_ERRORS } from './types'
 
 export const registerUser = (user) => dispatch => {
-  console.log('ok')
 
   axios.post('/api/users/register', user)
   .then((res) => {

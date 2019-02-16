@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const validateRegisterInput = require('../validation/register')
-// const validateLoginInput = require('../validation/login')
+const validateLoginInput = require('../validation/login')
 
 const User = require('../models/User')
 
@@ -33,7 +33,8 @@ router.post('/register', function(req, res) {
       })
 
       const newUser = new User({
-        name: req.body.name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password,
         avatar
@@ -94,8 +95,8 @@ router.post('/login', (req, res) => {
           if(err) console.error('There is some error in token', err)
             else {
               res.json({
-                  success: true,
-                  token: `Bearer ${token}`
+                success: true,
+                token: `Bearer ${token}`
               })
             }
         })

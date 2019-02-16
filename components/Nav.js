@@ -74,7 +74,7 @@ const NavLinks = (props) => (
     ) : (
       <React.Fragment>
         <Link href="/joining-as">
-          <a>Sign Up</a>
+          <a>Join</a>
         </Link>
         <Link href="/how-it-works">
           <a>How It Works</a>
