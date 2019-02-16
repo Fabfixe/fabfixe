@@ -5,15 +5,7 @@ import App, { Container } from 'next/app'
 import withRedux from 'next-redux-wrapper'
 import '../scss/index.scss'
 import thunk from 'redux-thunk'
-
-const reducer = (state = { foo: '' }, action) => {
-  switch (action.type) {
-    case 'FOO':
-      return { ...state, foo: action.payload }
-    default:
-      return state
-  }
-}
+import rootReducer from '../reducers'
 
 /**
 * @param {object} initialState
@@ -24,15 +16,13 @@ const reducer = (state = { foo: '' }, action) => {
 * @param {string} options.storeKey This key will be used to preserve store in global namespace for safe HMR
 */
 
-const initialState = {
-  isLoggedIn: false
-}
+const initialState = {}
 
 const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
   ? window.__REDUX_DEVTOOLS_EXTENSION__()
   : f => f
 
-  const makeStore = () => createStore(reducer, initialState, compose(applyMiddleware(thunk), devtools))
+  const makeStore = () => createStore(rootReducer, initialState, compose(applyMiddleware(thunk), devtools))
 
 class Fabfixe extends App {
 
