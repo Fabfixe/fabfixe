@@ -5,7 +5,7 @@ import { withRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { registerUser } from '../actions/authentication'
 
-class Form extends Component {
+class JoinForm extends Component {
   constructor(props) {
     super(props)
 
@@ -18,6 +18,7 @@ class Form extends Component {
       errors: {},
       isConfirmed: false,
       submitted: false,
+      accountType: this.props.accountType
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -41,7 +42,8 @@ class Form extends Component {
       lastName: this.state.lastName,
       email: this.state.email,
       password: this.state.password,
-      password_confirm: this.state.password_confirm
+      password_confirm: this.state.password_confirm,
+      accountType: this.state.accountType
     }
 
     this.props.registerUser(user)
@@ -125,12 +127,13 @@ class Form extends Component {
   }
 }
 
-Form.propTypes = {
+JoinForm.propTypes = {
   registerUser: PropTypes.func.isRequired,
+  accountType: PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({
   errors: state.errors
 })
 
-export default connect(mapStateToProps, { registerUser} )(Form)
+export default connect(mapStateToProps, { registerUser} )(JoinForm)

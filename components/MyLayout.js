@@ -1,7 +1,12 @@
+import Nav from './Nav'
+
 const Layout = (props) => (
-  <div className={ props.alignment }>
-    {props.children}
-  </div>
+  <React.Fragment>
+    <Nav />
+    <div className={ props.alignment }>
+      {props.children}
+    </div>
+  </React.Fragment>
 )
 
 export default Layout

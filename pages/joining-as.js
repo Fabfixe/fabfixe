@@ -19,10 +19,10 @@ export default () => (
       alignItems: 'center' }} alignment="center">
         <div className="options-container">
           <h2 style={{ marginBottom: "20px" }}>I'm joining as a:</h2>
-          <Link href="/create-account-pupil">
+          <Link href="/accountType?pupil" as="/join/pupil">
             <Button>Pupil</Button>
           </Link>
-          <Link href="/create-account-artist">
+          <Link href="/accountType?artist" as="/join/artist">
             <Button>Artist</Button>
           </Link>
         </div>

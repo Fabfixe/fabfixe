@@ -32,8 +32,6 @@ app.prepare()
     api_secret: process.env.API_SECRET
   })
 
-
-
   server.use(formData.parse())
 
   server.post('/image-upload', (req, res) => {
@@ -62,9 +60,17 @@ app.prepare()
   server.use(bodyParser.json())
 
   server.use('/api/users', users)
+
+  server.get("/join/:accountType", (req, res) => {
+    if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
+      return app.render(req, res, "/join", { accountType: req.params.accountType })
+    }
+  })
+
   server.get('*', (req, res) => {
     return handle(req, res)
   })
+
 
   server.listen(3000, (err) => {
     if (err) throw err

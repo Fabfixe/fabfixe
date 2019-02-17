@@ -9,7 +9,7 @@ const HowItWorks = (props) => (
     <div className="thing2"></div>
     <div className="thing3"></div>
     <div className="button-container">
-      <Link href={ props.actionLink }>
+      <Link href={`/accountType?${props.actionLink}`} as={`/join/${props.actionLink}`}>
         <Button>Get Started</Button>
       </Link>
     </div>
