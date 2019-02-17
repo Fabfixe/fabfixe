@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Login from '../components/Login'
 import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
@@ -12,7 +11,6 @@ import Footer from '../components/Footer'
 
 export default () => (
   <React.Fragment>
-    <Nav />
     <MyLayout alignment="center">
     <Heading style={{ marginTop: '80px' }}>Login</Heading>
     <Login />

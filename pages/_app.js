@@ -3,9 +3,12 @@ import { createStore, compose, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import App, { Container } from 'next/app'
 import withRedux from 'next-redux-wrapper'
-import '../scss/index.scss'
+import setAuthToken from '../setAuthToken'
+import jwt_decode from 'jwt-decode'
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
+import { setCurrentUser, logoutUser } from '../actions/authentication'
+import '../scss/index.scss'
 
 /**
 * @param {object} initialState
@@ -36,7 +39,23 @@ class Fabfixe extends App {
   }
 
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps, store } = this.props
+
+    if(process.browser) {
+
+      if(localStorage.jwtToken) {
+        setAuthToken(localStorage.jwtToken)
+        const decoded = jwt_decode(localStorage.jwtToken)
+        store.dispatch(setCurrentUser(decoded))
+
+        const currentTime = Date.now() / 1000
+        console.log('decoded.exp', decoded.exp)
+        if(decoded.exp < currentTime) {
+          store.dispatch(logoutUser())
+          window.location.href = '/login'
+        }
+      }
+    }
 
     return (
       <Container>

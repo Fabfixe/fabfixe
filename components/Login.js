@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../components/Button'
+import Router from 'next/router'
 import { connect } from 'react-redux'
 import { loginUser } from '../actions/authentication'
 
@@ -16,6 +17,12 @@ class Login extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount() {
+    if(this.props.auth.isAuthenticated) {
+      Router.push('/')
+    }
   }
 
   handleInputChange(e) {
@@ -74,10 +81,13 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   errors: state.errors
 })
 

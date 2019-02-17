@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
+import { logoutUser } from '../actions/authentication'
 import { connect } from 'react-redux'
 const classnames = require('classnames')
 
@@ -48,48 +49,69 @@ class Hamburger extends Component {
             </span>
           </button>
         <div onClick={ this.handleClick } className={ menuClasses }>
-          <NavLinks isLoggedIn={ false } />
+          <NavLinks { ...this.props } />
         </div>
       </React.Fragment>
     )
   }
 }
 
-const NavLinks = (props) => (
-  props.isLoggedIn ? (
-    <React.Fragment>
-      <Link href="">
-        <a>My Account</a>
-      </Link>
-      <Link href="/how-it-works">
-        <a>How It Works</a>
-      </Link>
-      <Link href="">
-        <a>Browse Artists</a>
-      </Link>
-      { props.userType === "client" || <Link href="/artists">
-        <a>For Artists</a>
-      </Link> }
-    </React.Fragment>
-    ) : (
-      <React.Fragment>
-        <Link href="/joining-as">
-          <a>Join</a>
-        </Link>
-        <Link href="/how-it-works">
-          <a>How It Works</a>
-        </Link>
-        <Link href="">
-          <a>Browse Artists</a>
-        </Link>
-        { props.userType === "client" || <Link href="/artists">
-          <a>For Artists</a>
-        </Link> }
-      </React.Fragment>
-    )
-)
+class NavLinks extends Component {
+  constructor(props) {
+    super(props)
 
-const mapStateToProps = (wtv) => (wtv)
+    this.onLogout = this.onLogout.bind(this)
+  }
+
+  onLogout(e) {
+    e.preventDefault()
+    this.props.logoutUser()
+  }
+
+  render() {
+    return (
+      this.props.auth.isAuthenticated ? (
+          <React.Fragment>
+            <Link href="">
+              <a>My Account</a>
+            </Link>
+            <Link href="/how-it-works">
+              <a>How It Works</a>
+            </Link>
+            <Link href="">
+              <a>Browse Artists</a>
+            </Link>
+            { this.props.userType === "client" || <Link href="/artists">
+              <a>For Artists</a>
+            </Link> }
+            <Link href="">
+              <a
+              onClick={this.onLogout.bind(this)}
+              >Log Out</a>
+            </Link>
+          </React.Fragment>
+        ) : (
+        <React.Fragment>
+          <Link href="/joining-as">
+            <a>Join</a>
+          </Link>
+          <Link href="/login">
+            <a>Log In</a>
+          </Link>
+          <Link href="/how-it-works">
+            <a>How It Works</a>
+          </Link>
+          <Link href="">
+            <a>Browse Artists</a>
+          </Link>
+          { this.props.userType === "client" || <Link href="/artists">
+            <a>For Artists</a>
+          </Link> }
+        </React.Fragment>
+      )
+    )
+  }
+}
 
 const Nav = (props) => {
 
@@ -100,7 +122,7 @@ const Nav = (props) => {
       </Link>
       <div className="nav-links" style={ navLinksStyle }>
         <div className="nav-links__inner">
-          <NavLinks display={ props.display } isLoggedIn={ props.isLoggedIn } />
+          <NavLinks { ...props }  />
         </div>
         <Hamburger { ...props }/>
       </div>
@@ -108,4 +130,8 @@ const Nav = (props) => {
   )
 }
 
-export default connect(mapStateToProps)(Nav)
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps, { logoutUser })(Nav)
