@@ -1,13 +1,12 @@
 require('dotenv').config()
+const CLIENT_ORIGIN = require('./config')
 const express = require('express')
 const next = require('next')
-const cloudinary = require('cloudinary')
-const formData = require('express-form-data')
 const cors = require('cors')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const CLIENT_ORIGIN = require('./config')
+const formData = require('express-form-data')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const passport = require('passport')
@@ -15,6 +14,7 @@ const config = require('./db')
 
 
 const users = require('./routes/user')
+const profileImage = require('./routes/profileImage')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
   () => { console.log('Database is connected') },
@@ -28,33 +28,10 @@ app.prepare()
     origin: CLIENT_ORIGIN
   }))
 
-  cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
-  })
-
-  server.use(formData.parse())
-
-  server.post('/image-upload', (req, res) => {
-    const values = Object.values(req.files)
-    const promises = values.map((image) => {
-      console.log(image.path)
-      cloudinary.uploader.upload(image.path)
-    })
-
-    Promise
-      .all(promises)
-      .then(results => res.json(results))
-  })
-
-  server.post('/image-upload-single', (req, res) => {
-    const path = Object.values(req.files)[0].path
-    cloudinary.uploader.upload(path)
-      .then(image => res.json([image]))
-  })
-
-  // Authentication bit
+  // Profile Image Route Handler
+  server.use('/image-upload-single', profileImage)
+  
+  // Authentication Route Handler
   server.use(passport.initialize())
   require('./passport')(passport)
 
@@ -62,6 +39,7 @@ app.prepare()
   server.use(bodyParser.json())
 
   server.use('/api/users', users)
+
 
   server.get("/join/:accountType", (req, res) => {
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
@@ -72,14 +50,17 @@ app.prepare()
     }
   })
 
-  server.get("/create-account/:accountType", (req, res) => {
+  server.get("/create-profile/:accountType", (req, res) => {
+
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
-      return app.render(req, res, "/create-account", { accountType: req.params.accountType })
+      return app.render(req, res, "/create-profile", { accountType: req.params.accountType })
     } else {
       res.statusCode = 404
       app.render(req, res, '/_error', {})
     }
   })
+
+
 
   server.get('*', (req, res) => {
     return handle(req, res)

@@ -61,7 +61,7 @@ router.post('/register', function(req, res) {
 })
 
 router.post('/login', (req, res) => {
-
+  console.log('req')
   const { errors, isValid } = validateLoginInput(req.body)
 
   if(!isValid) {

@@ -9,7 +9,7 @@ import ImageUploader from '../components/ImageUploader'
 import Footer from '../components/Footer'
 import { registerUser } from '../actions/authentication'
 
-class CreateAccount extends Component {
+class CreateProfile extends Component {
   constructor(props) {
     super(props)
 
@@ -19,7 +19,6 @@ class CreateAccount extends Component {
   }
 
   static async getInitialProps({ query }) {
-    console.log('query', query)
     return { query }
   }
 
@@ -33,4 +32,4 @@ class CreateAccount extends Component {
   }
 }
 
-export default CreateAccount
+export default CreateProfile

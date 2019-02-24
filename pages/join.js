@@ -20,7 +20,6 @@ class JoinRouting extends Component {
   }
 
   static async getInitialProps({ query }) {
-    console.log('query', query)
     return { query }
   }
 

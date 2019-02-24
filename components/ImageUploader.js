@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Images from '../components/Images'
 import { API_URL } from '../config'
-import fetch from 'isomorphic-unfetch'
+import axios from 'axios'
 
 
 const AddButton = (props) => {
@@ -52,16 +52,14 @@ export default class ImageUploader extends Component {
     })
 
     if(this.state.error == '') {
-      fetch(`${API_URL}/image-upload-single`, {
-        method: 'POST',
-        body: formData
-      })
+      axios.post('/image-upload-single', formData)
       .then(res => {
-        if (!res.ok) {
+        console.log('res.json', res)
+
+        if (res.status != 200) {
           throw res
         }
-
-        return res.json()
+        return res.data
       })
       .then(images => {
         this.setState({
@@ -71,10 +69,9 @@ export default class ImageUploader extends Component {
         })
       })
       .catch(err => {
-        err.json().then(e => {
+        console.log(err)
           this.setState({ uploading: false,
-          error: 'Something went wrong, try again' })
-        })
+          error: 'Something went wrong, please try again' })
       })
     }
   }
