@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const config = require('./db')
 
+
 const users = require('./routes/user')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
@@ -26,6 +27,7 @@ app.prepare()
   server.use(cors({
     origin: CLIENT_ORIGIN
   }))
+
   cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
@@ -64,6 +66,18 @@ app.prepare()
   server.get("/join/:accountType", (req, res) => {
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
       return app.render(req, res, "/join", { accountType: req.params.accountType })
+    } else {
+      res.statusCode = 404
+      app.render(req, res, '/_error', {})
+    }
+  })
+
+  server.get("/create-account/:accountType", (req, res) => {
+    if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
+      return app.render(req, res, "/create-account", { accountType: req.params.accountType })
+    } else {
+      res.statusCode = 404
+      app.render(req, res, '/_error', {})
     }
   })
 

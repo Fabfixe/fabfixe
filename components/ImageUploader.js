@@ -13,11 +13,11 @@ const AddButton = (props) => {
   }
 
   return (
-    <div>
+    <React.Fragment>
       <div className="placeholder" style={imageStyle} />
       <input type='file' id='single' style={{ display: 'none' }} placeholder='Add Photo' accept='image/*' onChange={props.onChange} />
-      <label for='single'>Add Photo </label>
-    </div>
+      <label htmlFor='single'>Add Photo </label>
+    </React.Fragment>
   )
 }
 
@@ -107,11 +107,11 @@ export default class ImageUploader extends Component {
     }
 
     return (
-      <div>
+      <React.Fragment>
         <div className='image-uploader'>
           {content()}
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

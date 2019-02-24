@@ -1,16 +1,15 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-
 import MyLayout from '../components/MyLayout'
 import Nav from '../components/Nav'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
-import JoinForm from '../components/Join'
+import ImageUploader from '../components/ImageUploader'
 import Footer from '../components/Footer'
 import { registerUser } from '../actions/authentication'
 
-class JoinRouting extends Component {
+class CreateAccount extends Component {
   constructor(props) {
     super(props)
 
@@ -27,11 +26,11 @@ class JoinRouting extends Component {
   render() {
     return (
       <MyLayout alignment='center'>
-        <Heading style={{ marginTop: '80px' }}>Create an Account</Heading>
-        <JoinForm accountType={ this.state.accountType } />
+        <Heading style={{ marginTop: '80px' }}>Create Profile</Heading>
+        <ImageUploader />
       </MyLayout>
     )
   }
 }
 
-export default JoinRouting
+export default CreateAccount
