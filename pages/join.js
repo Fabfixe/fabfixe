@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-
 import MyLayout from '../components/MyLayout'
 import Nav from '../components/Nav'
 import Hero from '../components/Hero'

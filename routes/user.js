@@ -20,7 +20,6 @@ router.post('/register', function(req, res) {
       email: req.body.email
   }).then(user => {
     if(user) {
-
       return res.status(400).json({
         email: 'Email already exists'
       })
@@ -37,6 +36,7 @@ router.post('/register', function(req, res) {
         lastName: req.body.lastName,
         email: req.body.email,
         password: req.body.password,
+        accountType: req.body.accountType,
         avatar
       })
 
@@ -47,6 +47,7 @@ router.post('/register', function(req, res) {
             if(err) console.error('There was an error', err)
               else {
                 newUser.password = hash
+                console.log('newUser', newUser)
                 newUser
                 .save()
                 .then(user => {
@@ -61,7 +62,6 @@ router.post('/register', function(req, res) {
 })
 
 router.post('/login', (req, res) => {
-  console.log('req')
   const { errors, isValid } = validateLoginInput(req.body)
 
   if(!isValid) {
@@ -71,7 +71,7 @@ router.post('/login', (req, res) => {
   const email = req.body.email
   const password = req.body.password
 
-  User.findOne({email})
+  User.findOne({ email })
   .then(user => {
     if(!user) {
       errors.email = 'User not found'

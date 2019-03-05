@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode'
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 import { setCurrentUser, logoutUser } from '../actions/authentication'
+import { getUserData } from '../actions/userData'
 import '../scss/index.scss'
 
 /**
@@ -30,17 +31,13 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
 class Fabfixe extends App {
 
   static async getInitialProps({ Component, ctx }) {
-
-    // we can dispatch from here too
     ctx.store.dispatch({ type: 'FOO', payload: 'foo' });
-
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps }
   }
 
   render() {
     const { Component, pageProps, store } = this.props
-
     if(process.browser) {
 
       if(localStorage.jwtToken) {
@@ -49,12 +46,16 @@ class Fabfixe extends App {
         store.dispatch(setCurrentUser(decoded))
 
         const currentTime = Date.now() / 1000
-        console.log('decoded.exp', decoded.exp)
         if(decoded.exp < currentTime) {
           store.dispatch(logoutUser())
           window.location.href = '/login'
         }
       }
+    }
+
+    if(store.getState().auth.user.id) {
+      getUserData(store.getState().auth.user.id)
+      .then(res => console.log(res.data))
     }
 
     return (

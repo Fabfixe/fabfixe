@@ -7,7 +7,7 @@ const classnames = require('classnames')
 const navStyle = {
   display: "flex",
   alignItems: "center",
-  width: "100vw",
+  width: "100%",
 }
 
 const navLinksStyle = {

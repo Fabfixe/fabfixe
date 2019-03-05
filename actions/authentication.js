@@ -2,10 +2,28 @@ import axios from 'axios'
 import { GET_ERRORS, SET_CURRENT_USER } from './types'
 import setAuthToken from '../setAuthToken'
 import jwt_decode from 'jwt-decode'
+import Router from 'next/router'
 
 export const registerUser = (user, history) => dispatch => {
+  console.log('registerUser')
   axios.post('/api/users/register', user)
-  // .then(res => history.push('/login'))
+  .then((res) => {
+    axios.post('/api/users/login', user)
+    .then(res => {
+      const { token } = res.data
+      localStorage.setItem('jwtToken', token)
+      setAuthToken(token)
+      const decoded = jwt_decode(token)
+      dispatch(setCurrentUser(decoded))
+      Router.push(`/create-profile/${user.accountType}`), { shallow: true }
+    })
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    })
+  })
   .catch(err => {
     dispatch({
       type: GET_ERRORS,
@@ -15,6 +33,7 @@ export const registerUser = (user, history) => dispatch => {
 }
 
 export const loginUser = (user) => dispatch => {
+  console.log('loginUser')
   axios.post('/api/users/login', user)
   .then(res => {
     const { token } = res.data

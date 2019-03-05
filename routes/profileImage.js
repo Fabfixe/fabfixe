@@ -12,7 +12,6 @@ cloudinary.config({
 
 router.use(formData.parse())
 
-
 router.post('/image-upload', (req, res) => {
   const values = Object.values(req.files)
   const promises = values.map((image) => {

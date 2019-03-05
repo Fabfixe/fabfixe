@@ -14,7 +14,9 @@ const config = require('./db')
 
 
 const users = require('./routes/user')
+const username = require('./routes/username')
 const profileImage = require('./routes/profileImage')
+const userData = require('./routes/userData')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
   () => { console.log('Database is connected') },
@@ -30,7 +32,7 @@ app.prepare()
 
   // Profile Image Route Handler
   server.use('/image-upload-single', profileImage)
-  
+
   // Authentication Route Handler
   server.use(passport.initialize())
   require('./passport')(passport)
@@ -38,8 +40,12 @@ app.prepare()
   server.use(bodyParser.urlencoded({ extended: false }))
   server.use(bodyParser.json())
 
+
   server.use('/api/users', users)
 
+  server.use('/api/usernames', username)
+
+  server.use('/api/data', userData)
 
   server.get("/join/:accountType", (req, res) => {
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
@@ -59,8 +65,6 @@ app.prepare()
       app.render(req, res, '/_error', {})
     }
   })
-
-
 
   server.get('*', (req, res) => {
     return handle(req, res)

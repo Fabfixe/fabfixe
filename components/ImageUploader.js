@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Images from '../components/Images'
 import { API_URL } from '../config'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { profileImageUpload, profileImageDelete } from '../actions/profileUpload'
 
 
 const AddButton = (props) => {
@@ -21,7 +23,7 @@ const AddButton = (props) => {
   )
 }
 
-export default class ImageUploader extends Component {
+class ImageUploader extends Component {
   state = {
     uploading: false,
     images: [],
@@ -54,14 +56,16 @@ export default class ImageUploader extends Component {
     if(this.state.error == '') {
       axios.post('/image-upload-single', formData)
       .then(res => {
-        console.log('res.json', res)
 
         if (res.status != 200) {
           throw res
         }
+
         return res.data
       })
       .then(images => {
+        this.props.profileImageUpload(images)
+
         this.setState({
           uploading: false,
           images,
@@ -77,13 +81,12 @@ export default class ImageUploader extends Component {
   }
 
   removeImage = id => {
-    this.setState({
-      images: this.state.images.filter(image => image.public_id !== id)
-    })
+    this.props.profileImageDelete(id)
   }
 
   render() {
-    const { uploading, images, error } = this.state
+    const { uploading, error } = this.state
+    const { images } = this.props
 
     const content = () => {
       switch(true) {
@@ -96,8 +99,8 @@ export default class ImageUploader extends Component {
               <p className="error-message">{this.state.error}</p>
             </React.Fragment>
           )
-        case images.length > 0:
-          return <Images images={images} removeImage={this.removeImage} />
+        case images.profileImage.length > 0:
+          return <Images images={images.profileImage} removeImage={this.removeImage} />
         default:
           return <AddButton onChange={this.onChange} />
       }
@@ -112,3 +115,9 @@ export default class ImageUploader extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  images: state.profileImage
+})
+
+export default connect(mapStateToProps, { profileImageUpload, profileImageDelete })(ImageUploader)
