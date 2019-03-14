@@ -1,9 +1,7 @@
 import axios from 'axios'
 
-
-
 export const getUserData = (id) => {
-  return axios.post('/api/data', id)
+  // return axios.post('/api/data', id)
 }
 
 // Edit users with .remove method

@@ -16,6 +16,7 @@ const config = require('./db')
 const users = require('./routes/user')
 const username = require('./routes/username')
 const profileImage = require('./routes/profileImage')
+const profiles = require('./routes/profile')
 const userData = require('./routes/userData')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
@@ -46,6 +47,8 @@ app.prepare()
   server.use('/api/usernames', username)
 
   server.use('/api/data', userData)
+
+  server.use('/api/profile', profiles)
 
   server.get("/join/:accountType", (req, res) => {
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {

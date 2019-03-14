@@ -53,10 +53,10 @@ class Fabfixe extends App {
       }
     }
 
-    if(store.getState().auth.user.id) {
-      getUserData(store.getState().auth.user.id)
-      .then(res => console.log(res.data))
-    }
+    // if(store.getState().auth.user.id) {
+    //   getUserData(store.getState().auth.user.id)
+    //   .then(res => console.log(res.data))
+    // }
 
     return (
       <Container>

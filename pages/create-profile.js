@@ -3,12 +3,17 @@ import React, { Component } from 'react'
 import MyLayout from '../components/MyLayout'
 import Nav from '../components/Nav'
 import Hero from '../components/Hero'
+import Button from '../components/Button'
 import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
 import ImageUploader from '../components/ImageUploader'
 import Footer from '../components/Footer'
 import validateUsernameInput from '../validation/username'
+import validateProfileSubmit from '../validation/profileSubmit'
+import axios from 'axios'
+
 import { connect } from 'react-redux'
+import { updateProfile } from '../actions/updateProfile'
 const classnames = require('classnames')
 
 class CreateProfile extends Component {
@@ -17,7 +22,10 @@ class CreateProfile extends Component {
 
     this.state = {
       accountType: this.props.query.accountType,
+      flagErrors: false,
       errors: {},
+      username: this.props.username,
+      profileImageUrl: '',
       YouTubeHandle: '',
       InstagramHandle: '',
       TwitterHandle: '',
@@ -37,6 +45,7 @@ class CreateProfile extends Component {
     this.handleInputBlur = this.handleInputBlur.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.updateSkill = this.updateSkill.bind(this)
+    this.getImageUrl = this.getImageUrl.bind(this)
   }
 
   static async getInitialProps({ query }) {
@@ -44,14 +53,34 @@ class CreateProfile extends Component {
   }
 
   handleUsernameBlur(e) {
-    //instead, i need to make the post to '/username' here
-    // so import axios
-    // handle the database query in the route
-    this.setState({
-      errors: validateUsernameInput(e.target.value).errors
+    e.persist()
+
+    this.setState((prevState) => {
+      const errors = validateUsernameInput(e.target.value).errors
+
+      if(errors.username) {
+        return {
+          errors
+        }
+      } else {
+        return {
+          flagErrors: false,
+          errors: {},
+          username: e.target.value
+        }
+      }
     })
 
-    // validate it
+    axios.post('/api/usernames', { username: e.target.value })
+    .catch((err) => {
+      let errors = {}
+      errors.username = 'Username already taken'
+      this.setState({ errors })
+    })
+  }
+
+  getImageUrl(url) {
+    this.setState({ profileImageUrl: url})
   }
 
   handleInputBlur(e) {
@@ -69,30 +98,57 @@ class CreateProfile extends Component {
       let idx = prevState.selectedExpertise[category].indexOf(skill)
 
       if(idx != -1) {
-         prevState.selectedExpertise[category].splice(idx)
+         prevState.selectedExpertise[category].splice(idx, 1)
          return prevState
       } else {
          prevState.selectedExpertise[category].push(skill)
+
          return prevState
       }
     })
   }
 
   handleSubmit(e) {
-    // e.preventDefault()
-    // this.setState({ submitted: true })
-    // if(!this.state.isConfirmed) return
-    //
-    // const user = {
-    //   firstName: this.state.firstName,
-    //   lastName: this.state.lastName,
-    //   email: this.state.email,
-    //   password: this.state.password,
-    //   password_confirm: this.state.password_confirm,
-    //   accountType: this.state.accountType
-    // }
-    //
-    // this.props.registerUser(user)
+    e.preventDefault()
+    const accountType = this.state.accountType
+    const profile = {
+      artist: {
+        id: this.props.id,
+        username: this.state.username,
+        profileImageUrl: this.state.profileImageUrl,
+        youtube: this.state.YouTubeHandle,
+        instagram: this.state.InstagramHandle,
+        twitter: this.state.TwitterHandle,
+        facebook: this.state.FacebookHandle,
+        hourlyRate: this.state.hourlyRate,
+        expertise: this.state.selectedExpertise
+      },
+
+      pupil: {
+        id: this.props.id,
+        username: this.state.username,
+        profileImageUrl: this.state.profileImageUrl,
+        youtube: this.state.YouTubeHandle,
+        instagram: this.state.InstagramHandle,
+        twitter: this.state.TwitterHandle,
+        facebook: this.state.FacebookHandle,
+      }
+    }
+
+    const validation = validateProfileSubmit(profile[accountType])
+
+    if(this.state.errors.username) {
+      this.setState({
+        flagErrors: true
+      })
+    } else if(!validation.isValid) {
+      this.setState({
+        errors: validation.errors,
+        flagErrors: true
+      })
+    } else {
+      updateProfile(accountType, profile[accountType])
+    }
   }
 
   render() {
@@ -101,7 +157,7 @@ class CreateProfile extends Component {
     return (
       <MyLayout alignment='center'>
         <Heading style={{ marginTop: '80px' }}>Create Profile</Heading>
-        <ImageUploader />
+        <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
         <form onSubmit={ this.handleSubmit }>
           <input
             type='text'
@@ -119,7 +175,7 @@ class CreateProfile extends Component {
             id='youtube-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ `@${this.state.YouTubeHandle}` }
+            defaultValue={ this.state.YouTubeHandle }
           />
           <label>Instagram</label>
           <input
@@ -128,7 +184,7 @@ class CreateProfile extends Component {
             id='youtube-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ `@${this.state.InstagramHandle}` }
+            defaultValue={ this.state.InstagramHandle }
           />
           <label>Twitter</label>
           <input
@@ -137,16 +193,16 @@ class CreateProfile extends Component {
             id='twitter-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ `@${this.state.TwitterHandle}` }
+            defaultValue={ this.state.TwitterHandle }
           />
-          <label>Twitter</label>
+          <label>Facebook</label>
           <input
             type='text'
             name='FacebookHandle'
             id='facebook-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ `@${this.state.FacebookHandle}` }
+            defaultValue={ this.state.FacebookHandle }
           />
           {accountType === 'artist' && (
             <React.Fragment>
@@ -179,6 +235,10 @@ class CreateProfile extends Component {
             </ul>
             </React.Fragment>
           )}
+          <div className="button-container">
+            {this.state.flagErrors && (<div className="invalid-feedback">See errors above</div>)}
+            <Button type="submit">Save Profile</Button>
+          </div>
         </form>
       </MyLayout>
     )
@@ -187,7 +247,8 @@ class CreateProfile extends Component {
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  expertises: state.expertises
+  id: state.auth.user.id,
+  username: state.username
 })
 
 export default connect(mapStateToProps)(CreateProfile)

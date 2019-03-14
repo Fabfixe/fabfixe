@@ -2,9 +2,6 @@ import React, { Component } from 'react'
 import Images from '../components/Images'
 import { API_URL } from '../config'
 import axios from 'axios'
-import { connect } from 'react-redux'
-import { profileImageUpload, profileImageDelete } from '../actions/profileUpload'
-
 
 const AddButton = (props) => {
   const imageStyle = {
@@ -64,13 +61,14 @@ class ImageUploader extends Component {
         return res.data
       })
       .then(images => {
-        this.props.profileImageUpload(images)
 
         this.setState({
           uploading: false,
           images,
           error: ''
         })
+        console.log('here',images[0].url)
+        this.props.onUpload(images[0].url)
       })
       .catch(err => {
         console.log(err)
@@ -81,12 +79,13 @@ class ImageUploader extends Component {
   }
 
   removeImage = id => {
-    this.props.profileImageDelete(id)
+    this.props.onUpload('')
+    this.setState({ images: []})
   }
 
   render() {
     const { uploading, error } = this.state
-    const { images } = this.props
+    const { images } = this.state
 
     const content = () => {
       switch(true) {
@@ -99,8 +98,8 @@ class ImageUploader extends Component {
               <p className="error-message">{this.state.error}</p>
             </React.Fragment>
           )
-        case images.profileImage.length > 0:
-          return <Images images={images.profileImage} removeImage={this.removeImage} />
+        case images.length > 0:
+          return <Images images={images} removeImage={this.removeImage} />
         default:
           return <AddButton onChange={this.onChange} />
       }
@@ -120,4 +119,4 @@ const mapStateToProps = state => ({
   images: state.profileImage
 })
 
-export default connect(mapStateToProps, { profileImageUpload, profileImageDelete })(ImageUploader)
+export default ImageUploader

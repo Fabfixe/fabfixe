@@ -47,7 +47,7 @@ router.post('/register', function(req, res) {
             if(err) console.error('There was an error', err)
               else {
                 newUser.password = hash
-                console.log('newUser', newUser)
+
                 newUser
                 .save()
                 .then(user => {

@@ -5,7 +5,6 @@ import jwt_decode from 'jwt-decode'
 import Router from 'next/router'
 
 export const registerUser = (user, history) => dispatch => {
-  console.log('registerUser')
   axios.post('/api/users/register', user)
   .then((res) => {
     axios.post('/api/users/login', user)
@@ -13,6 +12,7 @@ export const registerUser = (user, history) => dispatch => {
       const { token } = res.data
       localStorage.setItem('jwtToken', token)
       setAuthToken(token)
+
       const decoded = jwt_decode(token)
       dispatch(setCurrentUser(decoded))
       Router.push(`/create-profile/${user.accountType}`), { shallow: true }
@@ -33,7 +33,6 @@ export const registerUser = (user, history) => dispatch => {
 }
 
 export const loginUser = (user) => dispatch => {
-  console.log('loginUser')
   axios.post('/api/users/login', user)
   .then(res => {
     const { token } = res.data

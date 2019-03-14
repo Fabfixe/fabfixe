@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const ProfileSchema = new Schema({
+const ArtistProfileSchema = new Schema({
   id: {
     type: String,
     required: true
@@ -29,9 +29,13 @@ const ProfileSchema = new Schema({
   hourlyRate: {
     type: Number,
     required: false
+  },
+  expertise: {
+    makeup: [String],
+    hair: [String]
   }
 })
 
-const Profile = mongoose.model('profiles', ProfileSchema)
+const ArtistProfile = mongoose.model('artistprofiles', ArtistProfileSchema)
 
-module.exports = Profile
+module.exports = ArtistProfile

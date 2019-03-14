@@ -53,7 +53,7 @@ form {
 
 .invalid-feedback {
   margin: 10px;
-  font-family: system-ui;
+  font-family: 'system-ui';
   font-size: 12px;
   color: red;
   width: 100%;
@@ -66,6 +66,7 @@ form {
 
 .expertise-tags {
   display: flex;
+  width: 100%;
 
   li {
     background-color: lightgrey;
@@ -77,7 +78,7 @@ form {
     &:hover {
       background-color: #C0C0C0;
     }
-    
+
     &.selected {
       background-color: grey;
     }

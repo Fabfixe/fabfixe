@@ -10,12 +10,13 @@ isEmpty = require('./is-empty')
 
 module.exports = function validateUsernameInput(data) {
   let errors = {}
+  // return axios.post('/api/usernames', { username: data })
+  //   .then((wtv) => console.log('the then'))
+  //   .catch((err) => {
+  //      errors.username = 'Username already taken'
+  //     return errors
+  //   })
 
-  axios.post('/api/usernames', { username: data })
-    .catch((err) => {
-      console.log('error', err)
-      errors.username = 'Username already taken'
-    })
 
   if(!Validator.isLength(data, { max: 20 })) {
     errors.username = 'Username must be less than 20 characters'
