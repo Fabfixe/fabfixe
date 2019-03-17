@@ -4,9 +4,27 @@ const router = express.Router()
 const ArtistProfile = require('../models/ArtistProfile')
 const PupilProfile = require('../models/PupilProfile')
 
+router.post('/', function(req, res) {
+  ArtistProfile.findOne({
+    id: req.body.id
+  }).then((profile) => {
+    if(profile) {
+      return res.json(profile)
+    } else {
+      PupilProfile.findOne({
+        id: req.body.id
+      }).then((profile) => {
+        if(profile) return res.json(profile)
+      })
+    }
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+})
+
 router.post('/artist', function(req, res) {
-  console.log('req.body.id', req.body.id)
-  const newProfile = ArtistProfile({
+  const newProfile = {
     id: req.body.id,
     username: req.body.username,
     profileImageUrl: req.body.profileImageUrl,
@@ -16,13 +34,13 @@ router.post('/artist', function(req, res) {
     facebook: req.body.facebook,
     hourlyRate: req.body.hourlyRate,
     expertise: req.body.expertise
-  })
-
+  }
+console.log(newProfile)
   ArtistProfile.findOne({
     id: req.body.id
   }).then(profile => {
     if(profile) {
-      ArtistProfile.update({ id: res.body.id }, newProfile)
+      ArtistProfile.updateOne({ id: req.body.id }, newProfile)
       .then(res.send('updated'))
     } else {
       newProfile.save()
@@ -32,7 +50,7 @@ router.post('/artist', function(req, res) {
 })
 
 router.post('/pupil', function(req, res) {
-  const newProfile = PupilProfile({
+  const newProfile = {
     id: req.body.id,
     username: req.body.username,
     profileImageUrl: req.body.profileImageUrl,
@@ -40,10 +58,10 @@ router.post('/pupil', function(req, res) {
     instagram: req.body.instagram,
     twitter: req.body.twitter,
     facebook: req.body.facebook,
-  })
+  }
 
   if(profile) {
-    PupilProfile.update({ id: res.body.id }, newProfile)
+    PupilProfile.updateOne({ id: res.body.id }, newProfile)
     .then(res.send('updated'))
   } else {
     newProfile.save()

@@ -8,7 +8,7 @@ import jwt_decode from 'jwt-decode'
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
 import { setCurrentUser, logoutUser } from '../actions/authentication'
-import { getUserData } from '../actions/userData'
+import { getProfile, setProfile } from '../actions/profile'
 import '../scss/index.scss'
 
 /**
@@ -53,10 +53,10 @@ class Fabfixe extends App {
       }
     }
 
-    // if(store.getState().auth.user.id) {
-    //   getUserData(store.getState().auth.user.id)
-    //   .then(res => console.log(res.data))
-    // }
+    if(store.getState().auth.user.id) {
+      getProfile(store.getState().auth.user.id)
+        .then(profile => store.dispatch(setProfile(profile)))
+    }
 
     return (
       <Container>

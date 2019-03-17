@@ -13,10 +13,10 @@ import validateProfileSubmit from '../validation/profileSubmit'
 import axios from 'axios'
 
 import { connect } from 'react-redux'
-import { updateProfile } from '../actions/updateProfile'
+import { updateProfile } from '../actions/profile'
 const classnames = require('classnames')
 
-class CreateProfile extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props)
 
@@ -25,19 +25,19 @@ class CreateProfile extends Component {
       flagErrors: false,
       errors: {},
       username: this.props.username,
-      profileImageUrl: '',
-      YouTubeHandle: '',
-      InstagramHandle: '',
-      TwitterHandle: '',
-      FacebookHandle: '',
-      hourlyRate: '',
+      profileImageUrl: this.props.profileImageUrl,
+      youtube: this.props.youtube,
+      instagram: this.props.instagram,
+      twitter: this.props.twitter,
+      facebook: this.props.facebook,
+      hourlyRate: this.props.hourlyRate,
       expertise: {
         hair: [ 'Styling', 'Braiding', 'Natural Hair', 'Wigs/Extensions' ],
         makeup: [ 'Eyes', 'Lips', 'Foundation/Face', 'Nails' ]
       },
       selectedExpertise: {
-        makeup: [],
-        hair: []
+        makeup: this.props.expertise.makeup,
+        hair: this.props.expertise.hair
       }
     }
 
@@ -50,6 +50,21 @@ class CreateProfile extends Component {
 
   static async getInitialProps({ query }) {
     return { query }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps) {
+      this.setState({
+        username: nextProps.username,
+        profileImageUrl: nextProps.profileImageUrl,
+        youtube: nextProps.youtube,
+        instagram: nextProps.instagram,
+        twitter: nextProps.twitter,
+        facebook: nextProps.facebook,
+        hourlyRate: nextProps.hourlyRate,
+        selectedExpertise: nextProps.expertise
+      })
+    }
   }
 
   handleUsernameBlur(e) {
@@ -71,12 +86,14 @@ class CreateProfile extends Component {
       }
     })
 
-    axios.post('/api/usernames', { username: e.target.value })
-    .catch((err) => {
-      let errors = {}
-      errors.username = 'Username already taken'
-      this.setState({ errors })
-    })
+    if(e.target.value !== this.props.username) {
+      axios.post('/api/usernames', { username: e.target.value })
+      .catch((err) => {
+        let errors = {}
+        errors.username = 'Username already taken'
+        this.setState({ errors })
+      })
+    }
   }
 
   getImageUrl(url) {
@@ -116,10 +133,10 @@ class CreateProfile extends Component {
         id: this.props.id,
         username: this.state.username,
         profileImageUrl: this.state.profileImageUrl,
-        youtube: this.state.YouTubeHandle,
-        instagram: this.state.InstagramHandle,
-        twitter: this.state.TwitterHandle,
-        facebook: this.state.FacebookHandle,
+        youtube: this.state.youtube,
+        instagram: this.state.instagram,
+        twitter: this.state.twitter,
+        facebook: this.state.facebook,
         hourlyRate: this.state.hourlyRate,
         expertise: this.state.selectedExpertise
       },
@@ -128,10 +145,10 @@ class CreateProfile extends Component {
         id: this.props.id,
         username: this.state.username,
         profileImageUrl: this.state.profileImageUrl,
-        youtube: this.state.YouTubeHandle,
-        instagram: this.state.InstagramHandle,
-        twitter: this.state.TwitterHandle,
-        facebook: this.state.FacebookHandle,
+        youtube: this.state.youtube,
+        instagram: this.state.instagram,
+        twitter: this.state.twitter,
+        facebook: this.state.facebook,
       }
     }
 
@@ -156,7 +173,7 @@ class CreateProfile extends Component {
 
     return (
       <MyLayout alignment='center'>
-        <Heading style={{ marginTop: '80px' }}>Create Profile</Heading>
+        <Heading style={{ marginTop: '80px' }}>Edit Profile</Heading>
         <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
         <form onSubmit={ this.handleSubmit }>
           <input
@@ -165,44 +182,45 @@ class CreateProfile extends Component {
             id='username'
             placeholder='CHOOSE A USERNAME'
             onBlur={ this.handleUsernameBlur }
+            defaultValue={ this.state.username }
           />
           {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
           <h2>Connect Social Media</h2>
           <label>YouTube</label>
           <input
             type='text'
-            name='YouTubeHandle'
+            name='youtube'
             id='youtube-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ this.state.YouTubeHandle }
+            defaultValue={ this.state.youtube }
           />
           <label>Instagram</label>
           <input
             type='text'
-            name='InstagramHandle'
+            name='instagram'
             id='youtube-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ this.state.InstagramHandle }
+            defaultValue={ this.state.instagram }
           />
           <label>Twitter</label>
           <input
             type='text'
-            name='TwitterHandle'
+            name='twitter'
             id='twitter-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ this.state.TwitterHandle }
+            defaultValue={ this.state.twitter }
           />
           <label>Facebook</label>
           <input
             type='text'
-            name='FacebookHandle'
+            name='facebook'
             id='facebook-handle'
             placeholder='ENTER HANDLE'
             onBlur={ this.handleInputBlur }
-            defaultValue={ this.state.FacebookHandle }
+            defaultValue={ this.state.facebook }
           />
           {accountType === 'artist' && (
             <React.Fragment>
@@ -213,6 +231,7 @@ class CreateProfile extends Component {
               name='hourlyRate'
               className='digit'
               onChange={ this.handleInputBlur }
+              defaultValue={ this.state.hourlyRate }
             />
             <p className='dollar-prefix'>/hr</p>
             <h2>Add Expertise</h2>
@@ -248,8 +267,14 @@ class CreateProfile extends Component {
 const mapStateToProps = state => ({
   errors: state.errors,
   id: state.auth.user.id,
-  username: state.username
+  username: state.profile.username,
+  profileImageUrl: state.profile.profileImageUrl,
+  youtube: state.profile.youtube,
+  instagram: state.profile.instagram,
+  twitter: state.profile.twitter,
+  facebook: state.profile.facebook,
+  hourlyRate: state.profile.hourlyRate,
+  expertise: state.profile.expertise
 })
 
-export default connect(mapStateToProps)(CreateProfile)
-// export default CreateProfile
+export default connect(mapStateToProps)(EditProfile)

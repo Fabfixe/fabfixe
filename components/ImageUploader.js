@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Images from '../components/Images'
 import { API_URL } from '../config'
+import { connect } from 'react-redux'
 import axios from 'axios'
 
 const AddButton = (props) => {
@@ -21,10 +22,22 @@ const AddButton = (props) => {
 }
 
 class ImageUploader extends Component {
-  state = {
-    uploading: false,
-    images: [],
-    error: '',
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      uploading: false,
+      images: [ this.props.images ],
+      error: '',
+    }
+
+    this.removeImage = this.removeImage.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.images) {
+      this.setState({ images: [ nextProps.images ] })
+    }
   }
 
   onChange = e => {
@@ -61,14 +74,13 @@ class ImageUploader extends Component {
         return res.data
       })
       .then(images => {
-
+        images = images.map(image => image.url)
         this.setState({
           uploading: false,
           images,
           error: ''
         })
-        console.log('here',images[0].url)
-        this.props.onUpload(images[0].url)
+        this.props.onUpload(images[0])
       })
       .catch(err => {
         console.log(err)
@@ -78,8 +90,8 @@ class ImageUploader extends Component {
     }
   }
 
-  removeImage = id => {
-    this.props.onUpload('')
+  removeImage() {
+    // this.props.onUpload('')
     this.setState({ images: []})
   }
 
@@ -98,7 +110,7 @@ class ImageUploader extends Component {
               <p className="error-message">{this.state.error}</p>
             </React.Fragment>
           )
-        case images.length > 0:
+        case images[0] !== '' && images.length > 0:
           return <Images images={images} removeImage={this.removeImage} />
         default:
           return <AddButton onChange={this.onChange} />
@@ -116,7 +128,7 @@ class ImageUploader extends Component {
 }
 
 const mapStateToProps = state => ({
-  images: state.profileImage
+  images: state.profile.profileImageUrl,
 })
 
-export default ImageUploader
+export default connect(mapStateToProps)(ImageUploader)

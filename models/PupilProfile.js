@@ -10,6 +10,10 @@ const PupilProfileSchema = new Schema({
     type: String,
     required: true
   },
+  profileImageUrl: {
+    type: String,
+    required: false
+  },
   youtube: {
     type: String,
     required: false

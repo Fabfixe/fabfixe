@@ -77,15 +77,15 @@ router.post('/login', (req, res) => {
       errors.email = 'User not found'
       return res.status(404).json(errors)
     }
-
     bcrypt.compare(password, user.password)
     .then(isMatch => {
       if(isMatch) {
 
         const payload = {
           id: user.id,
-          name: user.name,
-          avatar: user.avatar
+          avatar: user.avatar,
+          name: user.firstName,
+          accountType: user.accountType,
         }
 
         jwt.sign(payload, 'secret', {
@@ -94,6 +94,7 @@ router.post('/login', (req, res) => {
 
           if(err) console.error('There is some error in token', err)
             else {
+              console.log(user)
               res.json({
                 success: true,
                 token: `Bearer ${token}`
