@@ -77,6 +77,7 @@ router.post('/login', (req, res) => {
       errors.email = 'User not found'
       return res.status(404).json(errors)
     }
+
     bcrypt.compare(password, user.password)
     .then(isMatch => {
       if(isMatch) {
@@ -94,11 +95,12 @@ router.post('/login', (req, res) => {
 
           if(err) console.error('There is some error in token', err)
             else {
-              console.log(user)
               res.json({
                 success: true,
                 token: `Bearer ${token}`
               })
+
+              Router.back()
             }
         })
       }

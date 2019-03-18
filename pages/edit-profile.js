@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
+import Router from 'next/router'
 import MyLayout from '../components/MyLayout'
 import Nav from '../components/Nav'
 import Hero from '../components/Hero'
@@ -8,12 +9,12 @@ import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
 import ImageUploader from '../components/ImageUploader'
 import Footer from '../components/Footer'
+import { connect } from 'react-redux'
+import { updateProfile } from '../actions/profile'
 import validateUsernameInput from '../validation/username'
 import validateProfileSubmit from '../validation/profileSubmit'
 import axios from 'axios'
 
-import { connect } from 'react-redux'
-import { updateProfile } from '../actions/profile'
 const classnames = require('classnames')
 
 class EditProfile extends Component {
@@ -50,6 +51,16 @@ class EditProfile extends Component {
 
   static async getInitialProps({ query }) {
     return { query }
+  }
+
+  componentDidMount() {
+    if(!this.props.auth.isAuthenticated) {
+      Router.push('/login')
+    }
+
+    if(this.props.query.accountType !== this.props.accountType) {
+      Router.push(`/edit-profile/${this.props.accountType}`)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -265,6 +276,8 @@ class EditProfile extends Component {
 }
 
 const mapStateToProps = state => ({
+  auth: state.auth,
+  accountType: state.auth.user.accountType,
   errors: state.errors,
   id: state.auth.user.id,
   username: state.profile.username,
