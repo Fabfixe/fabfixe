@@ -40,7 +40,6 @@ class Login extends Component {
     }
 
     this.props.loginUser(user)
-    Router.back()
   }
 
   componentWillReceiveProps(nextProps) {

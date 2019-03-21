@@ -82,6 +82,10 @@ app.prepare()
     }
   })
 
+  server.get(/^(?:\/(?=$))?(?=\/|$)/i, (req, res) => {
+    return app.render(req, res, '/profile', {})
+  })
+  
   server.get('*', (req, res) => {
     return handle(req, res)
   })

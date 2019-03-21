@@ -40,6 +40,7 @@ export const loginUser = (user) => dispatch => {
     setAuthToken(token)
     const decoded = jwt_decode(token)
     dispatch(setCurrentUser(decoded))
+    Router.back()
   })
   .catch(err => {
     dispatch({
