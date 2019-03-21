@@ -2,10 +2,7 @@ import Head from 'next/head'
 import React, { Component } from 'react'
 import Router from 'next/router'
 import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
-import Hero from '../components/Hero'
 import Button from '../components/Button'
-import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
 import ImageUploader from '../components/ImageUploader'
 import Footer from '../components/Footer'
@@ -56,9 +53,7 @@ class EditProfile extends Component {
   componentDidMount() {
     if(!this.props.auth.isAuthenticated) {
       Router.push('/login')
-    }
-
-    if(this.props.query.accountType !== this.props.accountType) {
+    } else if(this.props.query.accountType !== this.props.accountType) {
       Router.push(`/edit-profile/${this.props.accountType}`)
     }
   }
