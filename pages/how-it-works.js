@@ -13,8 +13,8 @@ export default () => (
     </Head>
     <MyLayout>
       <Nav />
-      <HowItWorks heading="For Pupils" actionLink="pupil" />
-      <HowItWorks heading="For Artists" actionLink="artist" />
+      <HowItWorks heading="For Pupils" actionLink="/join/pupil" />
+      <HowItWorks heading="For Artists" actionLink="/join/artist" />
       <Footer />
     </MyLayout>
   </div>

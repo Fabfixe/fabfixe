@@ -74,13 +74,13 @@ class NavLinks extends Component {
             <Link href="">
               <a>My Account</a>
             </Link>
-            <Link href="/how-it-works">
+            <Link href="/about/how-it-works">
               <a>How It Works</a>
             </Link>
             <Link href="">
               <a>Browse Artists</a>
             </Link>
-            { this.props.userType === "client" || <Link href="/artists">
+            { this.props.userType === "client" || <Link href="/about/artists">
               <a>For Artists</a>
             </Link> }
             <Link href="">
@@ -91,19 +91,19 @@ class NavLinks extends Component {
           </React.Fragment>
         ) : (
         <React.Fragment>
-          <Link href="/joining-as">
+          <Link href="/account/joining-as">
             <a>Join</a>
           </Link>
-          <Link href="/login">
+          <Link href="/account/login">
             <a>Log In</a>
           </Link>
-          <Link href="/how-it-works">
+          <Link href="/about/how-it-works">
             <a>How It Works</a>
           </Link>
           <Link href="">
             <a>Browse Artists</a>
           </Link>
-          { this.props.userType === "client" || <Link href="/artists">
+          { this.props.userType === "client" || <Link href="/about/artists">
             <a>For Artists</a>
           </Link> }
         </React.Fragment>

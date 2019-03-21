@@ -47,6 +47,22 @@ app.prepare()
 
   server.use('/api/profile', profiles)
 
+  server.get('/account/login', (req, res) => {
+    return app.render(req, res, '/login', {})
+  })
+
+  server.get('/account/joining-as', (req, res) => {
+    return app.render(req, res, '/joining-as', {})
+  })
+
+  server.get('/about/how-it-works', (req, res) => {
+    return app.render(req, res, '/how-it-works', {})
+  })
+
+  server.get('/about/artists', (req, res) => {
+    return app.render(req, res, '/artists', {})
+  })
+
   server.get("/join/:accountType", (req, res) => {
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
       return app.render(req, res, "/join", { accountType: req.params.accountType })

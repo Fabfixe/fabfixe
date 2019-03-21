@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Login from '../components/Login'
 import MyLayout from '../components/MyLayout'
 import Hero from '../components/Hero'

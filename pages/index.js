@@ -13,7 +13,7 @@ export default () => (
     <Nav />
     <MyLayout>
       <Hero headline="Placeholder Headline" subheadline="Placeholder Subheadline" />
-      <HowItWorks actionLink="/joining-as" />
+      <HowItWorks actionLink="/account/joining-as" />
       <Footer />
     </MyLayout>
   </div>

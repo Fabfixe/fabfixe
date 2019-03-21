@@ -7,6 +7,10 @@ isEmpty = require('./is-empty')
 // check if its isEmpty
 // check if its alphanumeric
 // check if its already in the database
+function isAlphanumericOrUnderscore(data) {
+  const regex = /^[a-zA-Z0-9-_]+$/
+  return regex.test(data)
+}
 
 module.exports = function validateUsernameInput(data) {
   let errors = {}
@@ -22,8 +26,8 @@ module.exports = function validateUsernameInput(data) {
     errors.username = 'Username must be less than 20 characters'
   }
 
-  if(!isEmpty(data) && !Validator.isAlphanumeric(data)) {
-    errors.username = 'Username can only contain letters and numbers'
+  if(!isEmpty(data) && !isAlphanumericOrUnderscore(data)) {
+    errors.username = 'Username can only contain letters, numbers or underscores'
   }
 
   return {

@@ -81,8 +81,10 @@ class EditProfile extends Component {
   handleUsernameBlur(e) {
     e.persist()
 
+    const newUsername = e.target.value.trim()
+
     this.setState((prevState) => {
-      const errors = validateUsernameInput(e.target.value).errors
+      const errors = validateUsernameInput(newUsername).errors
 
       if(errors.username) {
         return {
@@ -92,13 +94,13 @@ class EditProfile extends Component {
         return {
           flagErrors: false,
           errors: {},
-          username: e.target.value
+          username: newUsername
         }
       }
     })
 
-    if(e.target.value !== this.props.username) {
-      axios.post('/api/usernames', { username: e.target.value })
+    if(newUsername !== this.props.username) {
+      axios.post('/api/usernames', { username: newUsername })
       .catch((err) => {
         let errors = {}
         errors.username = 'Username already taken'
