@@ -24,10 +24,15 @@ class JoinRouting extends Component {
 
   render() {
     return (
-      <MyLayout alignment='center'>
-        <Heading style={{ marginTop: '80px' }}>Create an Account</Heading>
-        <JoinForm accountType={ this.state.accountType } />
-      </MyLayout>
+      <React.Fragment>
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        </Head>
+        <MyLayout alignment='center'>
+          <Heading style={{ marginTop: '80px' }}>Create an Account</Heading>
+          <JoinForm accountType={ this.state.accountType } />
+        </MyLayout>
+      </React.Fragment>
     )
   }
 }

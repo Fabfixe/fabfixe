@@ -8,30 +8,25 @@ const PupilProfile = require('../models/PupilProfile')
 router.post('/', function(req, res) {
   ArtistProfile.findOne({
     username: req.body.username
-  }).then(username => {
-    if(username) {
-      return res.status(400).json({
-        username: 'Username taken'
+  })
+  .then((profile) => {
+    if(profile !== null) {
+      return res.json(profile)
+    } else {
+      PupilProfile.findOne({
+        username: req.body.username
+      })
+      .then((profile) => {
+        // this block runs regardless
+        if(profile) {
+          if(profile !== null) return res.json(profile)
+        } else {
+          return res.send('')
+        }
       })
     }
   })
-  // ArtistProfile.find({}).then(profile => console.log('found profiles', profile))
-  .catch((err) => {
-    console.log('err', err)
-  })
-
-  PupilProfile.findOne({
-    username: req.body.username
-  }).then(username => {
-    if(username) {
-      return res.status(400).json({
-        username: 'Username taken'
-      })
-    }
-  })
-  .catch((err) => {
-    console.log('err', err)
-  })
+  .catch((err) => console.log(err))
 })
 
 

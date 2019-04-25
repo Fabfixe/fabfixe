@@ -48,14 +48,16 @@ class Fabfixe extends App {
         const currentTime = Date.now() / 1000
         if(decoded.exp < currentTime) {
           store.dispatch(logoutUser())
-          window.location.href = '/login'
+          window.location.href = '/account/login'
         }
       }
     }
 
     if(store.getState().auth.user.id) {
       getProfile(store.getState().auth.user.id)
-        .then(profile => store.dispatch(setProfile(profile)))
+        .then((profile) => {
+          if(profile) store.dispatch(setProfile(profile))
+        })
     }
 
     return (

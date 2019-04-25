@@ -1,33 +1,23 @@
 import React, { Component } from 'react'
 import Images from '../components/Images'
 import { API_URL } from '../config'
-import { connect } from 'react-redux'
 import axios from 'axios'
 
 const AddButton = (props) => {
-  const imageStyle = {
-    width: '168px',
-    height: '168px',
-    margin: '0 auto',
-    border: 'solid 1px black'
-  }
 
   return (
     <React.Fragment>
-      <div className="placeholder" style={imageStyle} />
-      <input type='file' id='single' style={{ display: 'none' }} placeholder='Add Photo' accept='image/*' onChange={props.onChange} />
-      <label htmlFor='single'>Add Photo </label>
+      <input type='file' id='single' placeholder='Add Photo' accept='image/*' onChange={props.onChange} />
     </React.Fragment>
   )
 }
 
-class ImageUploader extends Component {
+class AttachmentImageUploader extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       uploading: false,
-      images: [ this.props.images ],
+      images: [],
       error: '',
     }
 
@@ -118,16 +108,10 @@ class ImageUploader extends Component {
 
     return (
       <React.Fragment>
-        <div className='image-uploader'>
-          {content()}
-        </div>
+        {content()}
       </React.Fragment>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  images: state.profile.profileImageUrl,
-})
-
-export default connect(mapStateToProps)(ImageUploader)
+export default AttachmentImageUploader
