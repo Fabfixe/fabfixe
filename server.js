@@ -17,6 +17,7 @@ const users = require('./routes/user')
 const username = require('./routes/username')
 const profileImage = require('./routes/profileImage')
 const profiles = require('./routes/profile')
+const sessions = require('./routes/sessions')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
   () => { console.log('Database is connected') },
@@ -47,6 +48,8 @@ app.prepare()
 
   server.use('/api/profile', profiles)
 
+  server.use('/api/sessions', sessions)
+
   server.get('/account/login', (req, res) => {
     return app.render(req, res, '/login', {})
   })
@@ -63,6 +66,10 @@ app.prepare()
     return app.render(req, res, '/artists', {})
   })
 
+  server.get('/account/my-sessions', (req, res) => {
+    return app.render(req, res, '/my-sessions', {})
+  })
+
   server.get("/join/:accountType", (req, res) => {
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
       return app.render(req, res, "/join", { accountType: req.params.accountType })
@@ -72,7 +79,7 @@ app.prepare()
     }
   })
 
-  server.get("/edit-profile/:accountType", (req, res) => {
+  server.get("/account/edit-profile/:accountType", (req, res) => {
 
     if(req.params.accountType === "artist" || req.params.accountType === "pupil") {
       return app.render(req, res, "/edit-profile", { accountType: req.params.accountType })
@@ -89,7 +96,6 @@ app.prepare()
   server.get('*', (req, res) => {
     return handle(req, res)
   })
-
 
   server.listen(3000, (err) => {
     if (err) throw err

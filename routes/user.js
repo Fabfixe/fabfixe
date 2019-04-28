@@ -103,8 +103,7 @@ router.post('/login', (req, res) => {
               Router.back()
             }
         })
-      }
-      else {
+      } else {
         errors.password = 'Incorrect Password'
         return res.status(400).json(errors)
       }

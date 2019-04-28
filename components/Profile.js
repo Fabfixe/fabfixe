@@ -2,39 +2,118 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Heading from '../components/Heading'
 import Button from '../components/Button'
+import Modal from '../components/Modal'
 import Link from 'next/link'
+import Datetime from 'react-datetime'
 import AttachmentImageUploader from '../components/AttachmentImageUploader'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { withRouter } from 'next/router'
-import Datetime from 'react-datetime'
+import moment from 'moment'
+import validateSessionSubmit from '../validation/sessionSubmit'
+import { addSession } from '../actions/session'
+
+const timeMap = {
+  '30 min': 30,
+  '1 hour': 60,
+  '1 hour 30 min': 90,
+  '2 hours': 120
+}
+
+const formatTime = (time, duration) => {
+  return `${time.format("MM/DD/YYYY h:mma")} - ${time.add(timeMap[duration], 'm').format("MM/DD/YYYY h:mma")}`
+}
+
+const calcTotal = (duration, hourlyRate) => {
+  return (timeMap[duration] / 60) * hourlyRate
+}
+
+const ModalContent = (props) => (
+  <React.Fragment>
+  {props.pupilUsername ? (
+    <React.Fragment>
+      <Heading>Request a Session</Heading>
+      <form onSubmit={ props.handleSubmit }>
+      <Datetime
+        inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
+        onChange={ props.onChange }
+      />
+      {props.errors.date && (<div className="invalid-feedback">{props.errors.date}</div>)}
+      <h2>SESSION DURATION*</h2>
+      <select
+        onChange={ props.onSelect }
+        name="duration"
+        value={props.duration}
+      >
+        <option value="30 min">{`30 min: $${calcTotal("30 min", props.hourlyRate)}`}</option>
+        <option value="1 hour">{`1 hour: $${calcTotal("1 hour", props.hourlyRate)}`}</option>
+        <option value="1 hour 30 min">{`1 hour 30 min: $${calcTotal("1 hour 30 min", props.hourlyRate)}`}</option>
+        <option value="2 hours">{`2 hours: $${calcTotal("2 hours", props.hourlyRate)}`}</option>
+      </select>
+      <h2>CATEGORY</h2>
+      <select
+        onChange={ props.onSelect }
+        name="expertise"
+      >
+        <option value="Eyes">Eyes</option>
+        <option value="Lips">Lips</option>
+        <option value="Foundation/Face">Foundation/Face</option>
+        <option value="Nails">Nails</option>
+        <option value="Styling">Styling</option>
+        <option value="Braiding">Braiding</option>
+        <option value="Natural Hair">Natural Hair</option>
+        <option value="Wigs/Extensions">Wigs/Extensions</option>
+      </select>
+      <label>📎 Add Attachment
+        <AttachmentImageUploader onUpload={(url) => { props.getImageUrl(url) }}/>
+      </label>
+      <h2>LOOK DESCRIPTION*</h2>
+      <textarea
+        maxLength="250"
+        onChange={props.onSelect}
+        name="description"
+      ></textarea>
+      {props.errors.description && (<div className="invalid-feedback">{props.errors.description}</div>)}
+
+      <div className="button-container">
+        <Button type="submit">Send Request</Button>
+      </div>
+    </form>
+    {props.submitted && <div className="submitted">
+      <p>Congrats! Your session request with <b>{props.username}</b> has been sent</p>
+      <p>Time: {formatTime(props.date, props.duration)}</p>
+      <p>Total: ${calcTotal(props.duration, props.hourlyRate)}</p>
+    </div>}
+    </React.Fragment>) : (
+      <React.Fragment>
+        {props.isAuthenticated ?
+         (<Link href='/account/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
+         (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
+      </React.Fragment>
+    )}
+    </React.Fragment>
+)
 
 class Profile extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      profile: {},
+      profile: this.props.profile,
       showModal: false,
       duration: "30 min",
       attachment: '',
       date: null,
       category: "Eyes",
       description: '',
+      errors: {},
+      submitted: false
     }
 
     this.handleModal = this.handleModal.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onSelect = this.onSelect.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  componentDidMount() {
-    axios.post('/api/profile/username', { username: this.props.username })
-    .then((res) => {
-      const profile = res.data
-      this.setState({ profile })
-    })
-    .catch((err) => console.log(err))
+    this.getImageUrl = this.getImageUrl.bind(this)
   }
 
   handleModal() {
@@ -44,8 +123,7 @@ class Profile extends Component {
   }
 
   getImageUrl(url) {
-    console.log(url)
-    this.setState({ attachment: url})
+    this.setState({ attachment: url })
   }
 
   onChange(date) {
@@ -59,8 +137,36 @@ class Profile extends Component {
     this.setState(newState)
   }
 
-  handleSubmit() {
-    console.log('handle submit')
+  handleSubmit(e) {
+    e.preventDefault()
+
+    const { date, category, attachment, duration, description } = this.state
+    const session = {
+      date,
+      category,
+      attachment,
+      description,
+      duration: timeMap[duration],
+      artist: this.state.profile.id,
+      pupil: this.props.user.auth.user.id,
+      status: 'pending',
+      messages: []
+    }
+
+    const validation = validateSessionSubmit(session)
+    if(validation.isValid) {
+      axios.post('/api/sessions', session)
+        .then((res) => {
+          this.props.addSession(res.data)
+          console.log(res.data)
+          this.setState({ submitted: true })
+
+        })
+    } else {
+      this.setState({
+        errors: validation.errors,
+      })
+    }
   }
 
   render() {
@@ -71,85 +177,45 @@ class Profile extends Component {
 
     return (
       <React.Fragment>
-        <Heading>{this.props.username}</Heading>
-        <ul>
-          {profileImageUrl && <li style={{ width: '40px',
-            height: '40px',
-            backgroundImage: `url(${profileImageUrl})`,
-            backgroundSize: 'cover' }} />}
-          {youtube && <li>{`YouTube: @${youtube}`}</li>}
-          {instagram && <li>{`Instagram: @${instagram}`}</li>}
-          {twitter && <li>{`Twitter: @${twitter}`}</li>}
-          {facebook && <li>{`Facebook: @${facebook}`}</li>}
-          {hourlyRate && <li>{`Hourly Rate: $${hourlyRate}`}</li>}
-          {expertise && expertise.hair.length > 0 && <li>{`Hair Skills: ${expertise.hair.join(', ')}`}</li>}
-          {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
-          <li style={{ marginTop: '30px'}}>
-            {accountType === 'artist' || <div className="button-container">
-              <Button onClick={ this.handleModal }>Request a Session</Button>
-            </div>}
-          </li>
-        </ul>
-        {this.state.showModal && <div className='modal'>
-          <div onClick={ this.handleModal } className="close">X</div>
-          <div className="center">
-            <div className="modal-content">
-              {pupilUsername ? (
-                <React.Fragment>
-                  <Heading>Request a Session</Heading>
-                  <form onSubmit={ this.handleSubmit }>
-                  <Datetime
-                    inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
-                    onChange={ this.onChange }
-                  />
-                  <h2>SESSION DURATION*</h2>
-                  <select
-                    onChange={ this.onSelect }
-                    name="duration"
-                    value={this.state.duration}
-                  >
-                    <option value="30 min">30 min</option>
-                    <option value="1 hour">1 hour</option>
-                    <option value="1 hour 30 min">1 hour 30 min</option>
-                    <option value="2 hours">2 hours</option>
-                  </select>
-                  <h2>CATEGORY</h2>
-                  <select
-                    onChange={ this.onSelect }
-                    name="expertise"
-                  >
-                    <option value="Eyes">Eyes</option>
-                    <option value="Lips">Lips</option>
-                    <option value="Foundation/Face">Foundation/Face</option>
-                    <option value="Nails">Nails</option>
-                    <option value="Styling">Styling</option>
-                    <option value="Braiding">Braiding</option>
-                    <option value="Natural Hair">Natural Hair</option>
-                    <option value="Wigs/Extensions">Wigs/Extensions</option>
-                  </select>
-                  <label>📎 Add Attachment
-                    <AttachmentImageUploader onUpload={(url) => { this.getImageUrl(url) }}/>
-                  </label>
-                  <h2>LOOK DESCRIPTION*</h2>
-                  <textarea
-                    maxLength="250"
-                    onChange={ this.onSelect }
-                    name="description"
-                  ></textarea>
-                  <div className="button-container">
-                    <Button type="submit">Send Request</Button>
-                  </div>
-                </form>
-                </React.Fragment>) : (
-                  <React.Fragment>
-                    {isAuthenticated ? (<Link href='/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
-                     (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
-                  </React.Fragment>
-                )}
-            </div>
-          </div>
-        </div>}
-      </React.Fragment>
+        {username ? (
+          <React.Fragment>
+            <Heading>{this.props.username}</Heading>
+            <ul>
+              {profileImageUrl && <li style={{ width: '40px',
+                height: '40px',
+                backgroundImage: `url(${profileImageUrl})`,
+                backgroundSize: 'cover' }} />}
+              {youtube && <li>{`YouTube: @${youtube}`}</li>}
+              {instagram && <li>{`Instagram: @${instagram}`}</li>}
+              {twitter && <li>{`Twitter: @${twitter}`}</li>}
+              {facebook && <li>{`Facebook: @${facebook}`}</li>}
+              {hourlyRate && <li>{`Hourly Rate: $${hourlyRate}`}</li>}
+              {expertise && expertise.hair.length > 0 && <li>{`Hair Skills: ${expertise.hair.join(', ')}`}</li>}
+              {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
+              <li style={{ marginTop: '30px'}}>
+                {accountType === 'artist' || <div className="button-container">
+                  <Button onClick={ this.handleModal }>Request a Session</Button>
+                </div>}
+              </li>
+            </ul>
+            {this.state.showModal &&
+            <Modal handleModal={this.handleModal}>
+                <ModalContent
+                  username={username}
+                  hourlyRate={hourlyRate}
+                  date={this.state.date}
+                  submitted={this.state.submitted}
+                  errors={this.state.errors}
+                  duration={this.state.duration}
+                  pupilUsername={pupilUsername}
+                  onSelect={this.onSelect}
+                  onChange={this.onChange}
+                  handleSubmit={this.handleSubmit}
+                  getImageUrl={this.getImageUrl} />
+              </Modal>
+            }
+          </React.Fragment>) : (<p>No profile</p>)}
+        </React.Fragment>
     )
   }
 }
@@ -158,4 +224,4 @@ const mapStateToProps = (user) => ({
   user
 })
 
-export default connect(mapStateToProps)(Profile)
+export default connect(mapStateToProps, { addSession })(Profile)

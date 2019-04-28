@@ -15,7 +15,7 @@ export const registerUser = (user, history) => dispatch => {
 
       const decoded = jwt_decode(token)
       dispatch(setCurrentUser(decoded))
-      Router.push(`/edit-profile/${user.accountType}`), { shallow: true }
+      Router.push(`/account/edit-profile/${user.accountType}`), { shallow: true }
     })
     .catch(err => {
       dispatch({

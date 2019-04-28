@@ -4,14 +4,19 @@ import MyLayout from '../components/MyLayout'
 import Nav from '../components/Nav'
 import Heading from '../components/Heading'
 import Profile from '../components/Profile'
-
+import axios from 'axios'
 class ProfileRouting extends Component {
   constructor(props) {
     super(props)
   }
 
   static async getInitialProps({ query }) {
-    return { query }
+    return axios.post('/api/profile/username', { username: query.username })
+    .then((res) => {
+      const profile = res.data
+      return { profile, query }
+    })
+    .catch((err) => console.log(err))
   }
 
   render() {
@@ -23,7 +28,7 @@ class ProfileRouting extends Component {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
         <MyLayout alignment="center">
-          <Profile { ...this.props.query }/>
+          <Profile { ...this.props.query } profile={this.props.profile}/>
         </MyLayout>
       </div>
     )

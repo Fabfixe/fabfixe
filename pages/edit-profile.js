@@ -57,9 +57,9 @@ class EditProfile extends Component {
 
   componentDidMount() {
     if(!this.props.auth.isAuthenticated) {
-      Router.push('/login')
+      Router.push('/account/login')
     } else if(this.props.query.accountType !== this.props.accountType) {
-      Router.push(`/edit-profile/${this.props.accountType}`)
+      Router.push(`/account/edit-profile/${this.props.accountType}`)
     }
   }
 

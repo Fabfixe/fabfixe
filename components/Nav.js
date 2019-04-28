@@ -72,8 +72,11 @@ class NavLinks extends Component {
     return (
       this.props.auth.isAuthenticated ? (
           <React.Fragment>
-            <Link href={`edit-profile/${this.props.auth.user.accountType}`}>
+            <Link href={`/account/edit-profile/${this.props.auth.user.accountType}`}>
               <a>Edit Profile</a>
+            </Link>
+            <Link href="/account/my-sessions">
+              <a>My Sessions</a>
             </Link>
             <Link href="/about/how-it-works">
               <a>How It Works</a>
@@ -81,9 +84,9 @@ class NavLinks extends Component {
             <Link href="">
               <a>Browse Artists</a>
             </Link>
-            { this.props.auth.user.accountType === "pupil" || <Link href="/about/artists">
+            {this.props.auth.user.accountType === "pupil" || <Link href="/about/artists">
               <a>For Artists</a>
-            </Link> }
+            </Link>}
             <Link href="">
               <a
               onClick={this.onLogout.bind(this)}
