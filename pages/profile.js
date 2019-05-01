@@ -14,9 +14,9 @@ class ProfileRouting extends Component {
     return axios.post('/api/profile/username', { username: query.username })
     .then((res) => {
       const profile = res.data
-      return { profile, query }
+      if(profile) return { profile, query }
     })
-    .catch((err) => console.log(err))
+    .catch((err) =>  { profile: null, query })
   }
 
   render() {

@@ -1,5 +1,6 @@
 const Validator = require('validator')
 const isEmpty = require('./is-empty')
+var moment = require('moment')
 
 module.exports = function validateSessionSubmit(data) {
   let errors = {}
@@ -8,6 +9,10 @@ module.exports = function validateSessionSubmit(data) {
 
   if(isEmpty(data.date)) {
     errors.date = 'Please choose a date'
+  }
+
+  if(!moment.isMoment(data.date)) {
+    errors.date = 'Please enter a valid date'
   }
 
   if(Validator.isEmpty(data.description)) {

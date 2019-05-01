@@ -14,6 +14,10 @@ const SessionSchema = new Schema({
     type: String,
     required: false
   },
+  status: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true

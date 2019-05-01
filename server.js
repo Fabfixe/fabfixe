@@ -41,7 +41,6 @@ app.prepare()
   server.use(bodyParser.urlencoded({ extended: false }))
   server.use(bodyParser.json())
 
-
   server.use('/api/users', users)
 
   server.use('/api/usernames', username)

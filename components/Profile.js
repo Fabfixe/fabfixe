@@ -24,8 +24,26 @@ const formatTime = (time, duration) => {
   return `${time.format("MM/DD/YYYY h:mma")} - ${time.add(timeMap[duration], 'm').format("MM/DD/YYYY h:mma")}`
 }
 
+const CurrencyFormatted = (amount) => {
+	let i = parseFloat(amount)
+	if(isNaN(i)) i = 0.00
+
+	let minus = ''
+	if(i < 0) minus = '-'
+
+	i = Math.abs(i)
+	i = parseInt((i + .005) * 100)
+	i = i / 100
+
+	let s = new String(i)
+	if(s.indexOf('.') < 0) s += '.00'
+	if(s.indexOf('.') === (s.length - 2))  s += '0'
+	s = minus + s
+	return s
+}
+
 const calcTotal = (duration, hourlyRate) => {
-  return (timeMap[duration] / 60) * hourlyRate
+  return CurrencyFormatted((timeMap[duration] / 60) * hourlyRate)
 }
 
 const ModalContent = (props) => (
@@ -158,9 +176,7 @@ class Profile extends Component {
       axios.post('/api/sessions', session)
         .then((res) => {
           this.props.addSession(res.data)
-          console.log(res.data)
           this.setState({ submitted: true })
-
         })
     } else {
       this.setState({
@@ -220,8 +236,6 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = (user) => ({
-  user
-})
+const mapStateToProps = (user) => ({ user })
 
 export default connect(mapStateToProps, { addSession })(Profile)

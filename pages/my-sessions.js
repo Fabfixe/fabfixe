@@ -7,16 +7,18 @@ import MyLayout from '../components/MyLayout'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
 import Heading from '../components/Heading'
-import Footer from '../components/Footer'
+import Sessions from '../components/Sessions'
 
-export default () => (
+const MySessions = (props) => (
   <React.Fragment>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
     <MyLayout alignment="center">
       <Heading style={{ marginTop: '80px' }}>My Sessions</Heading>
-      <div />
+      <Sessions />
     </MyLayout>
   </React.Fragment>
 )
+
+export default MySessions
