@@ -2,10 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const PupilProfileSchema = new Schema({
-  id: {
-    type: String,
-    required: true
-  },
+  _id: Schema.Types.ObjectId,
   username: {
     type: String,
     required: true
@@ -37,7 +34,11 @@ const PupilProfileSchema = new Schema({
   expertise: {
     makeup: [String],
     hair: [String]
-  }
+  },
+  sessions: [{
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'sessions'
+  }]
 })
 
 const PupilProfile = mongoose.model('pupilprofiles', PupilProfileSchema)

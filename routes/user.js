@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const validateRegisterInput = require('../validation/register')
 const validateLoginInput = require('../validation/login')
+const mongoose = require('mongoose')
 
 const User = require('../models/User')
 
@@ -30,8 +31,8 @@ router.post('/register', function(req, res) {
         r: 'pg',
         d: 'mm'
       })
-
       const newUser = new User({
+        _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
@@ -81,9 +82,8 @@ router.post('/login', (req, res) => {
     bcrypt.compare(password, user.password)
     .then(isMatch => {
       if(isMatch) {
-
         const payload = {
-          id: user.id,
+          _id: user._id,
           avatar: user.avatar,
           name: user.firstName,
           accountType: user.accountType,

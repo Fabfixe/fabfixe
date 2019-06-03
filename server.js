@@ -18,6 +18,10 @@ const username = require('./routes/username')
 const profileImage = require('./routes/profileImage')
 const profiles = require('./routes/profile')
 const sessions = require('./routes/sessions')
+const ArtistProfile = require('./models/ArtistProfile')
+const PupilProfile = require('./models/PupilProfile')
+const User = require('./models/User')
+const Sessions = require('./models/Sessions')
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
   () => { console.log('Database is connected') },
@@ -62,6 +66,7 @@ app.prepare()
   })
 
   server.get('/about/artists', (req, res) => {
+
     return app.render(req, res, '/artists', {})
   })
 
@@ -93,6 +98,12 @@ app.prepare()
   })
 
   server.get('*', (req, res) => {
+    // ArtistProfile.deleteMany()
+    //   .then((wtv) => console.log(wtv))
+    // User.deleteMany()
+    //   .then((wtv) => console.log(wtv))
+    // Sessions.deleteMany()
+    //   .then((wtv) => console.log(wtv))
     return handle(req, res)
   })
 

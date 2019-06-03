@@ -1,0 +1,30 @@
+.sessions {
+  font-family: "Arial";
+
+  h2 {
+    font-weight: bold;
+  }
+
+  ul {
+    width: 100%;
+    text-align: left;
+  }
+
+  .username {
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  #time-display {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .modal-content p {
+    margin-bottom: 10px;
+  }
+
+  .session-scheduler {
+    margin: 10px 0 20px;
+  }
+}

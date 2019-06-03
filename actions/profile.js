@@ -5,8 +5,8 @@ export const updateProfile = (accountType, profile) => {
   return axios.post(`/api/profile/${accountType}/`, profile)
 }
 
-export const getProfile = (id) => {
-   return axios.post('/api/profile/', { id })
+export const getProfile = (_id) => {
+   return axios.post('/api/profile/', { _id })
     .then(res => res.data)
     .catch((err) => {
       console.log('err from getProfile', err)

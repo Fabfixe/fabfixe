@@ -53,8 +53,8 @@ class Fabfixe extends App {
       }
     }
 
-    if(store.getState().auth.user.id) {
-      getProfile(store.getState().auth.user.id)
+    if(store.getState().auth.user._id) {
+      getProfile(store.getState().auth.user._id)
         .then((profile) => {
           if(profile) store.dispatch(setProfile(profile))
         })

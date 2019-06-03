@@ -11,47 +11,15 @@ import { connect } from 'react-redux'
 import { withRouter } from 'next/router'
 import moment from 'moment'
 import validateSessionSubmit from '../validation/sessionSubmit'
+import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 import { addSession } from '../actions/session'
-
-const timeMap = {
-  '30 min': 30,
-  '1 hour': 60,
-  '1 hour 30 min': 90,
-  '2 hours': 120
-}
-
-const formatTime = (time, duration) => {
-  return `${time.format("MM/DD/YYYY h:mma")} - ${time.add(timeMap[duration], 'm').format("MM/DD/YYYY h:mma")}`
-}
-
-const CurrencyFormatted = (amount) => {
-	let i = parseFloat(amount)
-	if(isNaN(i)) i = 0.00
-
-	let minus = ''
-	if(i < 0) minus = '-'
-
-	i = Math.abs(i)
-	i = parseInt((i + .005) * 100)
-	i = i / 100
-
-	let s = new String(i)
-	if(s.indexOf('.') < 0) s += '.00'
-	if(s.indexOf('.') === (s.length - 2))  s += '0'
-	s = minus + s
-	return s
-}
-
-const calcTotal = (duration, hourlyRate) => {
-  return CurrencyFormatted((timeMap[duration] / 60) * hourlyRate)
-}
 
 const ModalContent = (props) => (
   <React.Fragment>
   {props.pupilUsername ? (
-    <React.Fragment>
-      <Heading>Request a Session</Heading>
-      <form onSubmit={ props.handleSubmit }>
+  <React.Fragment>
+    <Heading>Request a Session</Heading>
+    <form onSubmit={ props.handleSubmit }>
       <Datetime
         inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
         onChange={ props.onChange }
@@ -92,7 +60,6 @@ const ModalContent = (props) => (
         name="description"
       ></textarea>
       {props.errors.description && (<div className="invalid-feedback">{props.errors.description}</div>)}
-
       <div className="button-container">
         <Button type="submit">Send Request</Button>
       </div>
@@ -102,14 +69,14 @@ const ModalContent = (props) => (
       <p>Time: {formatTime(props.date, props.duration)}</p>
       <p>Total: ${calcTotal(props.duration, props.hourlyRate)}</p>
     </div>}
-    </React.Fragment>) : (
-      <React.Fragment>
-        {props.isAuthenticated ?
-         (<Link href='/account/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
-         (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
-      </React.Fragment>
-    )}
+  </React.Fragment>) : (
+    <React.Fragment>
+      {props.isAuthenticated ?
+       (<Link href='/account/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
+       (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
     </React.Fragment>
+  )}
+  </React.Fragment>
 )
 
 class Profile extends Component {
@@ -165,8 +132,8 @@ class Profile extends Component {
       attachment,
       description,
       duration: timeMap[duration],
-      artist: this.state.profile.id,
-      pupil: this.props.user.auth.user.id,
+      artist: this.state.profile._id,
+      pupil: this.props.user.auth.user._id,
       status: 'pending',
       messages: []
     }

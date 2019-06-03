@@ -9,15 +9,14 @@ export const addSession = (session) => (dispatch) => {
   })
 }
 
-export const getSessions = (id, accountType) => (dispatch) => {
-  axios.post('/api/sessions/byId', { id, accountType })
-    .then((res) => {
-      dispatch({
-        type: GET_SESSIONS,
-        payload: res.data
-      })
-    })
-    .catch((err) => {
-      // copy over error from auth
-    })
+export const getSessions = (_id, accountType) => {
+  return axios.post('/api/sessions/byId', { _id, accountType })
+}
+
+export const cancelSession = (_id) => {
+  return axios.post('/api/sessions/cancel', { _id })
+}
+
+export const deleteSession = (_id, isPupil) => {
+  return axios.post('/api/sessions/delete', { _id, isPupil })
 }

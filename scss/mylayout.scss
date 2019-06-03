@@ -1,6 +1,7 @@
 .center {
   margin: 0 auto;
   padding-top: 80px;
+  position: relative;
 
   @media (min-width: 768px) {
     width: 80%;
@@ -8,5 +9,12 @@
 
   @media (min-width: 1024px) {
     width: 40%;
+  }
+
+  .center-module {
+    margin: 0 auto;
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
   }
 }

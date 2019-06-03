@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const ArtistProfile = require('./ArtistProfile')
+const PupilProfile = require('./PupilProfile')
+
 const SessionSchema = new Schema({
   date: {
     type: Object,
@@ -9,6 +12,10 @@ const SessionSchema = new Schema({
   category: {
     type: String,
     required: true
+  },
+  duration: {
+    type: String,
+    required: true,
   },
   attachment: {
     type: String,
@@ -23,17 +30,17 @@ const SessionSchema = new Schema({
     required: true
   },
   artist: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'artistprofiles',
   },
   pupil: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'pupilprofiles',
   },
   messages: {
     type: [Object],
     required: false
-  }
+  },
 })
 
 const Session = mongoose.model('sessions', SessionSchema)

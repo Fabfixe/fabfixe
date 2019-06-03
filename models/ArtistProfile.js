@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const Session = require('./Sessions')
+
 const ArtistProfileSchema = new Schema({
-  id: {
-    type: String,
-    required: true
-  },
+  _id: Schema.Types.ObjectId,
   username: {
     type: String,
     required: true
@@ -37,7 +36,11 @@ const ArtistProfileSchema = new Schema({
   expertise: {
     makeup: [String],
     hair: [String]
-  }
+  },
+  sessions: [{
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'sessions'
+  }]
 })
 
 const ArtistProfile = mongoose.model('artistprofiles', ArtistProfileSchema)

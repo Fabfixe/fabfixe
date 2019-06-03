@@ -3,16 +3,18 @@ const router = express.Router()
 
 const ArtistProfile = require('../models/ArtistProfile')
 const PupilProfile = require('../models/PupilProfile')
+const User = require('../models/User')
 
 router.post('/', function(req, res) {
   ArtistProfile.findOne({
-    id: req.body.id
+    _id: req.body._id
   }).then((profile) => {
     if(profile) {
+      console.log('profile', profile)
       return res.json(profile)
     } else {
       PupilProfile.findOne({
-        id: req.body.id
+        _id: req.body._id
       }).then((profile) => {
         if(profile) return res.json(profile)
       })
@@ -28,11 +30,13 @@ router.post('/username', function(req, res) {
     username: req.body.username
   }).then((profile) => {
     if(profile) {
+      console.log(profile)
       return res.json(profile)
     } else {
       PupilProfile.findOne({
         username: req.body.username
       }).then((profile) => {
+        console.log('profile', profile)
         if(profile) return res.json(profile)
       })
     }
@@ -43,8 +47,10 @@ router.post('/username', function(req, res) {
 })
 
 router.post('/artist', function(req, res) {
+  console.log('req', req.body)
+
   let newProfile = {
-    id: req.body.id,
+    _id: req.body._id,
     username: req.body.username,
     profileImageUrl: req.body.profileImageUrl,
     youtube: req.body.youtube,
@@ -52,14 +58,15 @@ router.post('/artist', function(req, res) {
     twitter: req.body.twitter,
     facebook: req.body.facebook,
     hourlyRate: req.body.hourlyRate,
-    expertise: req.body.expertise
+    expertise: req.body.expertise,
+    sessions: req.body.sessions
   }
 
   ArtistProfile.findOne({
-    id: req.body.id
+    _id: req.body._id
   }).then(profile => {
     if(profile) {
-      ArtistProfile.updateOne({ id: req.body.id }, newProfile)
+      ArtistProfile.updateOne({ _id: req.body._id }, newProfile)
       .then(res.send('updated'))
     } else {
       newProfile = ArtistProfile(newProfile)
@@ -71,20 +78,21 @@ router.post('/artist', function(req, res) {
 
 router.post('/pupil', function(req, res) {
   let newProfile = {
-    id: req.body.id,
+    _id: req.body._id,
     username: req.body.username,
     profileImageUrl: req.body.profileImageUrl,
     youtube: req.body.youtube,
     instagram: req.body.instagram,
     twitter: req.body.twitter,
     facebook: req.body.facebook,
+    sessions: req.body.sessions
   }
 
   PupilProfile.findOne({
-    id: req.body.id
+    _id: req.body._id
   }).then(profile => {
     if(profile) {
-      PupilProfile.updateOne({ id: req.body.id }, newProfile)
+      PupilProfile.updateOne({ _id: req.body._id }, newProfile)
       .then(res.send('updated'))
     } else {
       newProfile = PupilProfile(newProfile)

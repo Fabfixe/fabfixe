@@ -33,6 +33,7 @@ class EditProfile extends Component {
       twitter: this.props.twitter,
       facebook: this.props.facebook,
       hourlyRate: this.props.hourlyRate,
+      sessions: this.props.sessions,
       expertise: {
         hair: [ 'Styling', 'Braiding', 'Natural Hair', 'Wigs/Extensions' ],
         makeup: [ 'Eyes', 'Lips', 'Foundation/Face', 'Nails' ]
@@ -153,7 +154,7 @@ class EditProfile extends Component {
     const accountType = this.state.accountType
     const profile = {
       artist: {
-        id: this.props.id,
+        _id: this.props._id,
         username: this.state.username,
         profileImageUrl: this.state.profileImageUrl,
         youtube: this.state.youtube,
@@ -161,17 +162,19 @@ class EditProfile extends Component {
         twitter: this.state.twitter,
         facebook: this.state.facebook,
         hourlyRate: this.state.hourlyRate,
-        expertise: this.state.selectedExpertise
+        expertise: this.state.selectedExpertise,
+        sessions: this.state.sessions
       },
 
       pupil: {
-        id: this.props.id,
+        _id: this.props._id,
         username: this.state.username,
         profileImageUrl: this.state.profileImageUrl,
         youtube: this.state.youtube,
         instagram: this.state.instagram,
         twitter: this.state.twitter,
         facebook: this.state.facebook,
+        sessions: this.state.sessions
       }
     }
 
@@ -315,7 +318,7 @@ const mapStateToProps = state => ({
   auth: state.auth,
   accountType: state.auth.user.accountType,
   errors: state.errors,
-  id: state.auth.user.id,
+  _id: state.auth.user._id,
   username: state.profile.username,
   profileImageUrl: state.profile.profileImageUrl,
   youtube: state.profile.youtube,
@@ -323,7 +326,8 @@ const mapStateToProps = state => ({
   twitter: state.profile.twitter,
   facebook: state.profile.facebook,
   hourlyRate: state.profile.hourlyRate,
-  expertise: state.profile.expertise
+  expertise: state.profile.expertise,
+  sessions: state.profile.sessions
 })
 
 export default connect(mapStateToProps)(EditProfile)
