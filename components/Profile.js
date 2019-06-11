@@ -159,7 +159,7 @@ class Profile extends Component {
     const { username, expertise, facebook, instagram, twitter, youtube, profileImageUrl, hourlyRate } = this.state.profile
 
     return (
-      <React.Fragment>
+      <div className="profile">
         {username ? (
           <React.Fragment>
             <Heading>{this.props.username}</Heading>
@@ -198,7 +198,7 @@ class Profile extends Component {
               </Modal>
             }
           </React.Fragment>) : (<p>No profile</p>)}
-        </React.Fragment>
+        </div>
     )
   }
 }

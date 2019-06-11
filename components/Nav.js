@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
+import Router from 'next/router'
 import { logoutUser } from '../actions/authentication'
 import { connect } from 'react-redux'
 const classnames = require('classnames')
@@ -65,6 +66,7 @@ class NavLinks extends Component {
   onLogout(e) {
     e.preventDefault()
     this.props.logoutUser()
+    Router.push('/')
   }
 
   render() {

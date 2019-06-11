@@ -37,6 +37,14 @@ const SessionSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'pupilprofiles',
   },
+  artistDeleted: {
+    type: Boolean,
+    required: true
+  },
+  pupilDeleted: {
+    type: Boolean,
+    required: true
+  },
   messages: {
     type: [Object],
     required: false

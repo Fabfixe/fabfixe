@@ -15,6 +15,8 @@ router.post('/', function(req, res) {
     description: req.body.description,
     artist: req.body.artist,
     pupil: req.body.pupil,
+    artistDeleted: false,
+    pupilDeleted: false,
     messages: req.body.messages
   })
   newSession
@@ -32,6 +34,16 @@ router.post('/byId', function(req, res) {
     .catch((err) => console.log(err))
 })
 
+router.post('/update', function(req, res) {
+  return Session.updateOne({ _id: req.body._id }, { $set: {
+     date: req.body.date,
+     duration: req.body.duration,
+     messages: req.body.messages,
+     description: req.body.description }})
+    .then(() => res.send('updated'))
+    .catch((err) => console.log(err))
+})
+
 router.post('/cancel', (req, res) => {
   return Session.updateOne({ _id: req.body._id }, { $set: { status: 'cancelled' } })
     .then(() => res.send('cancelled'))
@@ -39,10 +51,8 @@ router.post('/cancel', (req, res) => {
 })
 
 router.post('/delete', (req, res) => {
-  console.log(req.body)
-  const updatedUser = req.body.isPupil ? 'pupil' : 'artist'
-  console.log('updatedUser', updatedUser)
-  return Session.updateOne({ _id: req.body._id }, { $set: { [updatedUser]: null } })
+  const deletedUser = req.body.isPupil ? 'pupilDeleted' : 'artistDeleted'
+  return Session.updateOne({ _id: req.body._id }, { $set: { [deletedUser]: true } })
     .then(() => res.send('deleted'))
     .catch((err) => console.log(err))
 })

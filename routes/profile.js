@@ -10,7 +10,6 @@ router.post('/', function(req, res) {
     _id: req.body._id
   }).then((profile) => {
     if(profile) {
-      console.log('profile', profile)
       return res.json(profile)
     } else {
       PupilProfile.findOne({
@@ -36,7 +35,6 @@ router.post('/username', function(req, res) {
       PupilProfile.findOne({
         username: req.body.username
       }).then((profile) => {
-        console.log('profile', profile)
         if(profile) return res.json(profile)
       })
     }

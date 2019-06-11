@@ -46,12 +46,13 @@ class EditSession extends Component {
   onSubmit() {
     const newMessage = {
       from: this.props.userId,
-      time: new Date()
+      time: new Date(),
       body: this.state.message
 
     }
-    
+
     const newSession = {
+      _id: this.props._id,
       date: moment(this.state.date),
       duration: this.state.duration,
       messages: this.props.messages.concat(newMessage),
@@ -60,15 +61,13 @@ class EditSession extends Component {
 
     // validate ish
     const validation = validateSessionSubmit(newSession)
-    console.log(validation)
     if(validation.isValid) {
-      // send the update
-
-      console.log(newSession)
+      axios.post('/api/sessions/update/', newSession)
+      .then(res => console.log(res.data))
+      .catch((err) => {
+        console.log('err from session update', err)
+      })
     }
-    // create an object with the updated keys
-      // id
-    // send them to an endpoint to update
   }
 
   cancelSession() {
@@ -128,19 +127,8 @@ class EditSession extends Component {
         <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
         <p id="time-display">Time: {formatTime(date, duration)}</p>
         {status === 'pending' &&
-        <button onClick={this.handleScheduler}>{this.state.schedulerOpen ? 'Cancel' : 'Suggest a new time'  }
+        <button className="small-button" onClick={this.handleScheduler}>{this.state.schedulerOpen ? 'Cancel' : 'Request a new time'  }
         </button>}
-        <p>Category: {category}</p>
-        <p>Description: {description}</p>
-        {attachment && <div style={{backgroundImage: `url(${attachment})`,
-          width: '100px',
-          height: '100px',
-          backgroundSize: 'cover',
-          marginBottom: '20px'
-        }} />}
-        <p style={{ textTransform: 'capitalize' }}>Status: {status}</p>
-        {(status === 'pending' || status === 'upcoming') && <button onClick={this.cancelSession} style={{ marginBottom: '20px'}}>Cancel Session</button>}
-        <p>{messages}</p>
         {this.state.schedulerOpen && <div className="session-scheduler">
         <h2>CHOOSE TIME</h2>
           <Datetime
@@ -159,8 +147,39 @@ class EditSession extends Component {
             <option value="2 hours">{`2 hours: $${calcTotal("2 hours", hourlyRate)}`}</option>
           </select>
         </div>}
-        <h2>Add a Message</h2>
-        <textarea onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
+        <p>Category: {category}</p>
+        <p>Description: {description}</p>
+        {attachment && <div style={{backgroundImage: `url(${attachment})`,
+          width: '100px',
+          height: '100px',
+          backgroundSize: 'cover',
+          marginBottom: '20px'
+        }} />}
+        <p style={{ textTransform: 'capitalize', display: 'inline-block' }}>Status: {status}</p>
+        {(status === 'pending' || status === 'upcoming') && <button className="small-button" onClick={this.cancelSession} style={{ marginBottom: '20px'}}>Cancel Session</button>}
+        {messages.length > 1 &&
+          <div>
+            <h2>Messages</h2>
+            <div className="modal-messages">
+              {messages.map((message, id) => {
+                return (
+                  <div style={{
+                    borderTop: 'dashed black 1px',
+                    paddingTop: '10px' }} key={id}>
+                    <p>Sent: {moment(message.time).format("MM/DD/YYYY h:mma")}</p>
+                    <p>From: {message.from === this.props.userId ? 'You' : isPupil ? artist : pupil }</p>
+                    <p>{message.body}</p>
+                  </div>
+                )})}
+            </div>
+          </div>
+        }
+        {status != 'cancelled' &&
+          <React.Fragment>
+            <h2>Add a Message</h2>
+            <textarea onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
+          </React.Fragment>
+        }
         {status === 'pending' && <Button onClick={this.onSubmit}>Send Update</Button>}
         {status === 'cancelled' && <Button onClick={this.deleteSession}>Delete Session</Button>}
       </div>
@@ -176,6 +195,7 @@ class Sessions extends Component {
       sessions: [],
       showModal: false,
       sessionInView: null,
+      isLoading: true
     }
 
     this.handleModal = this.handleModal.bind(this)
@@ -186,14 +206,17 @@ class Sessions extends Component {
 
     getSessions(_id, accountType)
     .then((res) => {
-      const sessions = res.data.map((session) => {
-        session['hourlyRate'] = session.artist.hourlyRate
-        session.artist = session.artist.username
-        session.pupil = session.pupil.username
-        return session
+      const validSessions = res.data.filter(session => session[this.state.user.accountType + 'Deleted'] !== true)
+
+      const sessions = validSessions.map((session) => {
+          session['hourlyRate'] = session.artist.hourlyRate
+          session.artist = session.artist.username
+          session.pupil = session.pupil.username
+
+          return session
       })
 
-      this.setState({ sessions })
+      this.setState({ sessions, isLoading: false })
     })
   }
 
@@ -214,6 +237,7 @@ class Sessions extends Component {
 
   render() {
     const isPupil = this.state.user.accountType === 'pupil'
+
     const pendingSessions = this.state.sessions.filter((session) => {
       return session.status === 'pending'
     })
@@ -222,47 +246,67 @@ class Sessions extends Component {
       return session.status === 'cancelled'
     })
 
+    const upcomingSessions = this.state.sessions.filter((session) => {
+      return session.status === 'upcoming'
+    })
+
+    const completedSessions = this.state.sessions.filter((session) => {
+      return session.status === 'completed'
+    })
+
     return (
       <div className={cn("sessions", "center-module")}>
-        <h2>UPCOMING SESSIONS</h2>
-        {pendingSessions.length > 0 &&
+        {this.state.sessions.length <= 0 ? <div>{this.state.isLoading ? 'Loading' : 'No sessions yet'}</div> :
           <React.Fragment>
-            <h2>PENDING SESSIONS</h2>
-            <ul>
-              {pendingSessions.map((session, id) => {
-                return (
-                  <li id={session._id} onClick={this.handleModal} key={id}>
-                    <p className="username">{isPupil ? session.artist : session.pupil}</p>
-                    <p>{formatTime(session.date, session.duration)}</p>
-                  </li>
-                )
-              })}
-            </ul>
+          {upcomingSessions.length > 0 &&
+            <React.Fragment>
+              <h2>UPCOMING SESSIONS</h2>
+            </React.Fragment>
+          }
+          {pendingSessions.length > 0 &&
+            <React.Fragment>
+              <h2>PENDING SESSIONS</h2>
+              <ul>
+                {pendingSessions.map((session, id) => {
+                  return (
+                    <li id={session._id} onClick={this.handleModal} key={id}>
+                      <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                      <p>{formatTime(session.date, session.duration)}</p>
+                    </li>
+                  )
+                })}
+              </ul>
+            </React.Fragment>
+          }
+          {upcomingSessions.length > 0 &&
+            <React.Fragment>
+              <h2>Completed Sessions</h2>
+            </React.Fragment>
+          }
+          {cancelledSessions.length > 0 &&
+            <React.Fragment>
+              <h2>CANCELLED SESSIONS</h2>
+              <ul>
+                {cancelledSessions.map((session, id) => {
+                  return (
+                    <li id={session._id} onClick={this.handleModal} key={id}>
+                      <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                      <p>{formatTime(session.date, session.duration)}</p>
+                    </li>
+                  )
+                })}
+              </ul>
+            </React.Fragment>
+          }
+          {this.state.showModal &&
+            <Modal handleModal={this.handleModal}>
+              <EditSession
+                isPupil={isPupil}
+                userId={this.state.user._id}
+              { ...this.state.sessionInView }/>
+            </Modal>}
           </React.Fragment>
         }
-        <h2>COMPLETED SESSIONS</h2>
-        {cancelledSessions.length > 0 &&
-          <React.Fragment>
-            <h2>CANCELLED SESSIONS</h2>
-            <ul>
-              {cancelledSessions.map((session, id) => {
-                return (
-                  <li id={session._id} onClick={this.handleModal} key={id}>
-                    <p className="username">{isPupil ? session.artist : session.pupil}</p>
-                    <p>{formatTime(session.date, session.duration)}</p>
-                  </li>
-                )
-              })}
-            </ul>
-          </React.Fragment>
-        }
-        {this.state.showModal &&
-          <Modal handleModal={this.handleModal}>
-            <EditSession
-              isPupil={isPupil}
-              userId={this.state.user.id}
-            { ...this.state.sessionInView }/>
-          </Modal>}
       </div>
     )
   }
