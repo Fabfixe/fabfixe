@@ -40,7 +40,11 @@ const ArtistProfileSchema = new Schema({
   sessions: [{
      type: mongoose.Schema.Types.ObjectId,
      ref: 'sessions'
-  }]
+  }],
+  isArtist: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const ArtistProfile = mongoose.model('artistprofiles', ArtistProfileSchema)

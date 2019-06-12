@@ -154,9 +154,8 @@ class Profile extends Component {
 
   render() {
     const { isAuthenticated } = this.props.user.auth
-    const { accountType } = this.props.user.auth.user
     const pupilUsername = this.props.user.profile.username
-    const { username, expertise, facebook, instagram, twitter, youtube, profileImageUrl, hourlyRate } = this.state.profile
+    const { username, isArtist, expertise, facebook, instagram, twitter, youtube, profileImageUrl, hourlyRate } = this.state.profile
 
     return (
       <div className="profile">
@@ -176,7 +175,7 @@ class Profile extends Component {
               {expertise && expertise.hair.length > 0 && <li>{`Hair Skills: ${expertise.hair.join(', ')}`}</li>}
               {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
               <li style={{ marginTop: '30px'}}>
-                {accountType === 'artist' || <div className="button-container">
+                {isArtist && <div className="button-container">
                   <Button onClick={ this.handleModal }>Request a Session</Button>
                 </div>}
               </li>

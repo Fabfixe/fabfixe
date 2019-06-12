@@ -38,7 +38,11 @@ const PupilProfileSchema = new Schema({
   sessions: [{
      type: mongoose.Schema.Types.ObjectId,
      ref: 'sessions'
-  }]
+  }],
+  isArtist: {
+    type: Boolean,
+    defaut: false
+  }
 })
 
 const PupilProfile = mongoose.model('pupilprofiles', PupilProfileSchema)

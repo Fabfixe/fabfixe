@@ -29,7 +29,6 @@ router.post('/username', function(req, res) {
     username: req.body.username
   }).then((profile) => {
     if(profile) {
-      console.log(profile)
       return res.json(profile)
     } else {
       PupilProfile.findOne({
@@ -57,7 +56,8 @@ router.post('/artist', function(req, res) {
     facebook: req.body.facebook,
     hourlyRate: req.body.hourlyRate,
     expertise: req.body.expertise,
-    sessions: req.body.sessions
+    sessions: req.body.sessions,
+    isArtist: true,
   }
 
   ArtistProfile.findOne({
@@ -83,7 +83,8 @@ router.post('/pupil', function(req, res) {
     instagram: req.body.instagram,
     twitter: req.body.twitter,
     facebook: req.body.facebook,
-    sessions: req.body.sessions
+    sessions: req.body.sessions,
+    isArtist: false
   }
 
   PupilProfile.findOne({
