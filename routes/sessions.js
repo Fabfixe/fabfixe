@@ -47,7 +47,7 @@ router.post('/update', function(req, res) {
 router.post('/cancel', (req, res) => {
   return Session.updateOne({ _id: req.body._id }, { $set: { status: 'cancelled' } })
     .then(() => res.send('cancelled'))
-    .catch((err) => console.log(err))
+    .catch((err) => res.send(err))
 })
 
 router.post('/delete', (req, res) => {

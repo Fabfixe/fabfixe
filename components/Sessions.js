@@ -44,24 +44,35 @@ class EditSession extends Component {
   }
 
   onSubmit() {
+    this.setState({ loading: true })
     const newMessage = {
       from: this.props.userId,
       time: new Date(),
       body: this.state.message
-
     }
 
-    const newSession = {
+    let newSession = {
       _id: this.props._id,
       date: moment(this.state.date),
       duration: this.state.duration,
-      messages: this.props.messages.concat(newMessage),
       description: this.props.description
     }
 
+    // Dont send an empty message
+    if(newMessage.body !== null) newSession.messages = this.props.messages.concat(newMessage)
+    
     const validation = validateSessionSubmit(newSession)
     if(validation.isValid) {
-      this.props.showSubmit(newSession)
+      axios.post('/api/sessions/update/', newSession)
+      .then((res) => {
+        // Add check for response code
+        this.props.showSubmit(res.data)
+        setTimeout(() =>  { this.setState({ loading: false })}, 2000)
+      })
+      .catch((err) => {
+        console.log('err from session update', err)
+        this.setState({ loading: false })
+      })
     }
   }
 
@@ -175,7 +186,7 @@ class EditSession extends Component {
             <textarea onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
           </React.Fragment>
         }
-        {status === 'pending' && <Button onClick={this.onSubmit}>{'Send Update'}</Button>}
+        {status === 'pending' && <Button onClick={this.onSubmit}>{this.state.loading ? 'Loading' : 'Send Update'}</Button>}
         {status === 'cancelled' && <Button onClick={this.deleteSession}>Delete Session</Button>}
       </div>
     )
@@ -224,21 +235,15 @@ class Sessions extends Component {
   }
 
   showSubmit(newSession) {
-    axios.post('/api/sessions/update/', newSession)
-    .then((res) => {
-      const updatedSessions = this.state.sessions.map((session) => {
-        if(session._id === newSession._id) {
-          session = Object.assign(session, newSession)
-          return session
-        }
-      })
 
-      this.setState({ sessions: updatedSessions, showModal: false })
+    const updatedSessions = this.state.sessions.map((session) => {
+      if(session._id === newSession._id) {
+        session = Object.assign(session, newSession)
+        return session
+      }
     })
-    .catch((err) => {
-      console.log('err from session update', err)
-      // this.setState({ loading: false })
-    })
+
+    this.setState({ sessions: updatedSessions })
   }
 
   handleModal(e) {
