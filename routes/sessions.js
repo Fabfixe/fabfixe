@@ -40,7 +40,7 @@ router.post('/update', function(req, res) {
      duration: req.body.duration,
      messages: req.body.messages,
      description: req.body.description }})
-    .then(() => res.send('updated'))
+    .then(() => res.send(req.body))
     .catch((err) => console.log(err))
 })
 
