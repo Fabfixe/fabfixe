@@ -35,13 +35,17 @@ router.post('/byId', function(req, res) {
 })
 
 router.post('/update', function(req, res) {
-  return Session.updateOne({ _id: req.body._id }, { $set: {
-     date: req.body.date,
-     duration: req.body.duration,
-     messages: req.body.messages,
-     description: req.body.description }})
+  let updatedSession = {
+    date: req.body.date,
+    duration: req.body.duration,
+    description: req.body.description
+  }
+
+  if(req.body.messages) updatedSession['messages'] = req.body.messages
+
+  return Session.updateOne({ _id: req.body._id }, { $set: updatedSession })
     .then(() => res.send(req.body))
-    .catch((err) => console.log(err))
+    .catch((err) => res.send(err))
 })
 
 router.post('/cancel', (req, res) => {

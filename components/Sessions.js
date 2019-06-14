@@ -60,7 +60,7 @@ class EditSession extends Component {
 
     // Dont send an empty message
     if(newMessage.body !== null) newSession.messages = this.props.messages.concat(newMessage)
-    
+
     const validation = validateSessionSubmit(newSession)
     if(validation.isValid) {
       axios.post('/api/sessions/update/', newSession)
@@ -163,7 +163,7 @@ class EditSession extends Component {
         }} />}
         <p style={{ textTransform: 'capitalize', display: 'inline-block' }}>Status: {status}</p>
         {(status === 'pending' || status === 'upcoming') && <button className="small-button" onClick={this.cancelSession} style={{ marginBottom: '20px'}}>Cancel Session</button>}
-        {messages.length > 1 &&
+        {messages && messages.length > 0 &&
           <div>
             <h2>Messages</h2>
             <div className="modal-messages">
@@ -210,7 +210,6 @@ class Sessions extends Component {
   }
 
   componentDidMount() {
-    console.log('mounted')
     const { _id, accountType } = this.props.user
 
     getSessions(_id, accountType)
@@ -235,7 +234,6 @@ class Sessions extends Component {
   }
 
   showSubmit(newSession) {
-
     const updatedSessions = this.state.sessions.map((session) => {
       if(session._id === newSession._id) {
         session = Object.assign(session, newSession)
