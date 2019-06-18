@@ -34,7 +34,11 @@ router.post('/username', function(req, res) {
       PupilProfile.findOne({
         username: req.body.username
       }).then((profile) => {
-        if(profile) return res.json(profile)
+        if(profile) {
+          return res.json(profile)
+        } else {
+          return res.json({})
+        }
       })
     }
   })

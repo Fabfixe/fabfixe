@@ -159,9 +159,7 @@ class Profile extends Component {
 
     return (
       <div className="profile">
-        {username ? (
-          <React.Fragment>
-            <Heading>{this.props.username}</Heading>
+          <Heading>{this.props.username}</Heading>
             <ul>
               {profileImageUrl && <li style={{ width: '40px',
                 height: '40px',
@@ -196,7 +194,6 @@ class Profile extends Component {
                   getImageUrl={this.getImageUrl} />
               </Modal>
             }
-          </React.Fragment>) : (<p>No profile</p>)}
         </div>
     )
   }
