@@ -15,12 +15,14 @@ const cn = require('classnames')
 class EditSession extends Component {
   constructor(props) {
     super(props)
+    this.textArea = React.createRef()
 
     this.state = {
       schedulerOpen: false,
       date: this.props.date,
       duration: this.props.duration,
       message: null,
+      showSubmitError: false,
       errors: {},
     }
 
@@ -66,12 +68,14 @@ class EditSession extends Component {
       axios.post('/api/sessions/update/', newSession)
       .then((res) => {
         // Add check for response code
+        this.textArea.current.value = ''
         this.props.showSubmit(res.data)
         setTimeout(() =>  { this.setState({ loading: false })}, 2000)
       })
       .catch((err) => {
         console.log('err from session update', err)
         this.setState({ loading: false })
+        this.setState({ showSubmitError: true })
       })
     }
   }
@@ -129,6 +133,7 @@ class EditSession extends Component {
 
     return (
       <div>
+        {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
         <h1>Manage Session</h1>
         <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
         <p id="time-display">Time: {formatTime(date, duration)}</p>
@@ -183,7 +188,7 @@ class EditSession extends Component {
         {status != 'cancelled' &&
           <React.Fragment>
             <h2>Add a Message</h2>
-            <textarea onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
+            <textarea ref={this.textArea} onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
           </React.Fragment>
         }
         {status === 'pending' && <Button onClick={this.onSubmit}>{this.state.loading ? 'Loading' : 'Send Update'}</Button>}
