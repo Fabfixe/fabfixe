@@ -24,6 +24,7 @@ class EditSession extends Component {
       message: null,
       showSubmitError: false,
       errors: {},
+      submitReady: false
     }
 
     this.handleScheduler = this.handleScheduler.bind(this)
@@ -69,12 +70,17 @@ class EditSession extends Component {
       .then((res) => {
         // Add check for response code
         this.textArea.current.value = ''
-        this.props.showSubmit(res.data)
-        setTimeout(() =>  { this.setState({ loading: false })}, 2000)
+        if(res.data.n === 1) {
+          this.props.showSubmit(newSession)
+          setTimeout(() =>  { this.setState({ loading: false })}, 2000)
+        } else {
+          setTimeout(() =>  { this.setState({ loading: false })}, 2000)
+          this.setState({ showSubmitError: true })
+        }
       })
       .catch((err) => {
         console.log('err from session update', err)
-        this.setState({ loading: false })
+        setTimeout(() =>  { this.setState({ loading: false })}, 2000)
         this.setState({ showSubmitError: true })
       })
     }
@@ -191,7 +197,7 @@ class EditSession extends Component {
             <textarea ref={this.textArea} onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
           </React.Fragment>
         }
-        {status === 'pending' && <Button onClick={this.onSubmit}>{this.state.loading ? 'Loading' : 'Send Update'}</Button>}
+        {status === 'pending' && <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>{this.state.loading ? 'Loading' : 'Send Update'}</Button>}
         {status === 'cancelled' && <Button onClick={this.deleteSession}>Delete Session</Button>}
       </div>
     )

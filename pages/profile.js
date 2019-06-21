@@ -16,7 +16,6 @@ class ProfileRouting extends Component {
     // .catch((err) => console.log(err))
     return axios.post('http://localhost:3000/api/profile/username', { username: query.username })
     .then((res) => {
-      console.log('RES', res)
       const profile = res.data
       if(profile) {
         return { profile, query }

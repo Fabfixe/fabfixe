@@ -35,6 +35,8 @@ router.post('/username', function(req, res) {
         username: req.body.username
       }).then((profile) => {
         if(profile) {
+
+          //might be able to remove these returns
           return res.json(profile)
         } else {
           return res.json({})
@@ -43,7 +45,7 @@ router.post('/username', function(req, res) {
     }
   })
   .catch((err) => {
-    console.log(err)
+    return res.send(err)
   })
 })
 

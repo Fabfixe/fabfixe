@@ -43,8 +43,14 @@ router.post('/update', function(req, res) {
 
   if(req.body.messages) updatedSession['messages'] = req.body.messages
 
+  // return Session.updateOne({ _id: req.body._id }, { $set: updatedSession })
+  //   .then(() => res.send(req.body))
+  //   .catch((err) => res.send(err))
   return Session.updateOne({ _id: req.body._id }, { $set: updatedSession })
-    .then(() => res.send(req.body))
+    .then((error, writeOpResult) => {
+      if(error) res.send(error)
+      if(writeOpResult) res.send(writeOpResult)
+    })
     .catch((err) => res.send(err))
 })
 
