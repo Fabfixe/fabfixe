@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'next/router'
 import moment from 'moment'
 import validateSessionSubmit from '../validation/sessionSubmit'
-import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
+import { currencyFormatted, calcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
 import { addSession } from '../actions/session'
 
 const ModalContent = (props) => (
@@ -21,6 +21,7 @@ const ModalContent = (props) => (
     <Heading>Request a Session</Heading>
     <form onSubmit={ props.handleSubmit }>
       <Datetime
+        isValidDate={validDateSelection}
         inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
         onChange={ props.onChange }
       />

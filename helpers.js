@@ -34,3 +34,7 @@ export const formatTime = (time, duration) => {
   if(moment(time).isMoment) return `${time.format("MM/DD/YYYY h:mma")} - ${time.add(duration, 'm').format("MM/DD/YYYY h:mma")}`
   return `${moment(time).format("MM/DD/YYYY h:mma")} - ${moment(time).add(duration, 'm').format("MM/DD/YYYY h:mma")}`
 }
+
+export const validDateSelection = (current) => {
+	return current.isSameOrAfter(moment(), 'day')
+}
