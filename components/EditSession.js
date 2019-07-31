@@ -81,6 +81,7 @@ class EditSession extends Component {
         if(res.data.n === 1) {
           this.props.showSubmit(newSession)
           setTimeout(() =>  { this.setState({ loading: false, displayBanner: true })}, 2000)
+          axios.post('/api/emails/sessionUpdated')
         } else {
           setTimeout(() =>  { this.setState({ loading: false })}, 2000)
           this.setState({ showSubmitError: true })

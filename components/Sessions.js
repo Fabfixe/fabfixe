@@ -9,6 +9,7 @@ import { getSessions, cancelSession, deleteSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
 
+
 class Sessions extends Component {
   constructor(props) {
     super(props)
@@ -77,11 +78,10 @@ class Sessions extends Component {
 
   render() {
     const isPupil = this.state.user.accountType === 'pupil'
-    console.log(this.state.sessions)
     const expiredSessions = this.state.sessions.filter((session) => {
       if(session) return session.status === 'expired'
     })
-    console.log(this.state.sessions)
+
     const pendingSessions = this.state.sessions.filter((session) => {
       return session.status === 'pending'
     })
