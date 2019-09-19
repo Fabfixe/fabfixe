@@ -45,10 +45,18 @@ const SessionSchema = new Schema({
     type: Boolean,
     required: true
   },
+  artistApproved: {
+    type: Boolean,
+    required: true
+  },
   messages: {
     type: [Object],
     required: false
   },
+  orderID: {
+    type: String,
+    required: false,
+  }
 })
 
 const Session = mongoose.model('sessions', SessionSchema)

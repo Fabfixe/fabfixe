@@ -1,7 +1,7 @@
 .modal {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   align-items: center;
   background: white;
   justify-content: center;
@@ -24,7 +24,12 @@
     }
 
     @media (min-width: 1024px) {
-      width: 40%;
+      width: 50%;
+    }
+
+    .confirm-approval input {
+      width: auto;
+      margin: 0 10px 10px 0;
     }
   }
 
@@ -34,13 +39,6 @@
     padding: 10px;
     overflow: scroll;
     margin-bottom: 15px;
-  }
-
-  .small-button {
-    background-color: black;
-    color: white;
-    margin: 10px;
-    border: 0;
   }
 
   #time-display {

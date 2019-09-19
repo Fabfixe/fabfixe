@@ -4,7 +4,7 @@ const Modal = (props) => (
   ReactDOM.createPortal(
     <div className='modal'>
       <div className="modal-content">
-        <div onClick={ props.handleModal } className="close">X</div>
+        <div onClick={ props.closeModal } className="close">X</div>
         {props.children}
       </div>
     </div>,

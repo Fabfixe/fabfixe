@@ -30,7 +30,6 @@ class ProfileRouting extends Component {
 
   render() {
     const { username } = this.props.query
-    console.log(this.props.profile)
     return (
       <div>
         <Head>

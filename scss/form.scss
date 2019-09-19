@@ -45,6 +45,12 @@ form {
     margin: 15px 0;
   }
 
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   .button,
   .button-container {
     margin: 20px auto;

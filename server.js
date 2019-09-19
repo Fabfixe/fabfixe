@@ -19,6 +19,7 @@ const profileImage = require('./routes/profileImage')
 const profiles = require('./routes/profile')
 const sessions = require('./routes/sessions')
 const emails = require('./routes/emails')
+const payments = require('./routes/payments')
 const ArtistProfile = require('./models/ArtistProfile')
 const PupilProfile = require('./models/PupilProfile')
 const User = require('./models/User')
@@ -55,6 +56,8 @@ app.prepare()
   server.use('/api/sessions', sessions)
 
   server.use('/api/emails', emails)
+
+  server.use('/api/payments', payments)
 
   server.get('/account/login', (req, res) => {
     return app.render(req, res, '/login', {})

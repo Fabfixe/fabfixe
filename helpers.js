@@ -22,6 +22,10 @@ export const calcTotal = (duration, hourlyRate) => {
   return currencyFormatted((timeMap[duration] / 60) * hourlyRate)
 }
 
+export const digitCalcTotal = (duration, hourlyRate) => {
+	return currencyFormatted((duration / 60) * hourlyRate)
+}
+
 export const timeMap = {
   '30 min': 30,
   '1 hour': 60,

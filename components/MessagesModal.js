@@ -4,16 +4,16 @@ import Banner from '../components/Banner'
 import Datetime from 'react-datetime'
 import Router from 'next/router'
 import { currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
-import validateSessionSubmit from '../validation/sessionSubmit'
-import { deleteSession } from '../actions/session'
+import { PayPalButton } from "react-paypal-button-v2"
+// import validateSessionSubmit from '../validation/sessionSubmit'
+// import { deleteSession } from '../actions/session'
 import moment from 'moment'
 import axios from 'axios'
 
-class EditSession extends Component {
+class MessagesModal extends Component {
   constructor(props) {
     super(props)
     this.textArea = React.createRef()
-    this.confirmApproval = React.createRef()
 
     this.state = {
       schedulerOpen: false,
@@ -24,7 +24,7 @@ class EditSession extends Component {
       errors: {},
       submitReady: false,
       displayBanner: false,
-      bannerMessage: 'Your update has been sent',
+      bannerMessage: 'Your message has been sent',
       showSummary: true,
     }
 
@@ -33,7 +33,6 @@ class EditSession extends Component {
     this.onSelect = this.onSelect.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.deleteSession = this.deleteSession.bind(this)
     this.onTextChange = this.onTextChange.bind(this)
   }
 
@@ -44,7 +43,7 @@ class EditSession extends Component {
   }
 
   onChange(date) {
-    if(!moment(date).isSame(this.props.date)) {
+    if(!date.isSame(this.props.date)) {
       this.setState({ date, submitReady: true })
     } else {
       if(this.state.duration === this.props.duration && this.state.message === null) this.setState({ submitReady: false })
@@ -53,55 +52,47 @@ class EditSession extends Component {
 
   handleBanner() {
     this.setState({ displayBanner: !this.state.displayBanner })
-    Router.push('/account/my-sessions')
   }
 
   onSubmit() {
-    if(this.props.isPupil ||this.confirmApproval.current.checked) {
-      this.setState({ loading: true })
+    this.setState({ loading: true })
+    const { isPupil } = this.props
+    const recipient = isPupil ? this.props.pupilId : this.props.artistId
+    const fromName = isPupil ? this.props.pupil : this.props.artist
+    const toName = isPupil ? this.props.artist : this.props.pupil
 
-      let newSession = {
-        _id: this.props._id,
-        isPupil: this.props.isPupil,
-        date: moment(this.state.date),
-        duration: this.state.duration,
-        description: this.props.description,
-        contractChange: this.state.submitReady
-      }
+    const newMessage = {
+      from: this.props.userId,
+      to: recipient,
+      time: new Date(),
+      body: this.state.message
+    }
 
-      const validation = validateSessionSubmit(newSession)
-      if(validation.isValid) {
-        axios.post('/api/sessions/update', newSession)
-        .then((res) => {
-          // Add check for response code
-          if(res.data.n === 1) {
-            this.setState({ errors: {}})
-            this.props.showSubmit(newSession)
-            setTimeout(() =>  { this.setState({ loading: false, displayBanner: true })}, 2000)
-            axios.post('/api/emails/sessionUpdated')
-          } else {
-            setTimeout(() =>  { this.setState({ loading: false })}, 2000)
-            this.setState({ showSubmitError: true })
-          }
-        })
-        .catch((err) => {
-          console.log('err from session update', err)
+    let newSession = {
+      _id: this.props._id,
+      isPupil: this.props.isPupil,
+      messages: this.props.messages.concat(newMessage)
+    }
+
+    // Dont send an empty message
+    if(newMessage.body !== '') {
+      axios.post('/api/sessions/newMessage', newSession)
+      .then((res) => {
+        // Add check for response code
+        this.textArea.current.value = ''
+        if(res.data.n === 1) {
+          this.props.showSubmit(newSession)
+          setTimeout(() =>  { this.setState({ loading: false, displayBanner: true })}, 2000)
+          axios.post('/api/emails/newMessage', { fromId: this.props.userId, toId: recipient, fromName, toName })
+        } else {
           setTimeout(() =>  { this.setState({ loading: false })}, 2000)
           this.setState({ showSubmitError: true })
-        })
-      }
-    } else {
-      this.setState({ errors: { confirm: true }})
-    }
-  }
-
-  deleteSession() {
-    if(window.confirm('Are you sure you want to delete this session?')) {
-      deleteSession(this.props._id, this.props.isPupil)
-      .then((res) => {
-        if(res.status === 200) {
-          Router.push('/account/my-sessions')
         }
+      })
+      .catch((err) => {
+        console.log('err from session update', err)
+        setTimeout(() =>  { this.setState({ loading: false })}, 2000)
+        this.setState({ showSubmitError: true })
       })
     }
   }
@@ -112,6 +103,12 @@ class EditSession extends Component {
     this.setState({
       message: e.target.value
     })
+
+    if(newMessage !== '') {
+      this.setState({ submitReady: true })
+    } else {
+      if(moment(this.state.date).isSame(this.props.date) && this.props.duration === this.state.duration)this.setState({ submitReady: false })
+    }
   }
 
   onSelect(e) {
@@ -143,17 +140,13 @@ class EditSession extends Component {
       artistApproved,
     } = this.props
 
-    const showPaymentButton = isPupil && artistApproved && status === 'pending'
 
     return (
       <React.Fragment>
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
-        <h1>Edit Session</h1>
+        <h1>Session Messages</h1>
         <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
         <p id="time-display">Time: {formatTime(date, duration)}</p>
-        {status === 'pending' &&
-        <button className="small-button" onClick={this.handleScheduler}>{this.state.schedulerOpen ? 'Cancel' : 'Request a new time'  }
-        </button>}
         {this.state.schedulerOpen && <div className="session-scheduler">
         <h2>CHOOSE TIME</h2>
           <Datetime
@@ -181,13 +174,28 @@ class EditSession extends Component {
           marginBottom: '20px'
         }} />}
         <p style={{ textTransform: 'capitalize', display: 'inline-block' }}>Status: {status}</p>
-        {(status === 'pending' || status === 'upcoming') && <button className="small-button"
-          onClick={() => { this.props.changeModal('confirm')}} style={{ marginBottom: '20px'}}>Cancel Session</button>}
-        {status !== 'cancelled' && status !== 'expired' && !isPupil && <div className="confirm-approval">
-          <input ref={this.confirmApproval} id="confirmApproval" type="checkbox" /><label htmlFor="confirmApproval">If the pupil pays for this modified session you have to do it or else</label>
-        </div>}
-        {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
-        <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>Submit Change</Button>
+        {messages && messages.length > 0 &&
+          <div>
+            <h2>Messages</h2>
+            <div className="modal-messages">
+              {messages.map((message, id) => {
+                return (
+                  <div style={{
+                    borderTop: 'dashed black 1px',
+                    paddingTop: '10px' }} key={id}>
+                    <p>Sent: {moment(message.time).format("MM/DD/YYYY h:mma")}</p>
+                    <p>From: {message.from === this.props.userId ? 'You' : isPupil ? artist : pupil }</p>
+                    <p>{message.body}</p>
+                  </div>
+                )})}
+            </div>
+          </div>}
+          {(status === 'pending' || status === 'upcoming') &&
+            <React.Fragment>
+              <h2>Add a Message</h2>
+              <textarea ref={this.textArea} onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
+            </React.Fragment>}
+        <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>Submit Message</Button>
         {(status === 'cancelled'|| status === 'expired') && <Button onClick={this.deleteSession}>Delete Session</Button>}
         {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
       </React.Fragment>
@@ -195,4 +203,4 @@ class EditSession extends Component {
   }
 }
 
-export default EditSession
+export default MessagesModal

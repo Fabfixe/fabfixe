@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import Modal from '../components/Modal'
 import EditSession from '../components/EditSession'
+import ViewSession from '../components/ViewSession'
+import MessagesModal from '../components/MessagesModal'
+import ConfirmModal from '../components/ConfirmModal'
+import CongratsModal from '../components/CongratsModal'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import { connect } from 'react-redux'
@@ -8,7 +12,7 @@ import moment from 'moment'
 import { getSessions, cancelSession, deleteSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
-
+import Button from '../components/Button'
 
 class Sessions extends Component {
   constructor(props) {
@@ -19,11 +23,15 @@ class Sessions extends Component {
       showModal: false,
       sessionInView: null,
       isLoading: true,
-      showSubmit: false
+      showSubmit: false,
+      modalType: ''
     }
 
+    this.closeModal = this.closeModal.bind(this)
     this.handleModal = this.handleModal.bind(this)
+    this.changeModal = this.changeModal.bind(this)
     this.showSubmit = this.showSubmit.bind(this)
+    this.cancelSession = this.cancelSession.bind(this)
   }
 
   componentDidMount() {
@@ -33,15 +41,12 @@ class Sessions extends Component {
     .then((res) => {
       const validSessions = res.data.filter(session => !session[this.state.user.accountType + 'Deleted'] && session.artist !== null)
 
-      validSessions.forEach((session) => {
-        if(session.status === 'pending' && moment(session.date).isBefore(moment())) session.status = 'expired'
-      })
-
       const sessions = validSessions.map((session) => {
           session['hourlyRate'] = session.artist.hourlyRate
+          session.artistId = session.artist._id
+          session.pupilId = session.pupil._id
           session.artist = session.artist.username
           session.pupil = session.pupil.username
-
           return session
       })
 
@@ -67,13 +72,31 @@ class Sessions extends Component {
     this.setState({ sessions: updatedSessions })
   }
 
-  handleModal(e) {
-    e.preventDefault()
-    const sessionInView = this.state.sessions.filter((session) => session._id === e.currentTarget.id)[0]
-    this.setState({
-      showModal: !this.state.showModal,
-      sessionInView
+  cancelSession(_id) {
+    cancelSession({_id})
+    .then((res) => {
+      if(res.status === 200) {
+        Router.push('/account/my-sessions')
+      }
     })
+  }
+
+  handleModal(id, modalType) {
+    const sessionInView = this.state.sessions.find((session) => session._id === id)
+    this.setState({
+      showModal: true,
+      sessionInView,
+      modalType
+    })
+  }
+
+  closeModal() {
+    this.setState({ showModal: false })
+    Router.push('/account/my-sessions')
+  }
+
+  changeModal(modalType) {
+    this.setState({ modalType })
   }
 
   render() {
@@ -107,6 +130,18 @@ class Sessions extends Component {
             {upcomingSessions.length > 0 &&
               <React.Fragment>
                 <h2>UPCOMING SESSIONS</h2>
+                <ul>
+                  {upcomingSessions.map((session, id) => {
+                    return (
+                      <li key={id}>
+                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p>{formatTime(session.date, session.duration)}</p>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
+                      </li>
+                    )
+                  })}
+                </ul>
               </React.Fragment>
             }
             {pendingSessions.length > 0 &&
@@ -115,16 +150,19 @@ class Sessions extends Component {
                 <ul>
                   {pendingSessions.map((session, id) => {
                     return (
-                      <li id={session._id} onClick={this.handleModal} key={id}>
+                      <li key={id}>
                         <p className="username">{isPupil ? session.artist : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'edit')}}>Edit</button>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
                     )
                   })}
                 </ul>
               </React.Fragment>
             }
-            {upcomingSessions.length > 0 &&
+            {completedSessions.length > 0 &&
               <React.Fragment>
                 <h2>Completed Sessions</h2>
               </React.Fragment>
@@ -135,7 +173,7 @@ class Sessions extends Component {
                 <ul>
                   {cancelledSessions.map((session, id) => {
                     return (
-                      <li id={session._id} onClick={this.handleModal} key={id}>
+                      <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
                         <p className="username">{isPupil ? session.artist : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                       </li>
@@ -150,7 +188,7 @@ class Sessions extends Component {
                 <ul>
                   {expiredSessions.map((session, id) => {
                     return (
-                      <li id={session._id} onClick={this.handleModal} key={id}>
+                      <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
                         <p className="username">{isPupil ? session.artist : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                       </li>
@@ -160,12 +198,36 @@ class Sessions extends Component {
               </React.Fragment>
             }
             {this.state.showModal &&
-              <Modal handleModal={this.handleModal}>
-                <EditSession
+              <Modal closeModal={this.closeModal}>
+                {this.state.modalType === 'edit' && <EditSession
                   isPupil={isPupil}
                   userId={this.state.user._id}
+                  changeModal={this.changeModal}
                   showSubmit={this.showSubmit}
-                { ...this.state.sessionInView }/>
+                  { ...this.state.sessionInView }/>}
+                {this.state.modalType === 'view' && <ViewSession
+                  isPupil={isPupil}
+                  userId={this.state.user._id}
+                  changeModal={this.changeModal}
+                  showSubmit={this.showSubmit}
+                  { ...this.state.sessionInView }/>}
+                {this.state.modalType === 'confirm' && <ConfirmModal
+                  copy={"Are you sure you want to cancel this session? You will lose coin if you cancel within eight hours of the session time"}
+                  onConfirm={() => { this.cancelSession(this.state.sessionInView._id)}}
+                  onCancel={() => {this.changeModal('edit')}}
+                />}
+                {this.state.modalType === 'messages' && <MessagesModal
+                  isPupil={isPupil}
+                  userId={this.state.user._id}
+                  changeModal={this.changeModal}
+                  showSubmit={this.showSubmit}
+                  { ...this.state.sessionInView }/>}
+                {this.state.modalType === 'congrats' && <CongratsModal
+                  isPupil={isPupil}
+                  userId={this.state.user._id}
+                  changeModal={this.changeModal}
+                  showSubmit={this.showSubmit}
+                  { ...this.state.sessionInView }/>}
               </Modal>}
             </React.Fragment>
           }

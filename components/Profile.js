@@ -1,3 +1,4 @@
+require('dotenv').config()
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Heading from '../components/Heading'
@@ -15,70 +16,71 @@ import { currencyFormatted, calcTotal, timeMap, formatTime, validDateSelection }
 import { addSession } from '../actions/session'
 
 const ModalContent = (props) => (
-  <React.Fragment>
-  {props.pupilUsername ? (
-  <React.Fragment>
-    <Heading>Request a Session</Heading>
-    <form onSubmit={ props.handleSubmit }>
-      <Datetime
-        isValidDate={validDateSelection}
-        inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
-        onChange={ props.onChange }
-      />
-      {props.errors.date && (<div className="invalid-feedback">{props.errors.date}</div>)}
-      <h2>SESSION DURATION*</h2>
-      <select
-        onChange={ props.onSelect }
-        name="duration"
-        value={props.duration}
-      >
-        <option value="30 min">{`30 min: $${calcTotal("30 min", props.hourlyRate)}`}</option>
-        <option value="1 hour">{`1 hour: $${calcTotal("1 hour", props.hourlyRate)}`}</option>
-        <option value="1 hour 30 min">{`1 hour 30 min: $${calcTotal("1 hour 30 min", props.hourlyRate)}`}</option>
-        <option value="2 hours">{`2 hours: $${calcTotal("2 hours", props.hourlyRate)}`}</option>
-      </select>
-      <h2>CATEGORY</h2>
-      <select
-        onChange={ props.onSelect }
-        name="expertise"
-      >
-        <option value="Eyes">Eyes</option>
-        <option value="Lips">Lips</option>
-        <option value="Foundation/Face">Foundation/Face</option>
-        <option value="Nails">Nails</option>
-        <option value="Styling">Styling</option>
-        <option value="Braiding">Braiding</option>
-        <option value="Natural Hair">Natural Hair</option>
-        <option value="Wigs/Extensions">Wigs/Extensions</option>
-      </select>
-      <label>📎 Add Attachment
-        <AttachmentImageUploader onUpload={(url) => { props.getImageUrl(url) }}/>
-      </label>
-      <h2>LOOK DESCRIPTION*</h2>
-      <textarea
-        maxLength="250"
-        onChange={props.onSelect}
-        name="description"
-      ></textarea>
-      {props.errors.description && (<div className="invalid-feedback">{props.errors.description}</div>)}
-      <div className="button-container">
-        <Button type="submit">Send Request</Button>
-      </div>
-    </form>
-    {props.submitted && <div className="submitted">
-      <p>Congrats! Your session request with <b>{props.username}</b> has been sent</p>
-      <p>Time: {formatTime(props.date, props.duration)}</p>
-      <p>Total: ${calcTotal(props.duration, props.hourlyRate)}</p>
-    </div>}
-  </React.Fragment>) : (
     <React.Fragment>
-      {props.isAuthenticated ?
-       (<Link href='/account/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
-       (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
+    {props.pupilUsername ? (
+    <React.Fragment>
+      <Heading>Request a Session</Heading>
+      <form onSubmit={ props.handleSubmit }>
+        <Datetime
+          isValidDate={validDateSelection}
+          inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
+          onChange={ props.onChange }
+        />
+        {props.errors.date && (<div className="invalid-feedback">{props.errors.date}</div>)}
+        <h2>SESSION DURATION*</h2>
+        <select
+          onChange={ props.onSelect }
+          name="duration"
+          value={props.duration}
+        >
+          <option value="30 min">{`30 min: $${calcTotal("30 min", props.hourlyRate)}`}</option>
+          <option value="1 hour">{`1 hour: $${calcTotal("1 hour", props.hourlyRate)}`}</option>
+          <option value="1 hour 30 min">{`1 hour 30 min: $${calcTotal("1 hour 30 min", props.hourlyRate)}`}</option>
+          <option value="2 hours">{`2 hours: $${calcTotal("2 hours", props.hourlyRate)}`}</option>
+        </select>
+        <h2>CATEGORY</h2>
+        <select
+          onChange={ props.onSelect }
+          name="expertise"
+        >
+          <option value="Eyes">Eyes</option>
+          <option value="Lips">Lips</option>
+          <option value="Foundation/Face">Foundation/Face</option>
+          <option value="Nails">Nails</option>
+          <option value="Styling">Styling</option>
+          <option value="Braiding">Braiding</option>
+          <option value="Natural Hair">Natural Hair</option>
+          <option value="Wigs/Extensions">Wigs/Extensions</option>
+        </select>
+        <label>📎 Add Attachment
+          <AttachmentImageUploader onUpload={(url) => { props.getImageUrl(url) }}/>
+        </label>
+        <h2>LOOK DESCRIPTION*</h2>
+        <textarea
+          maxLength="250"
+          onChange={props.onSelect}
+          name="description"
+        ></textarea>
+        {props.errors.description && (<div className="invalid-feedback">{props.errors.description}</div>)}
+        <div className="button-container">
+          <Button type="submit">Send Request</Button>
+        </div>
+      </form>
+      {props.submitted && <div className="submitted">
+        <p>Congrats! Your session request with <b>{props.username}</b> has been sent</p>
+        <p>{`Time: ${formatTime(props.date, props.duration)}`}</p>
+        <p>{`Total: ${calcTotal(props.duration, props.hourlyRate)}`}</p>
+      </div>}
+    </React.Fragment>) : (
+      <React.Fragment>
+        {props.isAuthenticated ?
+         (<Link href='/account/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
+         (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
+      </React.Fragment>
+    )}
     </React.Fragment>
-  )}
-  </React.Fragment>
-)
+  )
+
 
 class Profile extends Component {
   constructor(props) {
@@ -92,7 +94,7 @@ class Profile extends Component {
       category: "Eyes",
       description: '',
       errors: {},
-      submitted: false
+      submitted: false,
     }
 
     this.handleModal = this.handleModal.bind(this)
@@ -136,6 +138,7 @@ class Profile extends Component {
       artist: this.state.profile._id,
       pupil: this.props.user.auth.user._id,
       status: 'pending',
+      artistApproved: false,
       messages: []
     }
 
