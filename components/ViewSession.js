@@ -129,6 +129,8 @@ class ViewSession extends Component {
   render() {
     const {
       _id,
+      artistId,
+      pupilId,
       artist,
       pupil,
       isPupil,
@@ -145,7 +147,6 @@ class ViewSession extends Component {
       artistApproved,
     } = this.props
     const showPaymentButton = isPupil && artistApproved && status === 'pending'
-
     return (
       <React.Fragment>
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
@@ -179,6 +180,13 @@ class ViewSession extends Component {
                actions.order.capture().then((details) => {
                 // Show a success message to your buyer
                  axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: _id })
+                 axios.post('/api/emails/paymentComplete', { artistId,
+                   pupilId,
+                   total: details.purchase_units[0].amount.value,
+                   artistUsername: artist,
+                   pupilUsername: pupil,
+                   date: formatTime(date, duration),
+                })
                 .then((result) => {
                   if(result) console.log(result)
                   this.props.changeModal('congrats')

@@ -2,11 +2,12 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const sgMail = require('@sendgrid/mail')
+const User = require('../models/User')
 
 router.post('/sessionUpdated', function(req, res) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY)
   const msg = {
-    to: 'carronwhite@gmail.com',
+    to: 'carronwhite@gmail.com', // replace this
     from: 'carronwhite@gmail.com',
     subject: 'Sending with Twilio SendGrid is Fun',
     text: 'and easy to do anywhere, even with Node.js',
@@ -28,6 +29,37 @@ router.post('/newMessage', function(req, res) {
   }
 
   sgMail.send(msg)
+})
+
+router.post('/paymentComplete', function(req, res) {
+  User.findOne({ _id: req.body.pupilId })
+  .then(({ email }) => {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email,
+      from: 'carronwhite@gmail.com',
+      subject: `Confirmation`,
+      text: `Payment received and session scheduled!`,
+      html: `Hi <strong>${req.body.pupilUsername}</strong>, we received your payment of <strong>${req.body.amount}</strong> and scheduled your session with ${req.body.artistUsername}`,
+    }
+
+    sgMail.send(msg)
+  })
+
+  User.findOne({ _id: req.body.artistId })
+  .then(({ email }) => {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email,
+      from: 'carronwhite@gmail.com',
+      subject: `Session Scheduled`,
+      text: `Payment received and session scheduled!`,
+      html: `Hi <strong>${req.body.artistUsername}</strong>, ${req.body.pupilUsername} has paid for a session on ${req.body.date}`,
+    }
+
+    sgMail.send(msg)
+  })
+
 })
 
 module.exports = router
