@@ -8,7 +8,7 @@ import CongratsModal from '../components/CongratsModal'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import { connect } from 'react-redux'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import { getSessions, cancelSession, deleteSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
@@ -164,7 +164,19 @@ class Sessions extends Component {
             }
             {completedSessions.length > 0 &&
               <React.Fragment>
-                <h2>Completed Sessions</h2>
+                <h2>COMPLETED SESSIONS</h2>
+                <ul>
+                  {completedSessions.map((session, id) => {
+                    return (
+                      <li key={id}>
+                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p>{formatTime(session.date, session.duration)}</p>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
+                      </li>
+                    )
+                  })}
+                </ul>
               </React.Fragment>
             }
             {cancelledSessions.length > 0 &&

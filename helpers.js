@@ -34,9 +34,10 @@ export const timeMap = {
 }
 
 export const formatTime = (time, duration) => {
+	const tz = moment.tz.guess()
   duration = timeMap[duration] || parseInt(duration)
   if(moment(time).isMoment) return `${time.format("MM/DD/YYYY h:mma")} - ${time.add(duration, 'm').format("MM/DD/YYYY h:mma")}`
-  return `${moment(time).format("MM/DD/YYYY h:mma")} - ${moment(time).add(duration, 'm').format("MM/DD/YYYY h:mma")}`
+  return `${moment(time).tz(tz).format("MM/DD/YYYY h:mma") + ' ' + moment.tz(tz).zoneAbbr()} - ${moment(time).add(duration, 'm').format("MM/DD/YYYY h:mma") + ' ' + moment.tz(tz).zoneAbbr()}`
 }
 
 export const validDateSelection = (current) => {

@@ -99,9 +99,9 @@ app.prepare()
     }
   })
 
-  server.get('/:username', (req, res) => {
-    return app.render(req, res, '/profile', { username: req.params.username })
-  })
+  // server.get('/:username', (req, res) => {
+  //   return app.render(req, res, '/profile', { username: req.params.username })
+  // })
 
   server.get('*', (req, res) => {
     // ArtistProfile.deleteMany()

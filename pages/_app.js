@@ -31,14 +31,15 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
 
 class Fabfixe extends App {
 
-  static async getInitialProps({ Component, ctx }) {
-    ctx.store.dispatch({ type: 'FOO', payload: 'foo' });
-    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-    return { pageProps }
-  }
+  // static async getInitialProps({ Component, ctx }) {
+  //   ctx.store.dispatch({ type: 'FOO', payload: 'foo' });
+  //   console.log(ctx)
+  //   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+  //   return { pageProps }
+  // }
 
   render() {
-    const { Component, pageProps, store } = this.props
+    const { Component, store } = this.props
     if(process.browser) {
 
       if(localStorage.jwtToken) {
@@ -62,11 +63,9 @@ class Fabfixe extends App {
     }
 
     return (
-      <Container>
         <Provider store={ store }>
-          <Component { ...pageProps } />
+          <Component />
         </Provider>
-      </Container>
     )
   }
 }

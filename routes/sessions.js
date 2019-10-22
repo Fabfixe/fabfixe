@@ -33,13 +33,25 @@ router.post('/byId', function(req, res) {
     .populate('artist')
     .populate('pupil')
     .then((sessions) => {
-      // if the session is expired, update the session
+      // if the session is expired or completed, update the session
       sessions.forEach((session) => {
         if(session.status === 'pending' && moment(session.date).isBefore(moment())) session.status = 'expired'
         Session.updateOne({ _id: session._id}, { $set: session })
         .then((error) => {
           if(error) console.log(error)
         })
+
+        if(session.status === 'upcoming') {
+          // add the session duration to the session date and check if it is after today
+          const sessionEnded = moment(session.date).add(parseInt(session.duration), 'm')
+          if(sessionEnded.isBefore(moment())) {
+            session.status = 'completed'
+            Session.updateOne({ _id: session._id }, { $set: session })
+            .then((error) => {
+              if(error) console.log(error)
+            })
+          }
+        }
       })
 
       res.json(sessions)

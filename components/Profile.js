@@ -147,6 +147,8 @@ class Profile extends Component {
       axios.post('/api/sessions', session)
         .then((res) => {
           this.props.addSession(res.data)
+          // Email both parties to notify session requested
+          axios.post('/api/emails/sessionRequested', res.data)
           this.setState({ submitted: true })
         })
     } else {
