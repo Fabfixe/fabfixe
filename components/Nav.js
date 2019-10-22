@@ -28,10 +28,6 @@ class Hamburger extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  static getInitialProps({store, isServer, pathname, query}) {
-    return { custom: 'custom' } // you can pass some custom props to component from here
-  }
-
   handleClick() {
     this.setState(state => ({
       isActive: !state.isActive
