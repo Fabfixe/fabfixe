@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStore, compose, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import App, { Container } from 'next/app'
+import App from 'next/app'
 import Router from 'next/router'
 import withRedux from 'next-redux-wrapper'
 import setAuthToken from '../setAuthToken'
@@ -31,15 +31,13 @@ const devtools = (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__)
 
 class Fabfixe extends App {
 
-  // static async getInitialProps({ Component, ctx }) {
-  //   ctx.store.dispatch({ type: 'FOO', payload: 'foo' });
-  //   console.log(ctx)
-  //   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-  //   return { pageProps }
-  // }
+  static async getInitialProps({ Component, ctx }) {
+    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+    return { pageProps }
+  }
 
   render() {
-    const { Component, store } = this.props
+    const { Component, store, pageProps } = this.props
     if(process.browser) {
 
       if(localStorage.jwtToken) {
@@ -64,7 +62,7 @@ class Fabfixe extends App {
 
     return (
         <Provider store={ store }>
-          <Component />
+          <Component { ...pageProps }/>
         </Provider>
     )
   }

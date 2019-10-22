@@ -6,14 +6,32 @@ import Heading from '../components/Heading'
 import Profile from '../components/Profile'
 import axios from 'axios'
 
-function Whatever({name}) {
-  console.log('props', name)
-  return <div></div>
+function ProfileRouting({ profile, query }) {
+  return (
+    <div>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <MyLayout alignment="center">
+        {profile.username ? <Profile { ...query } profile={profile} /> : <div>No profile</div> }
+      </MyLayout>
+    </div>
+  )
 }
 
-Whatever.getInitialProps = async ({ query }) => {
-  console.log(query)
-  return { name: 'carron' }
+ProfileRouting.getInitialProps = async ({ query }) => {
+  return axios.post('/api/profile/username', { username: query.username })
+  .then((res) => {
+    const profile = res.data
+    if(profile) {
+      return { profile, query }
+    } else {
+      return { profile: null, query }
+    }
+  })
+  .catch((err) =>  {
+    return null
+  })
 }
 
-export default Whatever
+export default ProfileRouting
