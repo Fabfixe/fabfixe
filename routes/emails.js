@@ -26,41 +26,47 @@ router.post('/newMessage', function(req, res) {
     from: 'carronwhite@gmail.com', // Replace
     subject: `New message from ${req.body.fromName}`,
     text: `New message from ${req.body.fromName}`,
-    html: `Hi <strong>${req.body.toName}</strong>, you just got a new message from <strong>${req.body.fromName}</strong>. Click <a href='www.fabfixe.com/account/my-sessions'>here</a> to see the message.</a>`,
+    html: `Hi <strong>${req.body.toName}</strong>, you just got a new message from <strong>${req.body.fromName}</strong>. Click <a href='www.fabfixe.com/account/my-sessions'>here</a> to see the message.`,
   }
 
   sgMail.send(msg)
 })
 
 router.post('/sessionRequested', function(req, res) {
-  User.findOne({ _id: req.body.pupilId })
+  const { artistUsername, pupilUsername } = req.body
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+  User.findOne({ _id: req.body.pupil })
   .then(({ email }) => {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
       to: email,
       from: 'carronwhite@gmail.com', // Replace
-      subject: `Your session has been requested`,
-      text: `Your session has been requested`,
-      html: `Hi <strong>${req.body.pupilUsername}</strong>, <strong>${req.body.artistUsername}</strong> has been notified of your request and will get back to you`,
+      subject: 'Your session has been requested',
+      text: 'Your session has been requested',
+      html: `Hi <strong>${pupilUsername}</strong>, <strong>${artistUsername}</strong> has been notified of your request and will get back to you`,
     }
 
     sgMail.send(msg)
   })
+  .catch((err) => {
+    console.log(err)
+  })
 
-  User.findOne({ _id: req.body.artistId })
+  User.findOne({ _id: req.body.artist })
   .then(({ email }) => {
-    console.log(email)
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const formattedDate = moment(req.body.date)
     const msg = {
-      to: 'carrronwhite@gmail.com',
-      from: 'carronwhite@gmail.com',
-      subject: `You just received a new video session request`,
-      text: `You just received a new video session request`,
-      html: `Hi <strong>${req.body.artistUsername}</strong>, ${req.body.pupilUsername} has requested a session. Click <a href='www.fabfixe.com/account/my-sessions'>here</a> to review the request.</a>`,
+      to: email,
+      from: 'carronwhite@gmail.com', // Replace
+      subject: 'You just received a new video session request',
+      text: 'You just received a new video session request',
+      html: `Hi <strong>${artistUsername}</strong>, ${pupilUsername} has requested a session. Click <a href='www.fabfixe.com/account/my-sessions'>here</a> to review the request.`,
     }
 
     sgMail.send(msg)
+  })
+  .catch((err) => {
+    console.log(err)
   })
 })
 

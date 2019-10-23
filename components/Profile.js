@@ -10,7 +10,7 @@ import AttachmentImageUploader from '../components/AttachmentImageUploader'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { withRouter } from 'next/router'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import validateSessionSubmit from '../validation/sessionSubmit'
 import { currencyFormatted, calcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
 import { addSession } from '../actions/session'
@@ -136,6 +136,8 @@ class Profile extends Component {
       description,
       duration: timeMap[duration],
       artist: this.state.profile._id,
+      artistUsername: this.props.username,
+      pupilUsername: this.props.user.profile.username,
       pupil: this.props.user.auth.user._id,
       status: 'pending',
       artistApproved: false,
@@ -148,7 +150,7 @@ class Profile extends Component {
         .then((res) => {
           this.props.addSession(res.data)
           // Email both parties to notify session requested
-          axios.post('/api/emails/sessionRequested', res.data)
+          axios.post('/api/emails/sessionRequested', session)
           this.setState({ submitted: true })
         })
     } else {
