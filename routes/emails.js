@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 const router = express.Router()
 const sgMail = require('@sendgrid/mail')
 const User = require('../models/User')
+const CronJob = require('cron').CronJob
 
 router.post('/sessionUpdated', function(req, res) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -98,6 +99,43 @@ router.post('/paymentComplete', function(req, res) {
 
     sgMail.send(msg)
   })
+
+  // Cron job for reminders
+  const date = moment(req.body.momentDate).subtract(30, 'minutes').toDate()
+
+  const job = new CronJob(date, function() {
+
+    User.findOne({ _id: req.body.artistId })
+    .then(({ email }) => {
+     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+       const msg = {
+         to: email,
+         from: 'carronwhite@gmail.com',
+         subject: `Session Scheduled`,
+         text: `It's almost time for your session`,
+         html: `Reminder, you have a session with ${req.body.pupilUsername} in 30 minutes`,
+      }
+
+      sgMail.send(msg)
+    })
+
+    User.findOne({ _id: req.body.pupilId })
+    .then(({ email }) => {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        const msg = {
+          to: 'carronwhite@gmail.com',
+          from: 'carronwhite@gmail.com',
+          subject: `It's almost time for your session`,
+          text: `It's almost time for your session`,
+          html: `Reminder, you have a session with ${req.body.artistUsername} in 30 minutes`,
+       }
+
+      sgMail.send(msg)
+    })
+
+  })
+
+  job.start()
 })
 
 module.exports = router

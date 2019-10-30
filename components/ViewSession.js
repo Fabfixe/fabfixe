@@ -179,14 +179,16 @@ class ViewSession extends Component {
               // Capture the funds from the transaction
                actions.order.capture().then((details) => {
                 // Show a success message to your buyer
-                 axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: _id })
-                 axios.post('/api/emails/paymentComplete', { artistId,
+                 axios.post('/api/emails/paymentComplete', {
+                   artistId,
                    pupilId,
                    total: details.purchase_units[0].amount.value,
                    artistUsername: artist,
                    pupilUsername: pupil,
                    date: formatTime(date, duration),
+                   momentDate: date,
                 })
+                axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: _id })
                 .then((result) => {
                   if(result) console.log(result)
                   this.props.changeModal('congrats')

@@ -35,7 +35,7 @@ router.post('/byId', function(req, res) {
     .then((sessions) => {
       // if the session is expired or completed, update the session
       sessions.forEach((session) => {
-        if(session.status === 'pending' && moment(session.date).isBefore(moment())) session.status = 'expired'
+        if(session.status === 'pending' && moment(session.date).isSameOrBefore(moment())) session.status = 'expired'
         Session.updateOne({ _id: session._id}, { $set: session })
         .then((error) => {
           if(error) console.log(error)

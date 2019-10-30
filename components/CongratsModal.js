@@ -144,7 +144,7 @@ class CongratsModal extends Component {
     return (
       <React.Fragment>
         <p>Congrats! You have successfully scheduled a session with {artist}!</p>
-        <p>Time: {formatTime(date)}</p>
+        <p>Time: {formatTime(date, duration)}</p>
         <p>Total: ${digitCalcTotal(duration, hourlyRate)}</p>
       </React.Fragment>
     )
