@@ -19,8 +19,10 @@ function ProfileRouting({ profile, query }) {
   )
 }
 
-ProfileRouting.getInitialProps = async ({ query }) => {
-  return axios.post('/api/profile/username', { username: query.username })
+ProfileRouting.getInitialProps = async (ctx) => {
+  const { query } = ctx
+  const config = ctx.req ? { baseURL: 'http://localhost:3000' } : {}
+  return axios.post('/api/profile/username', { username: query.username }, config)
   .then((res) => {
     const profile = res.data
     if(profile) {
