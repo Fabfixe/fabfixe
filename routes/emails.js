@@ -113,7 +113,7 @@ router.post('/paymentComplete', function(req, res) {
          from: 'carronwhite@gmail.com',
          subject: `Session Scheduled`,
          text: `It's almost time for your session`,
-         html: `Reminder, you have a session with ${req.body.pupilUsername} in 30 minutes`,
+         html: `Reminder, you have a session with ${req.body.pupilUsername} in 30 minutes. View your upcoming sessions <a href='www.fabfixe.com/account/my-sessions'>here</a>.`,
       }
 
       sgMail.send(msg)
@@ -127,7 +127,7 @@ router.post('/paymentComplete', function(req, res) {
           from: 'carronwhite@gmail.com',
           subject: `It's almost time for your session`,
           text: `It's almost time for your session`,
-          html: `Reminder, you have a session with ${req.body.artistUsername} in 30 minutes`,
+          html: `Reminder, you have a session with ${req.body.artistUsername} in 30 minutes. View your upcoming sessions <a href='www.fabfixe.com/account/my-sessions'>here</a>.`,
        }
 
       sgMail.send(msg)
