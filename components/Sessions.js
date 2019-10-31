@@ -127,23 +127,6 @@ class Sessions extends Component {
         <div className={cn("sessions", "center-module")}>
           {this.state.sessions.length <= 0 ? <div>{this.state.isLoading ? 'Loading' : 'No sessions yet'}</div> :
             <React.Fragment>
-            {upcomingSessions.length > 0 &&
-              <React.Fragment>
-                <h2>UPCOMING SESSIONS</h2>
-                <ul>
-                  {upcomingSessions.map((session, id) => {
-                    return (
-                      <li key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
-                        <p>{formatTime(session.date, session.duration)}</p>
-                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
-                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </React.Fragment>
-            }
             {pendingSessions.length > 0 &&
               <React.Fragment>
                 <h2>PENDING SESSIONS</h2>
@@ -160,8 +143,26 @@ class Sessions extends Component {
                     )
                   })}
                 </ul>
-              </React.Fragment>
-            }
+              </React.Fragment>}
+            {upcomingSessions.length > 0 &&
+              <React.Fragment>
+                <h2>UPCOMING SESSIONS</h2>
+                <ul>
+                  {upcomingSessions.map((session, id) => {
+                    // Check if session is within 30 minutes
+                    const withinThirty = moment(session.date).subtract(30, 'minutes').isSameOrBefore(moment())
+
+                    return (
+                      <li className={cn({ 'soon': withinThirty })} key={id}>
+                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p>{formatTime(session.date, session.duration)}</p>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </React.Fragment>}
             {completedSessions.length > 0 &&
               <React.Fragment>
                 <h2>COMPLETED SESSIONS</h2>
@@ -177,8 +178,7 @@ class Sessions extends Component {
                     )
                   })}
                 </ul>
-              </React.Fragment>
-            }
+              </React.Fragment>}
             {cancelledSessions.length > 0 &&
               <React.Fragment>
                 <h2>CANCELLED SESSIONS</h2>
@@ -192,8 +192,7 @@ class Sessions extends Component {
                     )
                   })}
                 </ul>
-              </React.Fragment>
-            }
+              </React.Fragment>}
             {expiredSessions.length > 0 &&
               <React.Fragment>
                 <h2>EXPIRED SESSIONS</h2>
@@ -207,8 +206,7 @@ class Sessions extends Component {
                     )
                   })}
                 </ul>
-              </React.Fragment>
-            }
+              </React.Fragment>}
             {this.state.showModal &&
               <Modal closeModal={this.closeModal}>
                 {this.state.modalType === 'edit' && <EditSession
