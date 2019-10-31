@@ -156,6 +156,7 @@ class Sessions extends Component {
                       <li className={cn({ 'soon': withinThirty })} key={id}>
                         <p className="username">{isPupil ? session.artist : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
+                        {!withinThirty && <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
