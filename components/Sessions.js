@@ -7,6 +7,7 @@ import ConfirmModal from '../components/ConfirmModal'
 import CongratsModal from '../components/CongratsModal'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
+import Link from 'next/link'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import { getSessions, cancelSession, deleteSession } from '../actions/session'
@@ -156,7 +157,7 @@ class Sessions extends Component {
                       <li className={cn({ 'soon': withinThirty })} key={id}>
                         <p className="username">{isPupil ? session.artist : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
-                        {!withinThirty && <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>Join</button>}
+                        {!withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
