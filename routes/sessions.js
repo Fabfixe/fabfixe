@@ -28,6 +28,13 @@ router.post('/', function(req, res) {
     })
 })
 
+router.post('/bySessionId', function(req, res) {
+  return Session.find({ _id: req.body.id })
+  .then((session) => {
+    res.json(session)
+  })
+})
+
 router.post('/byId', function(req, res) {
   return Session.find({ [req.body.accountType]: req.body._id })
     .populate('artist')
