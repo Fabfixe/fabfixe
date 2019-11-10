@@ -17,6 +17,7 @@
     "@wojtekmaj/react-datetimerange-picker": "^2.1.0",
     "@zeit/next-sass": "^1.0.1",
     "acorn": "^6.0.5",
+    "assert": "^2.0.0",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
@@ -54,6 +55,8 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "tls": "0.0.1",
+    "twilio": "^3.37.0",
+    "twilio-video": "^2.0.0-beta15",
     "typescript": "^3.6.4",
     "validator": "^10.11.0"
   },

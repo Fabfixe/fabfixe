@@ -36,8 +36,8 @@ class Fabfixe extends App {
     return { pageProps }
   }
 
-  render() {
-    const { Component, store, pageProps } = this.props
+  componentDidMount() {
+    const { store } = this.props
     if(process.browser) {
 
       if(localStorage.jwtToken) {
@@ -59,6 +59,10 @@ class Fabfixe extends App {
           if(profile) store.dispatch(setProfile(profile))
         })
     }
+  }
+
+  render() {
+    const { Component, store, pageProps } = this.props
 
     return (
         <Provider store={ store }>

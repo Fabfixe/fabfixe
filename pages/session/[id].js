@@ -4,17 +4,10 @@ import { connect } from 'react-redux'
 import MyLayout from '../../components/MyLayout'
 import Nav from '../../components/Nav'
 import Heading from '../../components/Heading'
-import Profile from '../../components/Profile'
+import VideoSession from '../../components/VideoSession'
 import axios from 'axios'
 
 class SessionRouting extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-
-    }
-  }
 
   static async getInitialProps (ctx) {
     const { query } = ctx
@@ -23,7 +16,6 @@ class SessionRouting extends Component {
     .then((res) => {
       const session = res.data
       if(session) {
-        console.log('session', session)
         return { session }
       } else {
         return { session: null }
@@ -35,26 +27,23 @@ class SessionRouting extends Component {
   }
 
   render() {
-    console.log(this.props)
-
+console.log(this.props)
     return (
       <div>
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
-        <MyLayout alignment="center">
-        </MyLayout>
+          {this.props.userId && <VideoSession { ...this.props } />}
       </div>
     )
   }
-
 }
 
 const mapStateToProps = state => ({
   auth: state.auth,
   accountType: state.auth.user.accountType,
   errors: state.errors,
-  _id: state.auth.user._id,
+  userId: state.auth.user._id,
   username: state.profile.username,
   profileImageUrl: state.profile.profileImageUrl,
   youtube: state.profile.youtube,
