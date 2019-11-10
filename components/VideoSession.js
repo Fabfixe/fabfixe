@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Video from 'twilio-video'
 import axios from 'axios'
+import { FixedBottom } from 'react-fixed-bottom'
 const classNames = require('classnames')
 
 export default class VideoSession extends Component {
@@ -220,11 +221,13 @@ export default class VideoSession extends Component {
     show `Leave Room` button.
     */
     const joinOrLeaveRoomButton = this.state.hasJoinedRoom ? (
+        <FixedBottom offset={30}>
         <button label="Leave Room"
         secondary={'true'}
         onClick={this.leaveRoom}>
           Leave Session
         </button>
+        </FixedBottom>
       ) : (
         <button
           label="Join Room"
@@ -236,8 +239,8 @@ export default class VideoSession extends Component {
 
   const status = () => {
     if(this.state.activeRoom && !this.state.participant) return "single-session"
-    if(this.state.participant) return "double-session"
     if(!this.state.hasJoinedRoom) return "preview"
+    if(this.state.participant) return "double-session"
   }
 
   const displayJoin = !this.state.hasJoinedRoom && this.state.localMediaAvailable && this.state.token
@@ -246,8 +249,8 @@ export default class VideoSession extends Component {
      <div id="session-container" className={status()}>
       <div className="session-content">
         <div className="video-container">
-          <div ref="localMedia" id="local-media" />
           <div ref="remoteMedia" id="remote-media" />
+          <div ref="localMedia" id="local-media" />
         </div>
         {displayJoin && <p>Looking good! Click “JOIN” to start your session</p>}
         {this.state.localMediaAvailable && joinOrLeaveRoomButton}
