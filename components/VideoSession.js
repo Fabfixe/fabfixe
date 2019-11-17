@@ -289,7 +289,7 @@ export default class VideoSession extends Component {
             <p>Contact us at support@fabfixe.com</p>
           </div>
         </Modal>}
-        {this.state.hasJoinedRoom && <div id="chat" onClick={() => this.toggleWidget('chat')}><p>Chat</p></div>}
+        {this.state.hasJoinedRoom && this.state.participant && <div id="chat" onClick={() => this.toggleWidget('chat')}><p>Chat</p></div>}
       </div>
       {this.state.chat && <ChatWidget
         closeDrawer={() => this.toggleWidget('chat')}

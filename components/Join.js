@@ -104,7 +104,6 @@ class JoinForm extends Component {
         <input type='password'
           name='password_confirm'
           placeholder='CONFIRM PASSWORD'
-          onChange={ this.handleInputChange }
           value={ this.state.password }
           onChange={ this.handleInputChange }
           value={ this.state.password_confirm }

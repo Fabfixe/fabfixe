@@ -8,10 +8,7 @@ export default props => {
   const textArea = useRef()
   const [message, updateMessage] = useState('')
   const [submitReady, setSubmitReady] = useState(false)
-  const [localMessages, updateLocalMessages] = useState([])
-  const [remoteMessages, updateRemoteMessages] = useState(props.remoteMessages)
-  const [storedMessages, updateStoredMessages] = useState(props.session[0].videoMessages || [])
-  const [messages, updateMessages] = useState(storedMessages.concat(localMessages).concat(remoteMessages))
+  const [messages, updateMessages] = useState(props.session[0].videoMessages || [])
 
   useEffect(() => {
     const latestRemoteMessage = props.remoteMessages[props.remoteMessages.length - 1]
