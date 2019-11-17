@@ -53,6 +53,10 @@ const SessionSchema = new Schema({
     type: [Object],
     required: false
   },
+  videoMessages: {
+    type: [Object],
+    required: false
+  },
   orderID: {
     type: String,
     required: false,

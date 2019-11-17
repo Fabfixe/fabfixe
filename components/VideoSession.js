@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Video from 'twilio-video'
 import axios from 'axios'
 import { FixedBottom } from 'react-fixed-bottom'
+import Modal from './Modal'
+import ChatWidget from './ChatWidget'
 const classNames = require('classnames')
 
 export default class VideoSession extends Component {
@@ -17,6 +19,10 @@ export default class VideoSession extends Component {
       hasJoinedRoom: false,
       activeRoom: null, // Track the current active room
       participant: false,
+      help: false,
+      chat: false,
+      remoteMessages: [],
+      localDataTrack: null
    }
 
 
@@ -30,18 +36,14 @@ export default class VideoSession extends Component {
    this.detachParticipantTracks = this.detachParticipantTracks.bind(this)
    this.detachTrack = this.detachTrack.bind(this)
    this.trackUnpublished = this.trackUnpublished.bind(this)
-
-   // Extras
-   // this.participantDisconnected = this.participantDisconnected.bind(this)
    this.trackPublished = this.trackPublished.bind(this)
-   // this.trackUnsubscribed = this.trackUnsubscribed.bind(this)
-   // this.localParticipantDisconnected = this.localParticipantDisconnected.bind(this)
+   this.toggleWidget = this.toggleWidget.bind(this)
+   this.dealWithMessages = this.dealWithMessages.bind(this)
  }
 
   componentDidMount() {
     const { userId } = this.props
     const session = this.props.session[0]
-    console.log('prior token', this.state.token)
     /*
     Make an API call to get the token and identity and update the corresponding state variables.
     */
@@ -51,7 +53,6 @@ export default class VideoSession extends Component {
       axios.post('/api/token', { identity: userId, _id: session._id })
       .then((result) => {
         const { identity, token } = result.data
-        console.log('token', token)
         this.setState({ identity, token, roomName: session._id })
         this.setupPreview()
       })
@@ -85,10 +86,20 @@ export default class VideoSession extends Component {
   joinRoom() {
     const { connect, createLocalVideoTrack } = require('twilio-video')
     const localVideoTrack = this.state.previewTracks[0]
+    const localDataTrack = new Video.LocalDataTrack()
+    this.setState({ localDataTrack })
+
+    // connect(this.state.token, {
+    //   name: this.state.roomName,
+    //   tracks: [localDataTrack]
+    // })
+    // .then((room) => {
+
+    // })
 
     connect(this.state.token, {
       name: this.state.roomName,
-      tracks: [localVideoTrack]
+      tracks: [localVideoTrack, localDataTrack]
     })
     .then((room) => {
       this.setState({
@@ -123,6 +134,18 @@ export default class VideoSession extends Component {
         this.setState({ participant: false })
         this.detachParticipantTracks(participant)
       })
+
+      room.on('trackSubscribed', (track) => {
+        track.on('message', (message) => {
+          message = JSON.parse(message)
+          this.setState({ remoteMessages: this.state.remoteMessages.concat([message])})
+        })
+      })
+
+      // room.on('trackMessage', (data, track) => {
+      //   console.log(data, typeof data)
+      //   this.setState({ remoteMessages: this.state.remoteMessages.concat([data])})
+      // })
 
       // Once the LocalParticipant leaves the room, detach the Tracks
       // of all Participants, including that of the LocalParticipant.
@@ -161,18 +184,20 @@ export default class VideoSession extends Component {
   }
 
   attachTrack(track, container) {
-    container.appendChild(track.attach())
+    if(track.kind !== "data") container.appendChild(track.attach())
   }
 
   // Attach array of Tracks to the DOM.
   attachTracks(tracks, container) {
+    if(track.kind === "data") return
     tracks.forEach(function(track) {
       attachTrack(track, container)
     })
   }
 
   detachTrack(track) {
-    track.detach().forEach(function(element) {
+    if(track.kind === "data") return
+    track.detach().forEach((element) => {
       element.remove()
     })
   }
@@ -207,11 +232,19 @@ export default class VideoSession extends Component {
       this.trackPublished(publication, container)
     })
 
-    participant.on('trackPublished', function(publication) {
+    participant.on('trackPublished', (publication) => {
       this.trackPublished(publication, container)
     })
 
     participant.on('trackUnpublished', this.trackUnpublished)
+  }
+
+  toggleWidget(type) {
+    this.setState({ [type]: !this.state[type] })
+  }
+
+  dealWithMessages(message) {
+    this.state.localDataTrack.send(JSON.stringify(message))
   }
 
   render() {
@@ -221,12 +254,12 @@ export default class VideoSession extends Component {
     show `Leave Room` button.
     */
     const joinOrLeaveRoomButton = this.state.hasJoinedRoom ? (
-        <FixedBottom offset={30}>
-        <button label="Leave Room"
-        secondary={'true'}
-        onClick={this.leaveRoom}>
-          Leave Session
-        </button>
+        <FixedBottom offset={20}>
+          <button label="Leave Room"
+          secondary={'true'}
+          onClick={this.leaveRoom}>
+            Leave Session
+          </button>
         </FixedBottom>
       ) : (
         <button
@@ -244,9 +277,25 @@ export default class VideoSession extends Component {
   }
 
   const displayJoin = !this.state.hasJoinedRoom && this.state.localMediaAvailable && this.state.token
+  const session = this.props.session[0]
 
   return (
      <div id="session-container" className={status()}>
+      <div id="session-widgets">
+        <div id="help" onClick={() => this.toggleWidget('help')}><p>Help</p></div>
+        {this.state.help && <Modal closeModal={() => this.toggleWidget('help')}>
+          <div id="session-help-modal">
+            <p>Having trouble with your session?</p>
+            <p>Contact us at support@fabfixe.com</p>
+          </div>
+        </Modal>}
+        {this.state.hasJoinedRoom && <div id="chat" onClick={() => this.toggleWidget('chat')}><p>Chat</p></div>}
+      </div>
+      {this.state.chat && <ChatWidget
+        closeDrawer={() => this.toggleWidget('chat')}
+        onMessageCreation={this.dealWithMessages}
+        remoteMessages={this.state.remoteMessages}
+      { ...this.props }/>}
       <div className="session-content">
         <div className="video-container">
           <div ref="remoteMedia" id="remote-media" />

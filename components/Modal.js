@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 const Modal = (props) => (
   ReactDOM.createPortal(
     <div className='modal'>
+    <div onClick={ props.closeModal } className="close">X</div>
       <div className="modal-content">
-        <div onClick={ props.closeModal } className="close">X</div>
         {props.children}
       </div>
     </div>,

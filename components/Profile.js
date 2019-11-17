@@ -105,6 +105,7 @@ class Profile extends Component {
   }
 
   handleModal() {
+    console.log('here')
     this.setState({
       showModal: !this.state.showModal
     })
@@ -187,19 +188,22 @@ class Profile extends Component {
               </li>
             </ul>
             {this.state.showModal &&
-            <Modal handleModal={this.handleModal}>
-                <ModalContent
-                  username={username}
-                  hourlyRate={hourlyRate}
-                  date={this.state.date}
-                  submitted={this.state.submitted}
-                  errors={this.state.errors}
-                  duration={this.state.duration}
-                  pupilUsername={pupilUsername}
-                  onSelect={this.onSelect}
-                  onChange={this.onChange}
-                  handleSubmit={this.handleSubmit}
-                  getImageUrl={this.getImageUrl} />
+            <Modal closeModal={this.handleModal}>
+                <div className="center-modal">
+                  <ModalContent
+                    username={username}
+                    hourlyRate={hourlyRate}
+                    date={this.state.date}
+                    submitted={this.state.submitted}
+                    errors={this.state.errors}
+                    duration={this.state.duration}
+                    pupilUsername={pupilUsername}
+                    onSelect={this.onSelect}
+                    onChange={this.onChange}
+                    handleSubmit={this.handleSubmit}
+                    getImageUrl={this.getImageUrl}
+                  />
+                </div>
               </Modal>
             }
         </div>

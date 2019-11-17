@@ -20,16 +20,19 @@ router.post('/', function(req, res) {
 
   const client = require('twilio')(accountSid, authToken)
 
-  client.video.rooms(_id)
-  .fetch()
-  .catch((e) => {
+  try {
+    client.video.rooms(_id)
+    .fetch()
+  }
+
+  catch(e) {
     console.log('error:', e)
     client.video.rooms.create({ uniqueName: _id })
     .then((room) => {
       console.log(room.sid)
     })
     .done()
-  })
+  }
 
   // Grant user
   // grant the access token Twilio Video capabilities

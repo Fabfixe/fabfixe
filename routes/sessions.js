@@ -30,9 +30,11 @@ router.post('/', function(req, res) {
 
 router.post('/bySessionId', function(req, res) {
   return Session.find({ _id: req.body.id })
-  .then((session) => {
-    res.json(session)
-  })
+    .populate('artist')
+    .populate('pupil')
+    .then((session) => {
+      res.json(session)
+    })
 })
 
 router.post('/byId', function(req, res) {
@@ -67,9 +69,18 @@ router.post('/byId', function(req, res) {
 })
 
 router.post('/newMessage', function(req, res) {
-  console.log(req.body)
   return Session.updateOne({ _id: req.body._id }, { $set: { messages: req.body.messages } })
     .then((error, writeOpResult) => {
+      if(error) res.send(error)
+      if(writeOpResult) res.send(writeOpResult)
+    })
+    .catch((err) => res.send(err))
+})
+
+router.post('/newVideoMessage', function(req, res) {
+  return Session.updateOne({ _id: req.body._id }, { $set: { videoMessages: req.body.videoMessages } })
+    .then((error, writeOpResult) => {
+      console.log(req.body)
       if(error) res.send(error)
       if(writeOpResult) res.send(writeOpResult)
     })
