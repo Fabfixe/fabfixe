@@ -12,7 +12,6 @@ import Router from 'next/router'
 
 const MySessions = (props) => {
   useEffect(() => {
-    console.log(props.auth)
     if(!props.auth.isAuthenticated) Router.push('/account/login')
   }, [])
 

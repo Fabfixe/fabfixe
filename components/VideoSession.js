@@ -89,14 +89,6 @@ export default class VideoSession extends Component {
     const localDataTrack = new Video.LocalDataTrack()
     this.setState({ localDataTrack })
 
-    // connect(this.state.token, {
-    //   name: this.state.roomName,
-    //   tracks: [localDataTrack]
-    // })
-    // .then((room) => {
-
-    // })
-
     connect(this.state.token, {
       name: this.state.roomName,
       tracks: [localVideoTrack, localDataTrack]
@@ -119,6 +111,10 @@ export default class VideoSession extends Component {
         console.log("Already in Room: '" + participant.identity + "'")
         this.setState({ participant: true })
         this.participantConnected(participant, remoteMediaContainer)
+      })
+
+      Video.createLocalAudioTrack().then((localTrack) => {
+        room.localParticipant.publishTrack(localTrack)
       })
 
       // When a Participant joins the Room, log the event.
