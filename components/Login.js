@@ -13,7 +13,8 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      errors: {}
+      errors: {},
+      redirect: '/'
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -21,11 +22,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    const redirect = document.referrer || API_URL
-    console.log(redirect)
-    if(this.props.auth.isAuthenticated) {
-      window.location.href = redirect
-    }
+    if(document.referrer) this.setState({ redirect: document.referrer })
   }
 
   handleInputChange(e) {
@@ -45,17 +42,20 @@ class Login extends Component {
     this.props.loginUser(user)
   }
 
-  componentWillReceiveProps(nextProps) {
-
-    if(nextProps.errors) {
+  componentDidUpdate() {
+    if(Object.keys(this.props.errors).length > 0) {
       this.setState({
-        errors: nextProps.errors
+        errors: this.props.errors
       })
+    }
+
+    if(this.props.auth.isAuthenticated) {
+      Router.push(this.state.redirect)
     }
   }
 
   render() {
-    const {errors} = this.state
+    const { errors } = this.state
 
     return (
       <form id="login" onSubmit={ this.handleSubmit }>
