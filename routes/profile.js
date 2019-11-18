@@ -50,7 +50,6 @@ router.post('/username', function(req, res) {
 })
 
 router.post('/artist', function(req, res) {
-  console.log('req', req.body)
 
   let newProfile = {
     _id: req.body._id,

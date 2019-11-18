@@ -1,8 +1,8 @@
 import Head from 'next/head'
-import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
-import HowItWorks from '../components/HowItWorks'
-import Footer from '../components/Footer'
+import MyLayout from '../../components/MyLayout'
+import Nav from '../../components/Nav'
+import HowItWorks from '../../components/HowItWorks'
+import Footer from '../../components/Footer'
 
 // Will include blocks for both pupil and artists
 

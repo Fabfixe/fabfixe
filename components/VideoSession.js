@@ -142,11 +142,6 @@ export default class VideoSession extends Component {
         })
       })
 
-      // room.on('trackMessage', (data, track) => {
-      //   console.log(data, typeof data)
-      //   this.setState({ remoteMessages: this.state.remoteMessages.concat([data])})
-      // })
-
       // Once the LocalParticipant leaves the room, detach the Tracks
       // of all Participants, including that of the LocalParticipant.
       room.on('disconnected', () => {

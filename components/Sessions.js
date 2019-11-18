@@ -8,12 +8,12 @@ import CongratsModal from '../components/CongratsModal'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import Link from 'next/link'
+import Button from '../components/Button'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import { getSessions, cancelSession, deleteSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
-import Button from '../components/Button'
 
 class Sessions extends Component {
   constructor(props) {

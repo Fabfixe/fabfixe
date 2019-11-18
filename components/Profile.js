@@ -105,7 +105,6 @@ class Profile extends Component {
   }
 
   handleModal() {
-    console.log('here')
     this.setState({
       showModal: !this.state.showModal
     })

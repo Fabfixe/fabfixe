@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
-import Button from '../components/Button'
-import HowItWorks from '../components/HowItWorks'
-import Footer from '../components/Footer'
+import MyLayout from '../../components/MyLayout'
+import Nav from '../../components/Nav'
+import Button from '../../components/Button'
+import HowItWorks from '../../components/HowItWorks'
+import Footer from '../../components/Footer'
 
 export default () => (
   <div>

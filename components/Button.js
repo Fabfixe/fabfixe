@@ -12,7 +12,6 @@ class Button extends Component {
   }
 
   handleClick() {
-    console.log()
     this.setState(state => ({
       isSelected: !state.isSelected
     }));

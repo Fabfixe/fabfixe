@@ -1,13 +1,13 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
-import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
-import Hero from '../components/Hero'
-import HowItWorks from '../components/HowItWorks'
-import Heading from '../components/Heading'
-import JoinForm from '../components/Join'
-import Footer from '../components/Footer'
-import { registerUser } from '../actions/authentication'
+import MyLayout from '../../components/MyLayout'
+import Nav from '../../components/Nav'
+import Hero from '../../components/Hero'
+import HowItWorks from '../../components/HowItWorks'
+import Heading from '../../components/Heading'
+import JoinForm from '../../components/Join'
+import Footer from '../../components/Footer'
+import { registerUser } from '../../actions/authentication'
 
 class JoinRouting extends Component {
   constructor(props) {

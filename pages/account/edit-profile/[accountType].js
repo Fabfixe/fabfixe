@@ -1,15 +1,15 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
 import Router from 'next/router'
-import MyLayout from '../components/MyLayout'
-import Button from '../components/Button'
-import Heading from '../components/Heading'
-import ImageUploader from '../components/ImageUploader'
-import Footer from '../components/Footer'
+import MyLayout from '../../../components/MyLayout'
+import Button from '../../../components/Button'
+import Heading from '../../../components/Heading'
+import ImageUploader from '../../../components/ImageUploader'
+import Footer from '../../../components/Footer'
 import { connect } from 'react-redux'
-import { updateProfile } from '../actions/profile'
-import validateUsernameInput from '../validation/username'
-import validateProfileSubmit from '../validation/profileSubmit'
+import { updateProfile } from '../../../actions/profile'
+import validateUsernameInput from '../../../validation/username'
+import validateProfileSubmit from '../../../validation/profileSubmit'
 import axios from 'axios'
 
 const classnames = require('classnames')
@@ -56,26 +56,15 @@ class EditProfile extends Component {
     return { query }
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     if(!this.props.auth.isAuthenticated) {
       Router.push('/account/login')
     } else if(this.props.query.accountType !== this.props.accountType) {
       Router.push(`/account/edit-profile/${this.props.accountType}`)
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps) {
-      this.setState({
-        username: nextProps.username,
-        profileImageUrl: nextProps.profileImageUrl,
-        youtube: nextProps.youtube,
-        instagram: nextProps.instagram,
-        twitter: nextProps.twitter,
-        facebook: nextProps.facebook,
-        hourlyRate: nextProps.hourlyRate,
-        selectedExpertise: nextProps.expertise
-      })
+    if(this.props.username !== this.state.username) {
+      this.setState({ ...this.props })
     }
   }
 

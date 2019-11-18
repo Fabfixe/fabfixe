@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
-import Hero from '../components/Hero'
-import HowItWorks from '../components/HowItWorks'
-import Footer from '../components/Footer'
+import MyLayout from '../../components/MyLayout'
+import Nav from '../../components/Nav'
+import Hero from '../../components/Hero'
+import HowItWorks from '../../components/HowItWorks'
+import Footer from '../../components/Footer'
 
 export default () => (
   <React.Fragment>

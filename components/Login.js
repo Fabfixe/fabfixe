@@ -4,6 +4,7 @@ import Button from '../components/Button'
 import Router from 'next/router'
 import { connect } from 'react-redux'
 import { loginUser } from '../actions/authentication'
+import { API_URL } from '../config'
 
 class Login extends Component {
   constructor(props) {
@@ -20,8 +21,10 @@ class Login extends Component {
   }
 
   componentDidMount() {
+    const redirect = document.referrer || API_URL
+    console.log(redirect)
     if(this.props.auth.isAuthenticated) {
-      Router.push('/')
+      window.location.href = redirect
     }
   }
 
