@@ -25,7 +25,6 @@ export default props => {
     const { isPupil } = props
     const fromName = isPupil ? props.pupil : props.artist
     const toName = isPupil ? props.artist : props.pupil
-
     const newMessage = {
       from: props.userId,
       time: new Date(),

@@ -22,7 +22,8 @@ export default class VideoSession extends Component {
       help: false,
       chat: false,
       remoteMessages: [],
-      localDataTrack: null
+      localDataTrack: null,
+      unreads: 0
    }
 
 
@@ -135,6 +136,7 @@ export default class VideoSession extends Component {
         track.on('message', (message) => {
           message = JSON.parse(message)
           this.setState({ remoteMessages: this.state.remoteMessages.concat([message])})
+          this.setState({ unreads: this.state.remoteMessages.length })
         })
       })
 
@@ -232,6 +234,7 @@ export default class VideoSession extends Component {
 
   toggleWidget(type) {
     this.setState({ [type]: !this.state[type] })
+    if(type === 'chat') this.setState({ unreads: 0})
   }
 
   dealWithMessages(message) {
@@ -280,7 +283,8 @@ export default class VideoSession extends Component {
             <p>Contact us at support@fabfixe.com</p>
           </div>
         </Modal>}
-        {this.state.hasJoinedRoom && this.state.participant && <div id="chat" onClick={() => this.toggleWidget('chat')}><p>Chat</p></div>}
+        {this.state.hasJoinedRoom && this.state.participant && <div id="chat"
+          className={classNames({'unread': this.state.unreads > 0})} onClick={() => this.toggleWidget('chat')}><p>Chat</p></div>}
       </div>
       {this.state.chat && <ChatWidget
         closeDrawer={() => this.toggleWidget('chat')}
