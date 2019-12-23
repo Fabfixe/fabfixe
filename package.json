@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "dev": "nodemon -w server.js server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js"
@@ -62,6 +63,13 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "eslint": "^5.9.0"
+    "babel-core": "^6.26.3",
+    "babel-jest": "^24.9.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "eslint": "^5.9.0",
+    "jest": "^24.9.0"
   }
 }
