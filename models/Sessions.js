@@ -3,8 +3,10 @@ const Schema = mongoose.Schema
 
 const ArtistProfile = require('./ArtistProfile')
 const PupilProfile = require('./PupilProfile')
+const SessionEvents = require('./SessionEvents')
 
 const SessionSchema = new Schema({
+  _id: Schema.Types.ObjectId,
   date: {
     type: Object,
     required: true
@@ -60,6 +62,10 @@ const SessionSchema = new Schema({
   orderID: {
     type: String,
     required: false,
+  },
+  sessionEvents: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'sessionevents',
   }
 })
 

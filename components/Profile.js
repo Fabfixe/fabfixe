@@ -141,7 +141,7 @@ class Profile extends Component {
       pupil: this.props.user.auth.user._id,
       status: 'pending',
       artistApproved: false,
-      messages: []
+      messages: [],
     }
 
     const validation = validateSessionSubmit(session)

@@ -1,12 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const moment = require('moment')
+const mongoose = require('mongoose')
 const Session = require('../models/Sessions')
+const SessionEvents = require('../models/SessionEvents')
 const PupilProfile = require('../models/PupilProfile')
 const ArtistProfile = require('../models/ArtistProfile')
 
 router.post('/', function(req, res) {
   const newSession = new Session({
+    _id: new mongoose.Types.ObjectId(),
     date: req.body.date,
     category: req.body.category,
     duration: req.body.duration,
@@ -19,13 +22,33 @@ router.post('/', function(req, res) {
     pupilDeleted: false,
     artistApproved: false,
     pupilApproved: true,
-    messages: req.body.messages
+    messages: req.body.messages,
   })
-  newSession
+
+  const newSessionEvent = new SessionEvents({
+    _id: new mongoose.Types.ObjectId(),
+    artist: {
+      visitedPreview: []
+    },
+    pupil: {
+      visitedPreview: []
+    },
+  })
+
+  newSessionEvent
     .save()
-    .then(session => {
-      res.json(session)
+    .then(sessionEvent => {
+      console.log('sessionEvent', sessionEvent)
+      newSession['sessionEvents'] = sessionEvent._id
+
+      newSession
+      .save()
+      .then(session => {
+        console.log('session on creation', session)
+        res.json(session)
+      })
     })
+    .catch((e) => console.log(e))
 })
 
 router.post('/bySessionId', function(req, res) {
@@ -45,7 +68,7 @@ router.post('/byId', function(req, res) {
       // if the session is expired or completed, update the session
       sessions.forEach((session) => {
         if(session.status === 'pending' && moment(session.date).isSameOrBefore(moment())) session.status = 'expired'
-        Session.updateOne({ _id: session._id}, { $set: session })
+        Session.updateOne({ _id: session._id }, { $set: session })
         .then((error) => {
           if(error) console.log(error)
         })

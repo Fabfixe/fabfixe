@@ -4,6 +4,7 @@ import axios from 'axios'
 import { FixedBottom } from 'react-fixed-bottom'
 import Modal from './Modal'
 import ChatWidget from './ChatWidget'
+import moment from 'moment-timezone'
 const classNames = require('classnames')
 
 export default class VideoSession extends Component {
@@ -23,7 +24,8 @@ export default class VideoSession extends Component {
       chat: false,
       remoteMessages: [],
       localDataTrack: null,
-      unreads: 0
+      unreads: 0,
+      accountType: ''
    }
 
 
@@ -45,12 +47,20 @@ export default class VideoSession extends Component {
   componentDidMount() {
     const { userId } = this.props
     const session = this.props.session[0]
-    /*
-    Make an API call to get the token and identity and update the corresponding state variables.
-    */
 
-    // check if the props id matches the ids from the session obj
+    // Store the accountType of the local participant
+    this.setState({ accountType: this.props.auth.user.accountType })
+
+    // Make an API call to get the token and identity and update the corresponding state variables.
+      // Check if the props id matches the ids from the session obj
     if(userId === session.artist || session.pupil ) {
+      const accountType = this.props.auth.user.accountType
+      axios.post('/api/sessionEvents/visitedPreview', {
+        accountType: accountType,
+        time: moment(),
+        _id: session._id
+      })
+
       axios.post('/api/token', { identity: userId, _id: session._id })
       .then((result) => {
         const { identity, token } = result.data
