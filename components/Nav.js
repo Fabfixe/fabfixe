@@ -8,7 +8,7 @@ const classnames = require('classnames')
 const navStyle = {
   display: "flex",
   alignItems: "center",
-  width: "100%",
+  width: '100vw'
 }
 
 const navLinksStyle = {
@@ -119,7 +119,7 @@ const Nav = (props) => {
   return (
     <nav style={ navStyle }>
       <Link href="/">
-        <a className="nav-logo">logo</a>
+        <a className="nav-logo"></a>
       </Link>
       <div className="nav-links" style={ navLinksStyle }>
         <div className="nav-links__inner">
