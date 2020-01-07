@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Router from 'next/router'
 import { logoutUser } from '../actions/authentication'
 import { connect } from 'react-redux'
 const classnames = require('classnames')
 
-const navStyle = {
+let navStyle = {
   display: "flex",
   alignItems: "center",
   width: '100vw'
@@ -115,9 +115,18 @@ class NavLinks extends Component {
 }
 
 const Nav = (props) => {
+  const [navClass, setNavClass] = useState('')
+
+  useEffect(() => {
+    window.onscroll = () => {
+      if(window.scrollY < window.innerHeight)  setNavClass('')
+      if(window.scrollY > window.innerHeight)  setNavClass('dark')
+      console.log(navClass)
+    }
+  }, [])
 
   return (
-    <nav style={ navStyle }>
+    <nav className={navClass} style={ navStyle }>
       <Link href="/">
         <a className="nav-logo"></a>
       </Link>

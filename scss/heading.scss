@@ -1,15 +1,12 @@
 h1 {
+  font-family: $bebas-bold;
   font-size: 40px;
   text-align: center;
-  margin-bottom: 30px;
-  width: 100%;
 }
 
 h2 {
   font-family: Helvetica;
-  font-size: 18px;
-  text-transform: uppercase;
-  margin: 30px 0;
+  font-size: 26px;
   width: 100%;
 }
 
@@ -19,4 +16,44 @@ h3 {
   margin: 30px 0;
   font-size: 14px;
   width: 100%;
+}
+
+// Funky Headings
+.heading-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  display: inline-flex;
+  align-items: center;
+
+  &.left {
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+
+    h1 {
+      font-family: $bebas-bold;
+      color: #FFF;
+      padding-left: 10px;
+    }
+  }
+
+  &.right {
+    justify-content: flex-end;
+    padding-left: 10%;
+
+    h1 {
+      padding-right: 10px;
+    }
+  }
+
+  .line {
+    height: 5px;
+    background-color: $linen;
+    flex: 1;
+  }
+
+  & + div {
+    margin-top: 80px;
+  }
 }

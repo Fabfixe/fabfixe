@@ -1,28 +1,85 @@
 .hero-container {
-  height: 100vh;
   width: 100vw;
-  z-index: -1;
-  background: $moss;
-  overflow: hidden;
-  box-sizing: border-box;
-  padding: 20px;
+  height: 100vh;
+  position: relative;
 
-  h1 {
-    font-family: bebas_neuebold;
-    font-size: 40px;
-    margin: 15px 0;
-  }
-
-  h2 {
-    font-size: 30px;
-    text-align: center;
-  }
-
-  .hero-image {
-    background-image: url('/img/gray_hero.png');
-    background-repeat: no-repeat;
-    background-size: contain;
+  .hero-images {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 40vh;
+    height: 100%;
+
+    @include for-tablet-portrait-up {
+      flex-direction: row;
+    }
+
+    & > div {
+      height: 50%;
+      width: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50%;
+
+      @include for-tablet-portrait-up {
+        height: 100%;
+      }
+    }
+
+    #bg-image-one  {
+      background-image: url('/img/gray_hero_half.png');
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: transparentize($moss, 0.5);
+      }
+    }
+
+    #bg-image-two {
+      background-image: url('/img/purple_hero_half.png');
+    }
+  }
+
+  .hero-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    padding: 20px;
+    top: calc((100vh - 200px) / 2);
+    color: #FFF;
+    left: 0;
+    right: 0;
+
+    h1 {
+      font-size: 40px;
+      font-size: 62px;
+      letter-spacing: 1px;
+
+      @include for-tablet-portrait-up {
+        font-size: 76px;
+      }
+    }
+
+    h2 {
+      @include playfair;
+      text-align: center;
+      padding: 10px 20px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .hero-button {
+    @extend %action-button;
+    color: #FFF;
+    background-color: transparentize($plum, .25);
+
+    &:hover {
+      background-color: $plum;
+    }
   }
 }

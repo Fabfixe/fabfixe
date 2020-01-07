@@ -33,6 +33,15 @@ button.button {
   border: 0;
 }
 
+%action-button {
+  font-size: 28px;
+  display: inline-block;
+  padding: 20px 30px;
+  letter-spacing: 2px;
+  font-family: $bebas-bold;
+  text-decoration: none;
+}
+
 .options-container button.button {
   width: 300px;
   text-align: center;

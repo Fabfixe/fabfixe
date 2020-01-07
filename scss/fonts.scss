@@ -5,3 +5,20 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,400i&display=swap');
+
+$bebas-bold: 'bebas_neuebold';
+$lato: 'Lato', sans-serif;
+$playfair-bold: 'Playfair Display', serif;
+
+@mixin playfair-bold {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+}
+
+@mixin playfair {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+}

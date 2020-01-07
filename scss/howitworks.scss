@@ -1,36 +1,113 @@
 .how-container {
-  padding: 50px 0;
+  position: relative;
+  padding: 15px;
   width: 100%;
-  background: lightgrey;
+  height: 100vh;
+  background: #FFF;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
 
+  .heading-container {
+    top: 30px;
+  }
+
    h1 {
-     margin: 20px 0;
+     font-family: $bebas-bold;
+     color: $plum;
+     // margin: 20px 0;
+     // width: auto;
+     // text-align: center;
+     // position: relative;
+   }
+
+   .how-button {
+     font-family: $bebas-bold;
+     letter-spacing: 3.5px;
+     font-size: 22px;
+     color: #FFF;
+     text-decoration: none;
+     padding: 10px 15px;
+     background: $eggplant;
+     margin: 0 auto;
+     width: auto;
+     display: inline-block;
+
+     &:hover {
+       background: $plum;
+     }
+   }
+
+   .how-things-container {
      width: 100%;
-     text-align: center;
+     display: flex;
+     flex-direction: column;
+   }
+
+   .how-things {
+     display: flex;
+     flex-direction: column;
+     font-size: 18px;
+     margin: 10px 30px;
+     justify-content: center;
+   }
+
+   .how-image {
+     img {
+       width: 50%;
+       margin: 0 auto;
+       display: block;
+     }
    }
 
   .thing1, .thing2, .thing3 {
-    width: calc(100% - 50px);
-    margin-bottom: 10px;
-    height: 300px;
-    background: grey;
+    font-family: $lato;
+    margin-bottom: 40px;
+    z-index: 1;
+    position: relative;
 
-    @media (min-width: 1025px) {
-      width: calc(100% / 3 - 50px);
+    &:before {
+      width: 30px;
+      height: 30px;
+      z-index: -1;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      color: $blush;
+      background-color: $moss;
+      border-radius: 50%;
+      display: flex;
     }
   }
 
-  .button-container {
-    width: 100%;
+  .thing2 {
+    text-align: right;
   }
 
-  .button {
-    display: block;
-    margin: 30px auto 0;
-    margin-top: 30px;
+  .thing1:before {
+    content: '1';
+    top: -20px;
+    left: -20px;
+  }
+
+  .thing2:before {
+    content: '2';
+    top: -20px;
+    right: -13px;
+  }
+
+  .thing3:before {
+    content: '3';
+    top: -20px;
+    left: -20px;
+  }
+
+  @include for-tablet-portrait-up {
+    padding: 30px;
+
+    .how-things-container {
+      flex-direction: row;
+    }
   }
 }
