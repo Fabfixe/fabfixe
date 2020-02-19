@@ -15,8 +15,7 @@ const navLinksStyle = {
   display: "flex",
   justifyContent: "flex-end",
   width: "100%",
-  paddingRight: "15px",
-}
+ }
 
 class Hamburger extends Component {
   constructor(props) {
@@ -118,10 +117,13 @@ const Nav = (props) => {
   const [navClass, setNavClass] = useState('')
 
   useEffect(() => {
-    window.onscroll = () => {
-      if(window.scrollY < window.innerHeight)  setNavClass('')
-      if(window.scrollY > window.innerHeight)  setNavClass('dark')
-      console.log(navClass)
+    if(window.location.pathname === '/') {
+      window.onscroll = () => {
+        if(window.scrollY < 65)  setNavClass('')
+        if(window.scrollY > 65)  setNavClass('dark')
+      }
+    } else {
+      setNavClass('dark')
     }
   }, [])
 

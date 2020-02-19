@@ -1,8 +1,7 @@
 .how-container {
   position: relative;
-  padding: 15px;
+  padding: 30px;
   width: 100%;
-  height: 100vh;
   background: #FFF;
   display: flex;
   flex-wrap: wrap;
@@ -43,31 +42,63 @@
      width: 100%;
      display: flex;
      flex-direction: column;
+     margin-bottom: 50px;
+
+     @include for-desktop-up {
+       width: 75%;
+       margin-left: calc(25% / 2);
+       margin-right: calc(25% / 2);
+     }
    }
 
    .how-things {
      display: flex;
+     width: 100%;
      flex-direction: column;
      font-size: 18px;
-     margin: 10px 30px;
      justify-content: center;
    }
 
    .how-image {
-     img {
-       width: 50%;
-       margin: 0 auto;
-       display: block;
+    width: 50vw;
+    height: 50vw;
+    background: gray;
+    margin: 0 auto 20px;
+
+    @include for-tablet-portrait-up {
+      width: 200px;
+      height: 200px;
+      margin: 0 40px 0 0;
+    }
+   }
+
+   .thing-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+
+     @include for-tablet-portrait-up {
+       flex-direction: row;
+
+       &:nth-child(2) .how-image {
+         order: 2;
+         margin-left: 30px;
+         margin-right: 0;
+       }
      }
    }
 
   .thing1, .thing2, .thing3 {
-    font-family: $lato;
+    @include playfair;
     margin-bottom: 40px;
     z-index: 1;
     position: relative;
+    font-size: 22px;
+    line-height: 1.25;
 
     &:before {
+      font-family: $bebas-bold;
       width: 30px;
       height: 30px;
       z-index: -1;
@@ -75,7 +106,7 @@
       justify-content: center;
       position: absolute;
       color: $blush;
-      background-color: $moss;
+      background-color: $peach;
       border-radius: 50%;
       display: flex;
     }

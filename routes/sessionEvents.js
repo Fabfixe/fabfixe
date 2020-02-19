@@ -12,8 +12,7 @@ router.post('/visitedPreview', function(req, res) {
     .populate('sessionEvents')
     .then((session) => {
       const _id = session.sessionEvents._id
-      const visitedPreview = session.sessionEvents.visitedPreview.concat([time])
-      console.log('_id', _id)
+      const visitedPreview = session.sessionEvents.visitedPreview.concat([{accountType, time}])
       return SessionEvents.updateOne({ _id }, { $set: { visitedPreview } })
       .then((error, writeOpResult) => {
         if(writeOpResult) console.log('writeOpResult', writeOpResult)

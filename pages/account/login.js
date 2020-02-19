@@ -15,7 +15,7 @@ export default () => (
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
     <MyLayout alignment="center">
-      <Heading style={{ marginTop: '80px' }}>Login</Heading>
+      <Heading alignment="center" style={{ marginTop: '80px' }}>Login</Heading>
       <Login />
     </MyLayout>
   </React.Fragment>

@@ -19,7 +19,7 @@ const ModalContent = (props) => (
     <React.Fragment>
     {props.pupilUsername ? (
     <React.Fragment>
-      <Heading>Request a Session</Heading>
+      <Heading alignment="center">Request a Session</Heading>
       <form onSubmit={ props.handleSubmit }>
         <Datetime
           isValidDate={validDateSelection}
@@ -167,7 +167,7 @@ class Profile extends Component {
 
     return (
       <div className="profile">
-          <Heading>{this.props.username}</Heading>
+          <h1>{this.props.username}</h1>
             <ul>
               {profileImageUrl && <li style={{ width: '40px',
                 height: '40px',

@@ -6,13 +6,19 @@ const HowItWorks = (props) => (
   <div id="how-it-works" className="how-container">
     <Heading alignment="right">{props.heading || "How It Works"}</Heading>
     <div className="how-things-container">
-      <div className="how-image">
-        <img src='/img/purple_hero.png'/>
-      </div>
       <div className="how-things">
-        <div className="thing1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-        <div className="thing2">Aliquam accumsan ipsum a purus mollis convallis.</div>
-        <div className="thing3">Vestibulum tempus diam ex, in porttitor ex vulputate non.</div>
+        <div className="thing-container">
+          <div className="how-image" />
+          <div className="thing1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+        </div>
+        <div className="thing-container">
+          <div className="how-image" />
+          <div className="thing2">Aliquam accumsan ipsum a purus mollis convallis.</div>
+        </div>
+        <div className="thing-container">
+          <div className="how-image" />
+          <div className="thing3">Vestibulum tempus diam ex, in porttitor ex vulputate non.</div>
+        </div>
       </div>
     </div>
 

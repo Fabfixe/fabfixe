@@ -2,6 +2,10 @@ h1 {
   font-family: $bebas-bold;
   font-size: 40px;
   text-align: center;
+
+  @include for-tablet-portrait-up {
+    font-size: 48px;
+  }
 }
 
 h2 {
@@ -33,9 +37,12 @@ h3 {
 
     h1 {
       font-family: $bebas-bold;
-      color: #FFF;
       padding-left: 10px;
     }
+  }
+
+  &.center {
+    height: auto;
   }
 
   &.right {

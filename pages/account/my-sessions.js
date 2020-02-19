@@ -21,7 +21,7 @@ const MySessions = (props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <MyLayout alignment="center">
-        <Heading style={{ marginTop: '80px' }}>My Sessions</Heading>
+        <Heading alignment="center">My Sessions</Heading>
         <Sessions />
       </MyLayout>
     </React.Fragment>

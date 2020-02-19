@@ -22,6 +22,11 @@
 
       @include for-tablet-portrait-up {
         height: 100%;
+        background-position: 15%;
+      }
+
+      @include for-desktop-up {
+        background-position: 50%;
       }
     }
 
@@ -70,6 +75,7 @@
       text-align: center;
       padding: 10px 20px;
       margin-bottom: 10px;
+      line-height: 1.25;
     }
   }
 

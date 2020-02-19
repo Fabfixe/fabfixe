@@ -22,7 +22,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if(document.referrer) this.setState({ redirect: document.referrer })
+    if(document.referrer ==! window.location) this.setState({ redirect: document.referrer })
   }
 
   handleInputChange(e) {
@@ -50,7 +50,8 @@ class Login extends Component {
     }
 
     if(this.props.auth.isAuthenticated) {
-      Router.push(this.state.redirect)
+      console.log(this.state.redirect)
+      window.location = this.state.redirect
     }
   }
 
