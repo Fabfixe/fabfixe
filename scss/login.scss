@@ -1,0 +1,17 @@
+#login {
+  .invalid-feedback {
+    margin: 15px 30px;
+  }
+}
+
+.join-container {
+  h2 {
+    color: $plum;
+    text-align: center;
+  }
+  background-color: lighten($linen, 15%);
+
+  button {
+    background-color: darken($moss, 5%);
+  }
+}

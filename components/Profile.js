@@ -153,6 +153,9 @@ class Profile extends Component {
           axios.post('/api/emails/sessionRequested', session)
           this.setState({ submitted: true })
         })
+        .catch((e) => {
+          console.log('error with session submission:', err)
+        })
     } else {
       this.setState({
         errors: validation.errors,

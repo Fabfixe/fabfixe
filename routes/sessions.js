@@ -65,6 +65,7 @@ router.post('/byId', function(req, res) {
     .populate('artist')
     .populate('pupil')
     .then((sessions) => {
+      console.log('byId sessions', sessions)
       // if the session is expired or completed, update the session
       sessions.forEach((session) => {
         if(session.status === 'pending' && moment(session.date).isSameOrBefore(moment())) session.status = 'expired'

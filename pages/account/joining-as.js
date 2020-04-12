@@ -16,7 +16,8 @@ export default () => (
       <div style={{ height: '100vh',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center' }} alignment="center">
+      alignItems: 'center' }}
+      className="join-container">
         <div className="options-container">
           <h2 style={{ marginBottom: "20px" }}>I'm joining as a:</h2>
           <Link href="/accountType?pupil" as="/join/pupil">

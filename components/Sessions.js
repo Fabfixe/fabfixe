@@ -37,9 +37,9 @@ class Sessions extends Component {
 
   componentDidMount() {
     const { _id, accountType } = this.props.user
-
     getSessions(_id, accountType)
     .then((res) => {
+      console.log(res)
       const validSessions = res.data.filter(session => !session[this.state.user.accountType + 'Deleted'] && session.artist !== null)
 
       const sessions = validSessions.map((session) => {
@@ -156,7 +156,7 @@ class Sessions extends Component {
                     return (
                       <li className={cn({ 'soon': withinThirty })} key={id}>
                         <p className="username">{isPupil ? session.artist : session.pupil}</p>
-                        <p>{formatTime(session.date, session.duration)}</p>
+                        <p style={{ marginBottom: '20px' }}>{formatTime(session.date, session.duration)}</p>
                         {!withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
@@ -210,7 +210,7 @@ class Sessions extends Component {
                 </ul>
               </React.Fragment>}
             {this.state.showModal &&
-              <Modal closeModal={this.closeModal}>
+              <Modal layout="default" closeModal={this.closeModal}>
                 {this.state.modalType === 'edit' && <EditSession
                   isPupil={isPupil}
                   userId={this.state.user._id}

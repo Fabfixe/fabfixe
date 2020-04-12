@@ -8,13 +8,13 @@
 
   #session-widgets {
     position: absolute;
-    top: 50px;
-    right: 20px;
+    top: 80px;
+    right: 15px;
     display: flex;
     z-index: 10;
 
     div {
-      background-color: lightgray;
+      background-color: $moss;
       width: 50px;
       height: 30px;
       display: flex;
@@ -52,7 +52,7 @@
     font-size: 22px;
     text-transform: uppercase;
     width: 100%;
-    background: lightgray;
+    background: $moss;
     padding: 10px;
     border: 0;
     margin: 15px auto;
@@ -60,9 +60,7 @@
 
   &.single-session button,
   &.double-session button {
-    width: calc(100% - 30px);
-    left: 15px;
-    margin: 0;
+    margin: 0 auto;
   }
 
   &.preview {
@@ -82,7 +80,8 @@
 
   #local-media,
   #remote-media {
-    background-color: lightgray;
+    background-color: $moss;
+    display: flex;
   }
 
   &.single-session video {
@@ -154,7 +153,7 @@
   width: 75vw;
   height: 100vh;
   right: 0;
-  background-color: lightgray;
+  background-color: $moss;
   z-index: 11;
 
   & * {

@@ -8,7 +8,7 @@ import setAuthToken from '../setAuthToken'
 import jwt_decode from 'jwt-decode'
 import thunk from 'redux-thunk'
 import rootReducer from '../reducers'
-import { setCurrentUser, logoutUser } from '../actions/authentication'
+import { setCurrentUser, logoutUser, redirectAuthPages } from '../actions/authentication'
 import { getProfile, setProfile } from '../actions/profile'
 import '../scss/index.scss'
 
@@ -38,18 +38,19 @@ class Fabfixe extends App {
 
   componentDidMount() {
     const { store } = this.props
-    if(process.browser) {
 
+    if(process.browser) {
       if(localStorage.jwtToken) {
         setAuthToken(localStorage.jwtToken)
         const decoded = jwt_decode(localStorage.jwtToken)
         store.dispatch(setCurrentUser(decoded))
-
         const currentTime = Date.now() / 1000
         if(decoded.exp < currentTime) {
           store.dispatch(logoutUser())
           window.location.href = '/account/login'
         }
+      } else {
+        store.dispatch(redirectAuthPages(true))
       }
     }
 
@@ -63,7 +64,6 @@ class Fabfixe extends App {
 
   render() {
     const { Component, store, pageProps } = this.props
-
     return (
         <Provider store={ store }>
           <Component { ...pageProps }/>

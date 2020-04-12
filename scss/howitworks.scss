@@ -1,6 +1,7 @@
 .how-container {
   position: relative;
   padding: 30px;
+  margin: 80px 0;
   width: 100%;
   background: #FFF;
   display: flex;
@@ -9,25 +10,18 @@
   justify-content: space-around;
 
   .heading-container {
-    top: 30px;
+    top: 50px;
   }
 
    h1 {
      font-family: $bebas-bold;
      color: $plum;
-     // margin: 20px 0;
-     // width: auto;
-     // text-align: center;
-     // position: relative;
    }
 
    .how-button {
-     font-family: $bebas-bold;
-     letter-spacing: 3.5px;
-     font-size: 22px;
+     @extend %action-button;
+     font-size: 13px;
      color: #FFF;
-     text-decoration: none;
-     padding: 10px 15px;
      background: $eggplant;
      margin: 0 auto;
      width: auto;

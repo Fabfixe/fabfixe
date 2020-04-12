@@ -4,6 +4,7 @@
 
   h2 {
     font-weight: bold;
+    margin: 20px 0;
   }
 
   ul {
@@ -16,11 +17,26 @@
   }
 
   .username {
-    text-transform: uppercase;
+    text-transform: capitalize;
     margin-bottom: 5px;
   }
 
   .soon {
     border: solid 1px red;
+  }
+
+  .small-button:first-of-type {
+    margin-left: 0;
+  }
+}
+
+.edit-session-modal {
+  .small-button {
+    align-self: flex-start;
+    margin-left: 0;
+  }
+
+  .button {
+    margin: 20px 0;
   }
 }

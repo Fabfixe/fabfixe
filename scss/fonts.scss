@@ -6,19 +6,40 @@
   font-style: normal;
 }
 
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito:wght@400;900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,400i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Ultra:wght@400;700&display=swap');
 
-$bebas-bold: 'bebas_neuebold';
-$lato: 'Lato', sans-serif;
+// $bebas-bold: 'bebas_neuebold';
+$bebas-bold: 'Ultra';
+$nunito: 'Nunito', sans-serif;
 $playfair-bold: 'Playfair Display', serif;
 
-@mixin playfair-bold {
-  font-family: 'Playfair Display', serif;
+
+// Text Styles
+$letter-spacing-s: 3px;
+$letter-spacing-m: 5px;
+
+@mixin nunito {
+  font-family: $nunito;
+  font-weight: 400;
+}
+
+@mixin nunito-bold {
+  font-family: $nunito;
   font-weight: 900;
 }
 
+@mixin playfair-bold {
+  font-family: $nunito;
+  font-weight: 700;
+}
+
 @mixin playfair {
-  font-family: 'Playfair Display', serif;
+  font-family: $nunito;
   font-weight: 400;
+}
+
+p, input, div, button, h2, h3, ul, li {
+  font-family: $nunito;
 }

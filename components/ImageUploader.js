@@ -9,7 +9,6 @@ const AddButton = (props) => {
     width: '168px',
     height: '168px',
     margin: '0 auto',
-    border: 'solid 1px black'
   }
 
   return (
@@ -34,9 +33,9 @@ class ImageUploader extends Component {
     this.removeImage = this.removeImage.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.images) {
-      this.setState({ images: [ nextProps.images ] })
+  componentDidUpdate(prevProps) {
+    if(prevProps.images.length === 0 && this.props.images.length > 0) {
+      this.setState({ images: [ this.props.images ] })
     }
   }
 
@@ -118,7 +117,7 @@ class ImageUploader extends Component {
 
     return (
       <React.Fragment>
-        <div className='image-uploader'>
+        <div style={{ marginTop: "50px" }}className='image-uploader'>
           {content()}
         </div>
       </React.Fragment>

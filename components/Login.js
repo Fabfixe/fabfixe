@@ -43,20 +43,14 @@ class Login extends Component {
   }
 
   componentDidUpdate() {
-    if(Object.keys(this.props.errors).length > 0) {
-      this.setState({
-        errors: this.props.errors
-      })
-    }
-
     if(this.props.auth.isAuthenticated) {
-      console.log(this.state.redirect)
+      console.log('auth')
       window.location = this.state.redirect
     }
   }
 
   render() {
-    const { errors } = this.state
+    const { errors } = this.props
 
     return (
       <form id="login" onSubmit={ this.handleSubmit }>

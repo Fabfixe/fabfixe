@@ -1,9 +1,16 @@
+$form-padding: 30px;
+$form-item-width: calc(100% - #{$form-padding * 2});
+
+
 input {
   border: 0;
-  border-bottom: solid 1px grey;
-  width: 100%;
+  border-radius: 0;
+  border-bottom: solid 1px lighten($plum, 50%);
+  width: $form-item-width;
   padding: 0 0 10px 10px;
-  margin-top: 10px;
+  margin: 10px auto 0;
+  letter-spacing: $letter-spacing-s;
+  background-color: transparent;
 
   &.email {
     -webkit-text-security: disc;
@@ -11,8 +18,9 @@ input {
     text-security: disc;
   }
 
-  &.digit {
+  &[type='number'] {
     width: 50px;
+    margin: 0;
   }
 }
 
@@ -29,20 +37,24 @@ input {
 .box {
   width: 20px;
   height: 20px;
-  border: solid 2px grey;
+  border: solid 2px $plum;
   position: absolute;
 }
 
 form {
   margin: 0 auto;
-  padding: 30px;
   display: flex;
   flex-wrap: wrap;
 
+  p {
+    margin: 0 $form-padding;
+  }
+
   label {
+    width: $form-item-width;
     font-style: italic;
     display: block;
-    margin: 15px 0;
+    margin: 15px auto;
   }
 
   .button-container {
@@ -58,26 +70,32 @@ form {
 }
 
 .invalid-feedback {
-  margin: 10px;
+  margin: $form-padding;
   font-family: 'system-ui';
   font-size: 12px;
   color: red;
-  width: 100%;
+  width: $form-item-width;
 }
 
-.dollar-prefix {
+p.dollar-prefix {
   display: flex;
   align-items: center;
+  margin: 0 0 0 $form-padding;
+}
+
+p.hour-suffix {
+  margin-left: 0;
 }
 
 .expertise-tags {
   display: flex;
-  width: 100%;
+  width: $form-item-width;
+  margin: 0 $form-padding;
+  flex-wrap: wrap;
 
   li {
-    background-color: lightgrey;
-    margin-right: 10px;
-    font-family: Helvetica;
+    background-color: $moss;
+    margin: 0 10px 10px;
     padding: 10px;
     transition: background-color 0.5s ease;
 
@@ -86,7 +104,22 @@ form {
     }
 
     &.selected {
-      background-color: grey;
+      background-color: $moss;
     }
   }
+}
+
+form {
+  &#login {
+    margin-top: 50px;
+  }
+
+  h2, h3 {
+    width: $form-item-width;
+    margin: $form-padding;
+  }
+}
+
+#signup {
+  margin: 30px auto;
 }

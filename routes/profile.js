@@ -25,17 +25,21 @@ router.post('/', function(req, res) {
 })
 
 router.post('/username', function(req, res) {
+  console.log('the username you sent', req.body.username)
   ArtistProfile.findOne({
     username: req.body.username
   }).then((profile) => {
     if(profile) {
+      console.log('profile.artist', profile)
       return res.json(profile)
     } else {
       PupilProfile.findOne({
         username: req.body.username
       }).then((profile) => {
-        if(profile) {
+        console.log('WHY ARE YOU HERE?')
 
+        if(profile) {
+          console.log('profile pupil', profile)
           //might be able to remove these returns
           return res.json(profile)
         } else {

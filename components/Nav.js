@@ -78,7 +78,7 @@ class NavLinks extends Component {
             <Link href="/about/how-it-works">
               <a>How It Works</a>
             </Link>
-            <Link href="">
+            <Link href="/browse/artists">
               <a>Browse Artists</a>
             </Link>
             {this.props.auth.user.accountType === "pupil" || <Link href="/about/artists">
@@ -101,7 +101,7 @@ class NavLinks extends Component {
           <Link href="/about/how-it-works">
             <a>How It Works</a>
           </Link>
-          <Link href="">
+          <Link href="/browse/artists">
             <a>Browse Artists</a>
           </Link>
           { this.props.userType === "client" || <Link href="/about/artists">

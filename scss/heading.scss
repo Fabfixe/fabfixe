@@ -1,21 +1,23 @@
+body * {
+  color: $plum;
+}
+
 h1 {
   font-family: $bebas-bold;
-  font-size: 40px;
+  font-size: 32px;
   text-align: center;
 
   @include for-tablet-portrait-up {
-    font-size: 48px;
+    font-size: 38px;
   }
 }
 
 h2 {
-  font-family: Helvetica;
-  font-size: 26px;
+  font-size: 23px;
   width: 100%;
 }
 
 h3 {
-  font-family: Helvetica;
   text-transform: uppercase;
   margin: 30px 0;
   font-size: 14px;
@@ -43,6 +45,7 @@ h3 {
 
   &.center {
     height: auto;
+    width: auto;
   }
 
   &.right {
@@ -61,6 +64,6 @@ h3 {
   }
 
   & + div {
-    margin-top: 80px;
+    margin-top: 110px;
   }
 }

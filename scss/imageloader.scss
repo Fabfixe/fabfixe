@@ -1,5 +1,4 @@
 .image-uploader {
-  border: solid 1px black;
   position: relative;
   width: 168px;
   height: 168px;
@@ -7,6 +6,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: $linen;
+  border-radius: 50%;
 
   .fade-in {
     overflow: hidden;
@@ -14,11 +15,17 @@
     height: 168px;
   }
 
+  .placeholder {
+    background-image: url('/img/Blowdryer.svg');
+    background-repeat: no-repeat;
+    background-position: 50%;
+  }
+
   label {
     display: inline-flex;
     width: 168px;
     margin: 0 auto;
-    background: lightgray;
+    background: $moss;
     position: absolute;
     left: 0;
     right: 0;

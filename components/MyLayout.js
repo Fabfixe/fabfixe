@@ -1,9 +1,10 @@
 import Nav from './Nav'
+const cn = require('classnames')
 
 const Layout = (props) => (
   <React.Fragment>
     <Nav />
-    <div style={{overflow: 'hidden'}}className={ props.alignment }>
+    <div className={cn(props.alignment, props.scroll)}>
       {props.children}
     </div>
   </React.Fragment>

@@ -21,8 +21,8 @@ const usernameExists = (username) => {
 class EditProfile extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
+      auth: this.props.auth,
       accountType: this.props.query.accountType,
       flagErrors: false,
       errors: {},
@@ -34,18 +34,14 @@ class EditProfile extends Component {
       facebook: this.props.facebook,
       hourlyRate: this.props.hourlyRate,
       sessions: this.props.sessions,
-      expertise: {
-        hair: [ 'Styling', 'Braiding', 'Natural Hair', 'Wigs/Extensions' ],
-        makeup: [ 'Eyes', 'Lips', 'Foundation/Face', 'Nails' ]
-      },
       selectedExpertise: {
-        makeup: this.props.expertise.makeup,
-        hair: this.props.expertise.hair
+        makeup: [],
+        hair: []
       }
     }
 
     this.handleUsernameBlur = this.handleUsernameBlur.bind(this)
-    this.handleInputBlur = this.handleInputBlur.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.updateSkill = this.updateSkill.bind(this)
     this.getImageUrl = this.getImageUrl.bind(this)
@@ -56,15 +52,15 @@ class EditProfile extends Component {
     return { query }
   }
 
-  componentDidUpdate() {
-    if(!this.props.auth.isAuthenticated) {
-      Router.push('/account/login')
+  componentDidUpdate(prevProps, prevState) {
+    if(!this.props.auth) {
+        window.location = '/account/login'
     } else if(this.props.query.accountType !== this.props.accountType) {
-      Router.push(`/account/edit-profile/${this.props.accountType}`)
-    }
-
-    if(this.props.username !== this.state.username) {
-      this.setState({ ...this.props })
+      window.location = `/account/edit-profile/${this.props.accountType}`
+    } else {
+      if(prevProps.username === '' && this.props.username !== '') {
+        this.setState({ ...this.props })
+      }
     }
   }
 
@@ -72,21 +68,6 @@ class EditProfile extends Component {
     e.persist()
 
     const newUsername  = e.target.value.trim()
-    this.setState((prevState) => {
-      const errors = validateUsernameInput(newUsername).errors
-
-      if(errors.username) {
-        return {
-          errors
-        }
-      } else {
-        return {
-          flagErrors: false,
-          errors: {},
-          username: newUsername
-        }
-      }
-    })
 
     if(newUsername !== this.props.username) {
       usernameExists(newUsername)
@@ -94,6 +75,22 @@ class EditProfile extends Component {
         if(res.data !== '') {
           this.setState({
             errors: { username: 'Username already exists' }
+          })
+        } else {
+          this.setState((prevState) => {
+            const errors = validateUsernameInput(newUsername).errors
+
+            if(errors.username) {
+              return {
+                errors
+              }
+            } else {
+              return {
+                flagErrors: false,
+                errors: {},
+                username: newUsername
+              }
+            }
           })
         }
       })
@@ -104,7 +101,7 @@ class EditProfile extends Component {
     this.setState({ profileImageUrl: url})
   }
 
-  handleInputBlur(e) {
+  handleChange(e) {
     this.setState({
       [e.target.name]: `${e.target.value}`
     })
@@ -168,41 +165,55 @@ class EditProfile extends Component {
     }
 
     const validation = validateProfileSubmit(profile[accountType])
+
+    if(!validation.isValid) {
+      this.setState({
+        errors: validation.errors,
+        flagErrors: true
+      })
+
+      return
+    }
+
     if(this.state.username !== this.props.username) {
-      if(this.state.errors.username) {
-        this.setState({
-          flagErrors: true
-        })
-      } else if(!validation.isValid) {
-        this.setState({
-          errors: validation.errors,
-          flagErrors: true
-        })
-      } else {
-        usernameExists(this.state.username)
-        .then((res) => {
-          if(res.data !== '') {
-            this.setState({
-              errors: { username: 'Username already taken' },
-              flagErrors: true,
-            })
-          } else {
-            updateProfile(accountType, profile[accountType])
-            .then(res => {
-              if(res.status === 200) alert('Profile Updated')
-            })
-            .catch((err) => {
-              alert('Something went wrong, please try again')
-              console.log('err from updateProfile', err)
-            })
-          }
-        })
-      }
+      usernameExists(this.state.username)
+      .then((res) => {
+        if(res.data !== '') {
+          this.setState({
+            errors: { username: 'Username already taken' },
+            flagErrors: true,
+          })
+        } else {
+          updateProfile(accountType, profile[accountType])
+          .then(res => {
+            console.log('res', res)
+            if(res.status === 200) alert('Profile Updated')
+          })
+          .catch((err) => {
+            alert('Something went wrong, please try again')
+            console.log('err from updateProfile', err)
+          })
+        }
+      })
+    } else {
+      updateProfile(accountType, profile[accountType])
+      .then(res => {
+        console.log('res', res)
+        if(res.status === 200) alert('Profile Updated')
+      })
+      .catch((err) => {
+        alert('Something went wrong, please try again')
+        console.log('err from updateProfile', err)
+      })
     }
   }
 
   render() {
-    const { errors, accountType, expertise } = this.state
+    const { errors, accountType } = this.state
+    const expertise = {
+      hair: [ 'Styling', 'Braiding', 'Natural Hair', 'Wigs/Extensions' ],
+      makeup: [ 'Eyes', 'Lips', 'Foundation/Face', 'Nails' ]
+    }
 
     return (
       <React.Fragment>
@@ -210,9 +221,10 @@ class EditProfile extends Component {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
         <MyLayout alignment='center'>
-          <Heading style={{ marginTop: '80px' }}>Edit Profile</Heading>
+          <Heading alignment='center' scroll='no-scroll'>Edit Profile</Heading>
           <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
-          <form onSubmit={ this.handleSubmit }>
+          <form style={{ marginTop: '30px' }}
+            onSubmit={ this.handleSubmit }>
             <input
               type='text'
               name='username'
@@ -220,6 +232,7 @@ class EditProfile extends Component {
               placeholder='CHOOSE A USERNAME'
               onBlur={ this.handleUsernameBlur }
               onFocus={ this.onFocus }
+              onChange={ this.handleChange }
               defaultValue={ this.state.username }
             />
             {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
@@ -230,7 +243,7 @@ class EditProfile extends Component {
               name='youtube'
               id='youtube-handle'
               placeholder='ENTER HANDLE'
-              onBlur={ this.handleInputBlur }
+              onChange={ this.handleChange }
               defaultValue={ this.state.youtube }
             />
             <label>Instagram</label>
@@ -239,7 +252,7 @@ class EditProfile extends Component {
               name='instagram'
               id='youtube-handle'
               placeholder='ENTER HANDLE'
-              onBlur={ this.handleInputBlur }
+              onChange={ this.handleChange }
               defaultValue={ this.state.instagram }
             />
             <label>Twitter</label>
@@ -248,7 +261,7 @@ class EditProfile extends Component {
               name='twitter'
               id='twitter-handle'
               placeholder='ENTER HANDLE'
-              onBlur={ this.handleInputBlur }
+              onChange={ this.handleChange }
               defaultValue={ this.state.twitter }
             />
             <label>Facebook</label>
@@ -257,7 +270,7 @@ class EditProfile extends Component {
               name='facebook'
               id='facebook-handle'
               placeholder='ENTER HANDLE'
-              onBlur={ this.handleInputBlur }
+              onChange={ this.handleChange }
               defaultValue={ this.state.facebook }
             />
             {accountType === 'artist' && (
@@ -268,10 +281,10 @@ class EditProfile extends Component {
                 type='number'
                 name='hourlyRate'
                 className='digit'
-                onChange={ this.handleInputBlur }
+                onChange={ this.handleChange }
                 defaultValue={ this.state.hourlyRate }
               />
-              <p className='dollar-prefix'>/hr</p>
+              <p className='hour-suffix'>/hr</p>
               <h2>Add Expertise</h2>
               <p>Add tags to show the things you slay at. Clients will be able to search based on these things</p>
               <h3>Makeup</h3>
@@ -286,14 +299,13 @@ class EditProfile extends Component {
               <ul className="expertise-tags">
                 {expertise.hair.map((exp) => {
                   let selected = this.state.selectedExpertise.hair.includes(exp)
-
                   return <li category="hair" id={exp} onClick={ (e) => { this.updateSkill(e, 'hair')} } key={exp} className={classnames({ selected })}>{exp}</li>
                 })}
               </ul>
               </React.Fragment>
             )}
+            {this.state.flagErrors && (<div className="invalid-feedback">See errors above</div>)}
             <div className="button-container">
-              {this.state.flagErrors && (<div className="invalid-feedback">See errors above</div>)}
               <Button type="submit">Save Profile</Button>
             </div>
           </form>
@@ -304,7 +316,7 @@ class EditProfile extends Component {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth,
+  auth: state.auth.isAuthenticated,
   accountType: state.auth.user.accountType,
   errors: state.errors,
   _id: state.auth.user._id,
@@ -315,8 +327,9 @@ const mapStateToProps = state => ({
   twitter: state.profile.twitter,
   facebook: state.profile.facebook,
   hourlyRate: state.profile.hourlyRate,
-  expertise: state.profile.expertise,
-  sessions: state.profile.sessions
+  selectedExpertise: state.profile.expertise,
+  sessions: state.profile.sessions,
+  redirectFromAuth: state.redirectFromAuth,
 })
 
 export default connect(mapStateToProps)(EditProfile)

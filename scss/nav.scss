@@ -14,8 +14,8 @@ nav {
 
   .nav-logo {
     background-image: url('/img/logo_white.png');
-    width: 150px;
-    height: 35px;
+    width: 200px;
+    height: 34px;
     top: 0px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -26,9 +26,10 @@ nav {
   display: none;
 
   a {
-    font-size: 22px;
-    letter-spacing: 0.5px;
-    font-family: $bebas-bold;
+    @include nunito-bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-s;
     margin-right: 25px;
     text-decoration: none;
     color: #FFF;
@@ -148,16 +149,16 @@ nav {
 }
 
 .hamburger--slider.is-active .hamburger-inner::after {
-  transform: translate3d(0, -8px, 0) rotate(-90deg);
+  transform: translate3d(0, -10px, 0) rotate(-90deg);
 }
 
 .menu {
   height: 100vh;
   width: 100vw;
   position: absolute;
-  background-color: lightgrey;
-  top: -15px;
-  left: -15px;
+  background-color: $moss;
+  top: 0;
+  left: 0;
   right: 0;
   bottom: 0;
   display: none;

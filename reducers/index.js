@@ -3,10 +3,12 @@ import errorReducer from './errorReducer'
 import authReducer from './authReducer'
 import profileReducer from './profileReducer'
 import sessionReducer from './sessionReducer'
+import redirectFromAuthReducer from './redirectFromAuthReducer'
 
 export default combineReducers({
   errors: errorReducer,
   auth: authReducer,
   profile: profileReducer,
-  sessions: sessionReducer
+  sessions: sessionReducer,
+  redirectFromAuth: redirectFromAuthReducer
 })

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GET_ERRORS, SET_CURRENT_USER } from './types'
+import { GET_ERRORS, SET_CURRENT_USER, REDIRECT_AUTH_PAGES } from './types'
 import setAuthToken from '../setAuthToken'
 import jwt_decode from 'jwt-decode'
 import Router from 'next/router'
@@ -15,6 +15,7 @@ export const registerUser = (user, history) => dispatch => {
 
       const decoded = jwt_decode(token)
       dispatch(setCurrentUser(decoded))
+      dispatch(redirectFromAuth(false))
       Router.push(`/account/edit-profile/${user.accountType}`), { shallow: true }
     })
     .catch(err => {
@@ -40,6 +41,7 @@ export const loginUser = (user) => dispatch => {
     setAuthToken(token)
     const decoded = jwt_decode(token)
     dispatch(setCurrentUser(decoded))
+    dispatch(redirectFromAuth(false))
   })
   .catch(err => {
     dispatch({
@@ -61,3 +63,8 @@ export const logoutUser = () => dispatch => {
   setAuthToken(false)
   dispatch(setCurrentUser({}))
 }
+
+export const redirectAuthPages = (status) => ({
+  type: REDIRECT_AUTH_PAGES,
+  payload: status
+})

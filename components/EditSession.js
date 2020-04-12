@@ -146,13 +146,15 @@ class EditSession extends Component {
     const showPaymentButton = isPupil && artistApproved && status === 'pending'
 
     return (
-      <React.Fragment>
+      <div className="edit-session-modal">
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
         <h1>Edit Session</h1>
         <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
-        <p id="time-display">Time: {formatTime(date, duration)}</p>
+        <p id="time-display" style={{ marginRight: '10px' }}>Time: {formatTime(date, duration)}</p>
         {status === 'pending' &&
-        <button className="small-button" onClick={this.handleScheduler}>{this.state.schedulerOpen ? 'Cancel' : 'Request a new time'  }
+        <button
+          className="small-button"
+          onClick={this.handleScheduler}>{this.state.schedulerOpen ? 'Cancel' : 'Request a new time' }
         </button>}
         {this.state.schedulerOpen && <div className="session-scheduler">
         <h2>CHOOSE TIME</h2>
@@ -174,13 +176,13 @@ class EditSession extends Component {
         </div>}
         <p>Category: {category}</p>
         <p>Description: {description}</p>
-        {attachment && <div style={{backgroundImage: `url(${attachment})`,
+        {attachment && <div style={{ backgroundImage: `url(${attachment})`,
           width: '100px',
           height: '100px',
           backgroundSize: 'cover',
           marginBottom: '20px'
         }} />}
-        <p style={{ textTransform: 'capitalize', display: 'inline-block' }}>Status: {status}</p>
+        <p style={{ textTransform: 'capitalize', display: 'inline-block', marginRight: '10px'}}>Status: {status}</p>
         {(status === 'pending' || status === 'upcoming') && <button className="small-button"
           onClick={() => { this.props.changeModal('confirm')}} style={{ marginBottom: '20px'}}>Cancel Session</button>}
         {status !== 'cancelled' && status !== 'expired' && !isPupil && <div className="confirm-approval">
@@ -190,7 +192,7 @@ class EditSession extends Component {
         <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>Submit Change</Button>
         {(status === 'cancelled'|| status === 'expired') && <Button onClick={this.deleteSession}>Delete Session</Button>}
         {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
-      </React.Fragment>
+      </div>
     )
   }
 }

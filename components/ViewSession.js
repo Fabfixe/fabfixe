@@ -151,65 +151,69 @@ class ViewSession extends Component {
       <React.Fragment>
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
         <h1>View Session</h1>
-        <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
-        <p id="time-display">Time: {formatTime(date, duration)}</p>
-        <p>Category: {category}</p>
-        <p>Description: {description}</p>
-        {attachment && <div style={{backgroundImage: `url(${attachment})`,
-          width: '100px',
-          height: '100px',
-          backgroundSize: 'cover',
-          marginBottom: '20px'
-        }} />}
-        <p>Status: {status}</p>
-        {showPaymentButton && <div className="paypal-container">
-          <p>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
-          <PayPalButton
-            createOrder={(data, actions) => {
-              return actions.order.create({
-                purchase_units: [{
-                  amount: {
-                  currency_code: "USD",
-                  value: digitCalcTotal(duration, hourlyRate)
-                   }
-                 }]
-              })
-            }}
-            onApprove={(data, actions) => {
-              // Capture the funds from the transaction
-               actions.order.capture().then((details) => {
-                // Show a success message to your buyer
-                 axios.post('/api/emails/paymentComplete', {
-                   artistId,
-                   pupilId,
-                   total: details.purchase_units[0].amount.value,
-                   artistUsername: artist,
-                   pupilUsername: pupil,
-                   date: formatTime(date, duration),
-                   momentDate: date,
+        <div className="view-session">
+          <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
+          <p id="time-display">Time: {formatTime(date, duration)}</p>
+          <p>Category: {category}</p>
+          <p>Description: {description}</p>
+          {attachment && <div style={{backgroundImage: `url(${attachment})`,
+            width: '100px',
+            height: '100px',
+            backgroundSize: 'cover',
+            marginBottom: '20px'
+          }} />}
+          <p>Status: {status}</p>
+          {showPaymentButton && <div className="paypal-container">
+            <p>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
+            <PayPalButton
+              createOrder={(data, actions) => {
+                return actions.order.create({
+                  purchase_units: [{
+                    amount: {
+                    currency_code: "USD",
+                    value: digitCalcTotal(duration, hourlyRate)
+                     }
+                   }]
                 })
-                axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: _id })
-                .then((result) => {
-                  if(result) console.log(result)
-                  this.props.changeModal('congrats')
+              }}
+              onApprove={(data, actions) => {
+                // Capture the funds from the transaction
+                 actions.order.capture().then((details) => {
+                  // Show a success message to your buyer
+                   axios.post('/api/emails/paymentComplete', {
+                     artistId,
+                     pupilId,
+                     total: details.purchase_units[0].amount.value,
+                     artistUsername: artist,
+                     pupilUsername: pupil,
+                     date: formatTime(date, duration),
+                     momentDate: date,
+                  })
+                  axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: _id })
+                  .then((result) => {
+                    if(result) console.log(result)
+                    this.props.changeModal('congrats')
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                    // Add an error message
+                  })
                 })
-                .catch((err) => {
-                  console.log(err)
-                  // Add an error message
-                })
-              })
-            }}
-            options={{ clientId: 'AVm5X6oZjRSvQwccLrBlE6hnioKJJc0DE93SoUIwU2UahsHgtpr9po5O0kDOw8RnXIYLJGuU2H3GHWWt' }}
-            style={{size: 'responsive', layout: 'horizontal', color: 'black', tagline: false }}/>
-        </div>}
-        {status !== 'cancelled' && status !== 'expired' && !isPupil && !artistApproved && <div className="confirm-approval">
-          <input ref={this.confirmApproval} id="confirmApproval" type="checkbox" /><label htmlFor="confirmApproval">By agreeing to this session, you have to do it</label>
-        </div>}
-        {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
-        {status === 'pending' && !isPupil && !artistApproved && <Button onClick={this.onApprove} containerStyle={{ display: 'inline-block', marginRight: '10px', float: 'left'}}>Approve Session</Button>}
-        {status === 'pending' && <Button  onClick= {() => { this.props.changeModal('edit')}} containerStyle={{ display: 'inline-block', marginRight: '10px', float: 'left'}}>Edit Session</Button>}
-        {(status === 'pending' || status === 'upcoming') && <Button onClick={() => { this.props.changeModal('messages')}} containerStyle={{ display: 'inline-block', marginRight: '10px', float: 'left'}}>Messages</Button>}
-        {(status === 'expired' || status === 'cancelled') && <Button onClick={this.deleteSession}>Delete Session</Button>}
+              }}
+              options={{ clientId: 'AVm5X6oZjRSvQwccLrBlE6hnioKJJc0DE93SoUIwU2UahsHgtpr9po5O0kDOw8RnXIYLJGuU2H3GHWWt' }}
+              style={{size: 'responsive', layout: 'horizontal', color: 'black', tagline: false }}/>
+            </div>}
+          {status !== 'cancelled' && status !== 'expired' && !isPupil && !artistApproved && <div className="confirm-approval">
+            <input ref={this.confirmApproval} id="confirmApproval" type="checkbox" /><label htmlFor="confirmApproval">By agreeing to this session, you have to do it</label>
+          </div>}
+          {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
+          <div className="button-row">
+            {status === 'pending' && !isPupil && !artistApproved && <Button containerStyle="row" onClick={this.onApprove}>Approve Session</Button>}
+            {status === 'pending' && <Button containerStyle="row" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</Button>}
+            {(status === 'pending' || status === 'upcoming') && <Button containerStyle="row" onClick={() => { this.props.changeModal('messages')}}>Messages</Button>}
+            {(status === 'expired' || status === 'cancelled') && <Button containerStyle="row" onClick={this.deleteSession}>Delete Session</Button>}
+          </div>
+        </div>
         {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
       </React.Fragment>
     )
