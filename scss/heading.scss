@@ -4,16 +4,16 @@ body * {
 
 h1 {
   font-family: $bebas-bold;
-  font-size: 32px;
+  font-size: 34px;
   text-align: center;
 
   @include for-tablet-portrait-up {
-    font-size: 38px;
+    font-size: 46px;
   }
 }
 
 h2 {
-  font-size: 23px;
+  font-size: 19px;
   width: 100%;
 }
 
@@ -55,12 +55,6 @@ h3 {
     h1 {
       padding-right: 10px;
     }
-  }
-
-  .line {
-    height: 5px;
-    background-color: $linen;
-    flex: 1;
   }
 
   & + div {

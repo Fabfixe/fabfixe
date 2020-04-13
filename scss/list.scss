@@ -1,4 +1,35 @@
 .artist-list {
   min-height: 100vh;
   padding: 150px 30px 80px;
+
+  ul {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  li {
+    display: flex;
+    flex-basis: 50%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    .artist-image {
+      width: 100px;
+      height: 100px;
+    }
+
+    p {
+      margin-bottom: 5px;
+    }
+
+    span {
+      text-transform: capitalize;
+    }
+  }
+
+  h1 {
+    margin-bottom: 30px;
+  }
 }

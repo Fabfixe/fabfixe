@@ -2,7 +2,7 @@ import Head from 'next/head'
 import MyLayout from '../../components/MyLayout'
 import Nav from '../../components/Nav'
 import Footer from '../../components/Footer'
-import Heading from '../../components/Heading'
+
 import ArtistList from '../../components/ArtistList'
 
 export default () => (

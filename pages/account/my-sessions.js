@@ -6,7 +6,7 @@ import Login from '../../components/Login'
 import MyLayout from '../../components/MyLayout'
 import Hero from '../../components/Hero'
 import HowItWorks from '../../components/HowItWorks'
-import Heading from '../../components/Heading'
+
 import Sessions from '../../components/Sessions'
 import Router from 'next/router'
 
@@ -21,7 +21,7 @@ const MySessions = (props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <MyLayout alignment="center">
-        <Heading alignment="center">My Sessions</Heading>
+        <h1 alignment="center">My Sessions</h1>
         <Sessions />
       </MyLayout>
     </React.Fragment>

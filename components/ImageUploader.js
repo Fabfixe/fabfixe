@@ -9,6 +9,7 @@ const AddButton = (props) => {
     width: '168px',
     height: '168px',
     margin: '0 auto',
+    borderRadius: '50%'
   }
 
   return (

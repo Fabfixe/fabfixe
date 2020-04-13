@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Router from 'next/router'
 import MyLayout from '../../../components/MyLayout'
 import Button from '../../../components/Button'
-import Heading from '../../../components/Heading'
+
 import ImageUploader from '../../../components/ImageUploader'
 import Footer from '../../../components/Footer'
 import { connect } from 'react-redux'
@@ -221,7 +221,7 @@ class EditProfile extends Component {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
         <MyLayout alignment='center'>
-          <Heading alignment='center' scroll='no-scroll'>Edit Profile</Heading>
+          <h1 alignment='center' scroll='no-scroll'>Edit Profile</h1>
           <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
           <form style={{ marginTop: '30px' }}
             onSubmit={ this.handleSubmit }>

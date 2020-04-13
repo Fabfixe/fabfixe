@@ -12,6 +12,11 @@ input {
   letter-spacing: $letter-spacing-s;
   background-color: transparent;
 
+  .moss-background & {
+    background-color: $moss;
+    padding: 10px;
+  }
+
   &.email {
     -webkit-text-security: disc;
     -moz-text-security: disc;
@@ -25,6 +30,7 @@ input {
 }
 
 .terms {
+  font-family: $bebas-bold;
   margin: 20px 0 0;
   padding: 10px;
 

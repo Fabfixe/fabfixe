@@ -1,7 +1,7 @@
 .how-container {
   position: relative;
   padding: 30px;
-  margin: 80px 0;
+  margin: 50px 0;
   width: 100%;
   background: #FFF;
   display: flex;
@@ -16,6 +16,7 @@
    h1 {
      font-family: $bebas-bold;
      color: $plum;
+     margin-bottom: 50px;
    }
 
    .how-button {
@@ -93,8 +94,9 @@
 
     &:before {
       font-family: $bebas-bold;
-      width: 30px;
-      height: 30px;
+      width: 50px;
+      height: 50px;
+      font-size: 42px;
       z-index: -1;
       align-items: center;
       justify-content: center;
@@ -112,19 +114,19 @@
 
   .thing1:before {
     content: '1';
-    top: -20px;
+    top: -35px;
     left: -20px;
   }
 
   .thing2:before {
     content: '2';
-    top: -20px;
+    top: -35px;
     right: -13px;
   }
 
   .thing3:before {
     content: '3';
-    top: -20px;
+    top: -40px;
     left: -20px;
   }
 

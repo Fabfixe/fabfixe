@@ -1,10 +1,9 @@
-import Heading from '../components/Heading'
 import Button from '../components/Button'
 import Link from 'next/link'
 
 const HowItWorks = (props) => (
   <div id="how-it-works" className="how-container">
-    <Heading alignment="right">{props.heading || "How It Works"}</Heading>
+    <h1 alignment="right">{props.heading || "How It Works"}</h1>
     <div className="how-things-container">
       <div className="how-things">
         <div className="thing-container">

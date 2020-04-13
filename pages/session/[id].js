@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MyLayout from '../../components/MyLayout'
 import Nav from '../../components/Nav'
-import Heading from '../../components/Heading'
+
 import VideoSession from '../../components/VideoSession'
 import axios from 'axios'
 

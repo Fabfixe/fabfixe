@@ -25,7 +25,6 @@ router.post('/', function(req, res) {
 })
 
 router.post('/username', function(req, res) {
-  console.log('the username you sent', req.body.username)
   ArtistProfile.findOne({
     username: req.body.username
   }).then((profile) => {
@@ -36,8 +35,6 @@ router.post('/username', function(req, res) {
       PupilProfile.findOne({
         username: req.body.username
       }).then((profile) => {
-        console.log('WHY ARE YOU HERE?')
-
         if(profile) {
           console.log('profile pupil', profile)
           //might be able to remove these returns
@@ -50,6 +47,13 @@ router.post('/username', function(req, res) {
   })
   .catch((err) => {
     return res.send(err)
+  })
+})
+
+router.get('/artists', function(req, res) {
+  const { offset, limit } = req.query
+  ArtistProfile.paginate({}, { offset: parseInt(offset), limit: parseInt(limit) }).then(function(result) {
+    res.json(result)
   })
 })
 

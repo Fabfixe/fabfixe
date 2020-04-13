@@ -51,13 +51,12 @@ button.button {
 button[type='submit'] {
   text-transform: uppercase;
   border: solid 2px $plum;
-  background-color: transparent;
-  color: $plum;
+  background-color: $plum;
+  color: white;
   font-weight: 900;
 
   &:hover {
-    background-color: $plum;
-    color: white;
+    background-color: darken($plum, 5%);
   }
 }
 

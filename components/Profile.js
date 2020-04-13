@@ -1,7 +1,7 @@
 require('dotenv').config()
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Heading from '../components/Heading'
+
 import Button from '../components/Button'
 import Modal from '../components/Modal'
 import Link from 'next/link'
@@ -19,7 +19,7 @@ const ModalContent = (props) => (
     <React.Fragment>
     {props.pupilUsername ? (
     <React.Fragment>
-      <Heading alignment="center">Request a Session</Heading>
+      <h1 alignment="center">Request a Session</h1>
       <form onSubmit={ props.handleSubmit }>
         <Datetime
           isValidDate={validDateSelection}
@@ -174,6 +174,7 @@ class Profile extends Component {
             <ul>
               {profileImageUrl && <li style={{ width: '40px',
                 height: '40px',
+                borderRadius: '50%',
                 backgroundImage: `url(${profileImageUrl})`,
                 backgroundSize: 'cover' }} />}
               {youtube && <li>{`YouTube: @${youtube}`}</li>}
@@ -185,7 +186,7 @@ class Profile extends Component {
               {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
               <li style={{ marginTop: '30px'}}>
                 {isArtist && <div className="button-container">
-                  <Button onClick={ this.handleModal }>Request a Session</Button>
+                  <Button onClick={ this.handleModal }>REQUEST A SESSION</Button>
                 </div>}
               </li>
             </ul>

@@ -1,12 +1,9 @@
 import Link from 'next/link'
-import Heading from './Heading'
 
 const Hero = (props) => (
   <React.Fragment>
     <div className="hero-container">
-      <div className="hero-images">
-        <div id="bg-image-one" />
-        <div id="bg-image-two" />
+      <div className="hero-image">
       </div>
       <div className="hero-description">
         <h1>Welcome to the future of beauty</h1>
