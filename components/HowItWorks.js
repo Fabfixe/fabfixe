@@ -3,27 +3,24 @@ import Link from 'next/link'
 
 const HowItWorks = (props) => (
   <div id="how-it-works" className="how-container">
-    <h1 alignment="right">{props.heading || "How It Works"}</h1>
-    <div className="how-things-container">
-      <div className="how-things">
-        <div className="thing-container">
-          <div className="how-image" />
-          <div className="thing1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-        </div>
-        <div className="thing-container">
-          <div className="how-image" />
-          <div className="thing2">Aliquam accumsan ipsum a purus mollis convallis.</div>
-        </div>
-        <div className="thing-container">
-          <div className="how-image" />
-          <div className="thing3">Vestibulum tempus diam ex, in porttitor ex vulputate non.</div>
-        </div>
-      </div>
-    </div>
-
+    <h1>{props.heading || "How It Works"}</h1>
+    <ul className="how-list">
+      <li>
+        <img src="/img/how_step_one.png" />
+        <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+      </li>
+      <li>
+        <img src="/img/how_step_two.png" />
+        <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+      </li>
+      <li>
+        <img src="/img/how_step_three.png" />
+        <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+      </li>
+    </ul>
     <div className="button-container">
       <Link href={`/accountType?${props.actionLink}`} as={`${props.actionLink}`}>
-        <a className='how-button'>Get Started</a>
+        <a className='how-button'>Sign Me Up</a>
       </Link>
     </div>
   </div>

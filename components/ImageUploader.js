@@ -3,6 +3,7 @@ import Images from '../components/Images'
 import { API_URL } from '../config'
 import { connect } from 'react-redux'
 import axios from 'axios'
+const classnames = require('classnames')
 
 const AddButton = (props) => {
   const imageStyle = {
@@ -116,9 +117,12 @@ class ImageUploader extends Component {
       }
     }
 
+    const hasImages = this.state.images[0] && this.state.images[0].length > 0
+
     return (
       <React.Fragment>
-        <div style={{ marginTop: "50px" }}className='image-uploader'>
+        <div style={{ marginTop: "50px" }}
+          className={classnames('image-uploader', { 'noLabel': hasImages })}>
           {content()}
         </div>
       </React.Fragment>

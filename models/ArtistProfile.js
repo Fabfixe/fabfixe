@@ -1,11 +1,17 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate')
 const Schema = mongoose.Schema
+
 
 const Session = require('./Sessions')
 
 const ArtistProfileSchema = new Schema({
   _id: Schema.Types.ObjectId,
   username: {
+    type: String,
+    required: true
+  },
+  displayName: {
     type: String,
     required: true
   },
@@ -46,6 +52,8 @@ const ArtistProfileSchema = new Schema({
     default: true
   }
 })
+
+ArtistProfileSchema.plugin(mongoosePaginate)
 
 const ArtistProfile = mongoose.model('artistprofiles', ArtistProfileSchema)
 

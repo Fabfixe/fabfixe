@@ -5,14 +5,16 @@
   align-items: center;
   background: white;
   justify-content: center;
-  top: 0;
+  top: 43px;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 10;
 
   h2 {
+    font-size: 1rem;
     margin: 20px 0;
+    letter-spacing: $letter-spacing-xs;
   }
 
   .modal-content {
@@ -91,17 +93,15 @@
     height: 30px;
     border: solid 1px black;
     border-radius: 0;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    padding-left: 8px;
   }
 
   textarea {
     width: 100%;
     height: 100px;
     border: solid 1px black;
-  }
-
-  input#single {
-    width: auto;
-    border: 0;
   }
 
   .submitted {
@@ -127,6 +127,35 @@
       font-weight: bold;
     }
   }
+}
+
+.rdt input {
+  font-size: 8px;
+  width: 100%;
+
+  @include for-tablet-up {
+    font-size: 14px;
+  }
+}
+
+.rdt td {
+  padding: 5px !important;
+}
+
+.rdtPicker td.rdtActive {
+  background-color: $peach !important;
+}
+
+.rdtPicker td.rdtToday:before {
+  border-bottom-color: $peach !important;
+}
+
+.rdtPicker td.rdtDay:hover,
+.rdtPicker td.rdtHour:hover,
+.rdtPicker td.rdtMinute:hover,
+.rdtPicker td.rdtSecond:hover,
+.rdtPicker .rdtTimeToggle:hover {
+  background-color: lighten($peach, 5%) !important;
 }
 
 .react-calendar {

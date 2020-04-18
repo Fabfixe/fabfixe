@@ -10,6 +10,16 @@
   h1 {
     margin-top: 70px;
   }
+
+  .artist-image {
+    width: 100px;
+    height: 100px;
+
+    @include for-tablet-up {
+      width: 150px;
+      height: 150px;
+    }
+  }
 }
 
 .paypal-container {

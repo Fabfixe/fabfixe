@@ -11,6 +11,7 @@
     background-image: url('/img/hero-bkg-mobile.png');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: 50% 90%;
 
     @include for-tablet-portrait-up {
       background-image: url('/img/hero-bkg-mobile.png');
@@ -29,13 +30,16 @@
     position: absolute;
     padding: 30px 20px;
     background-color: transparentize($linen, 0.1);
-    bottom: 0;
+    bottom: 100px;
+    margin: 0 30px;
     left: 0;
     right: 0;
 
     @include for-desktop-up {
       width: 40%;
       height: 100%;
+      bottom: 0;
+      top: 0;
       padding-left: 150px;
       background-color: transparent;
       justify-content: center;
@@ -44,9 +48,9 @@
 
     h1 {
       font-size: 38px;
-      letter-spacing: 1px;
+      letter-spacing: $letter-spacing-xxs;
       color: $plum;
-      font-weight: 900;
+      font-weight: 700;
 
       @include for-tablet-portrait-up {
         font-size: 58px;

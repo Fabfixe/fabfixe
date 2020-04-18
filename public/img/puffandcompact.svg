@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="55px" height="54px" viewBox="0 0 55 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>puffandcompact</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <ellipse id="path-1" cx="16.1442786" cy="16.2880505" rx="16.1442786" ry="16.2880505"></ellipse>
+    </defs>
+    <g id="Hero" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-75.000000, -278.000000)">
+            <g id="bronzeandblender" transform="translate(53.000000, 278.000000)">
+                <g id="Compact-and-Applicator" transform="translate(22.000000, 0.000000)">
+                    <g id="puffandcompact">
+                        <g id="Compact" transform="translate(-0.000000, 0.000000)">
+                            <ellipse id="Oval-2" fill="#403E4A" cx="24.3532338" cy="24.5701101" rx="24.3532338" ry="24.5701101"></ellipse>
+                            <ellipse id="Oval" fill="#7F6531" cx="24.2164179" cy="24.9842131" rx="18.4701493" ry="18.6346341"></ellipse>
+                        </g>
+                        <g id="Puff" transform="translate(22.711443, 20.705149)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Mask" fill="#F9F3E9" xlink:href="#path-1"></use>
+                            <g id="Rectangle-2" mask="url(#mask-2)" fill="#D8CCC7">
+                                <g transform="translate(-0.273632, 12.975227)" id="Rectangle">
+                                    <rect x="0" y="0" width="32.5621891" height="6.62564767"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

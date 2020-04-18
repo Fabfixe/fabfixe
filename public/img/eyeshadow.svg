@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="55px" viewBox="0 0 72 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Eyeshadow</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Hero" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-55.000000, -146.000000)">
+            <g id="paletteandtube" transform="translate(53.000000, 145.000000)">
+                <g id="Eyeshadow" transform="translate(38.000000, 28.500000) rotate(-17.000000) translate(-38.000000, -28.500000) translate(5.000000, 9.000000)">
+                    <rect id="Rectangle" fill="#BFC1B5" x="0" y="0" width="66" height="39" rx="5.99112426"></rect>
+                    <rect id="Rectangle" fill="#B38184" x="25" y="4" width="17" height="13" rx="5.99112426"></rect>
+                    <rect id="Rectangle" fill="#B38184" style="mix-blend-mode: exclusion;" x="45" y="4" width="17" height="13" rx="5.99112426"></rect>
+                    <rect id="Rectangle" fill="#B38184" style="mix-blend-mode: screen;" x="4" y="4" width="17" height="13" rx="5.99112426"></rect>
+                    <rect id="Rectangle" fill="#794F51" style="mix-blend-mode: soft-light;" x="25" y="22" width="17" height="13" rx="5.99112426"></rect>
+                    <rect id="Rectangle" fill="#B38184" style="mix-blend-mode: hard-light;" x="45" y="22" width="17" height="13" rx="5.99112426"></rect>
+                    <rect id="Rectangle" fill="#B38184" style="mix-blend-mode: luminosity;" x="4" y="22" width="17" height="13" rx="5.99112426"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

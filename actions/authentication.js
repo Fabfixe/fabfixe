@@ -9,16 +9,18 @@ export const registerUser = (user, history) => dispatch => {
   .then((res) => {
     axios.post('/api/users/login', user)
     .then(res => {
+      console.log('register res', res)
       const { token } = res.data
       localStorage.setItem('jwtToken', token)
       setAuthToken(token)
 
       const decoded = jwt_decode(token)
       dispatch(setCurrentUser(decoded))
-      dispatch(redirectFromAuth(false))
+      dispatch(redirectAuthPages(false))
       Router.push(`/account/edit-profile/${user.accountType}`), { shallow: true }
     })
     .catch(err => {
+      console.log('err on catch', err)
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
@@ -41,7 +43,7 @@ export const loginUser = (user) => dispatch => {
     setAuthToken(token)
     const decoded = jwt_decode(token)
     dispatch(setCurrentUser(decoded))
-    dispatch(redirectFromAuth(false))
+    dispatch(redirectAuthPages(false))
   })
   .catch(err => {
     dispatch({

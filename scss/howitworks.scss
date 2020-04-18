@@ -1,140 +1,71 @@
 .how-container {
-  position: relative;
-  padding: 30px;
-  margin: 50px 0;
-  width: 100%;
-  background: #FFF;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  min-height: 100vh;
+  justify-content: center;
+  background-color: $moss-background;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 150px;
+  padding-bottom: 80px;
 
-  .heading-container {
-    top: 50px;
+  .hero-container + & {
+    padding-top: 80px;
   }
 
-   h1 {
-     font-family: $bebas-bold;
-     color: $plum;
-     margin-bottom: 50px;
-   }
+  .how-container + & {
+    padding-top: 10px;
+  }
 
-   .how-button {
-     @extend %action-button;
-     font-size: 13px;
-     color: #FFF;
-     background: $eggplant;
-     margin: 0 auto;
-     width: auto;
-     display: inline-block;
+  .how-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 
-     &:hover {
-       background: $plum;
-     }
-   }
+     li {
+       padding: 30px;
+       display: flex;
+       flex-direction: column;
+       justify-content: center;
+       align-items: center;
+       text-align: center;
 
-   .how-things-container {
-     width: 100%;
-     display: flex;
-     flex-direction: column;
-     margin-bottom: 50px;
-
-     @include for-desktop-up {
-       width: 75%;
-       margin-left: calc(25% / 2);
-       margin-right: calc(25% / 2);
-     }
-   }
-
-   .how-things {
-     display: flex;
-     width: 100%;
-     flex-direction: column;
-     font-size: 18px;
-     justify-content: center;
-   }
-
-   .how-image {
-    width: 50vw;
-    height: 50vw;
-    background: gray;
-    margin: 0 auto 20px;
-
-    @include for-tablet-portrait-up {
-      width: 200px;
-      height: 200px;
-      margin: 0 40px 0 0;
-    }
-   }
-
-   .thing-container {
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-
-     @include for-tablet-portrait-up {
-       flex-direction: row;
-
-       &:nth-child(2) .how-image {
-         order: 2;
-         margin-left: 30px;
-         margin-right: 0;
+       img {
+         width: calc(100% - 60px);
+         margin-bottom: 20px;
        }
      }
+
+     @include for-tablet-up {
+       flex-direction: row;
+       padding: 60px;
+     }
+
+     @include for-desktop-up {
+       padding: 60px 160px;
+     }
+  }
+
+  @include for-tablet-up {
+    min-height: 40vh;
+  }
+
+  @include for-desktop-up {
+    min-height: 100vh;
+  }
+
+  .how-button {
+   @extend %action-button;
+   font-size: 13px;
+   color: #FFF;
+   background: $eggplant;
+   margin: 0 auto;
+   width: auto;
+   display: inline-block;
+
+   &:hover {
+     background: $plum;
    }
-
-  .thing1, .thing2, .thing3 {
-    @include playfair;
-    margin-bottom: 40px;
-    z-index: 1;
-    position: relative;
-    font-size: 22px;
-    line-height: 1.25;
-
-    &:before {
-      font-family: $bebas-bold;
-      width: 50px;
-      height: 50px;
-      font-size: 42px;
-      z-index: -1;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      color: $blush;
-      background-color: $peach;
-      border-radius: 50%;
-      display: flex;
-    }
-  }
-
-  .thing2 {
-    text-align: right;
-  }
-
-  .thing1:before {
-    content: '1';
-    top: -35px;
-    left: -20px;
-  }
-
-  .thing2:before {
-    content: '2';
-    top: -35px;
-    right: -13px;
-  }
-
-  .thing3:before {
-    content: '3';
-    top: -40px;
-    left: -20px;
-  }
-
-  @include for-tablet-portrait-up {
-    padding: 30px;
-
-    .how-things-container {
-      flex-direction: row;
-    }
   }
 }

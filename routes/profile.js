@@ -58,10 +58,10 @@ router.get('/artists', function(req, res) {
 })
 
 router.post('/artist', function(req, res) {
-
   let newProfile = {
     _id: req.body._id,
     username: req.body.username,
+    displayName: req.body.displayName,
     profileImageUrl: req.body.profileImageUrl,
     youtube: req.body.youtube,
     instagram: req.body.instagram,
@@ -72,6 +72,8 @@ router.post('/artist', function(req, res) {
     sessions: req.body.sessions,
     isArtist: true,
   }
+
+  console.log('newProfile', newProfile)
 
   ArtistProfile.findOne({
     _id: req.body._id

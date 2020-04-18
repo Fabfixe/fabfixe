@@ -26,6 +26,7 @@ class EditProfile extends Component {
       accountType: this.props.query.accountType,
       flagErrors: false,
       errors: {},
+      displayName: this.props.displayName,
       username: this.props.username,
       profileImageUrl: this.props.profileImageUrl,
       youtube: this.props.youtube,
@@ -60,6 +61,20 @@ class EditProfile extends Component {
     } else {
       if(prevProps.username === '' && this.props.username !== '') {
         this.setState({ ...this.props })
+      }
+    }
+  }
+
+  handleUsernameBlur(e) {
+    if(errors.displayName) {
+      return {
+        errors
+      }
+    } else {
+      return {
+        flagErrors: false,
+        errors: {},
+        displayName: e.target.value.trim()
       }
     }
   }
@@ -142,6 +157,7 @@ class EditProfile extends Component {
       artist: {
         _id: this.props._id,
         username: this.state.username,
+        displayName: this.state.displayName,
         profileImageUrl: this.state.profileImageUrl,
         youtube: this.state.youtube,
         instagram: this.state.instagram,
@@ -187,7 +203,13 @@ class EditProfile extends Component {
           updateProfile(accountType, profile[accountType])
           .then(res => {
             console.log('res', res)
-            if(res.status === 200) alert('Profile Updated')
+            if(res.status === 200) {
+              if(!alert('Profile Updated')) window.location.reload()
+            }
+            this.setState({
+              flagErrors: false,
+              errors: {}
+            })
           })
           .catch((err) => {
             alert('Something went wrong, please try again')
@@ -198,8 +220,9 @@ class EditProfile extends Component {
     } else {
       updateProfile(accountType, profile[accountType])
       .then(res => {
-        console.log('res', res)
-        if(res.status === 200) alert('Profile Updated')
+        if(res.status === 200) {
+          if(!alert('Profile Updated')) window.location.reload()
+        }
       })
       .catch((err) => {
         alert('Something went wrong, please try again')
@@ -212,7 +235,7 @@ class EditProfile extends Component {
     const { errors, accountType } = this.state
     const expertise = {
       hair: [ 'Styling', 'Braiding', 'Natural Hair', 'Wigs/Extensions' ],
-      makeup: [ 'Eyes', 'Lips', 'Foundation/Face', 'Nails' ]
+      makeup: [ 'Eyes', 'Lips', 'Foundation/Face', 'Nails', 'Eyebrows' ]
     }
 
     return (
@@ -223,8 +246,7 @@ class EditProfile extends Component {
         <MyLayout alignment='center'>
           <h1 alignment='center' scroll='no-scroll'>Edit Profile</h1>
           <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
-          <form style={{ marginTop: '30px' }}
-            onSubmit={ this.handleSubmit }>
+          <form onSubmit={ this.handleSubmit }>
             <input
               type='text'
               name='username'
@@ -236,6 +258,17 @@ class EditProfile extends Component {
               defaultValue={ this.state.username }
             />
             {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
+            {accountType === 'artist' && <input
+              type='text'
+              name='displayName'
+              id='displayName'
+              placeholder='CHOOSE A DISPLAY NAME'
+              onBlur={ this.handleDisplayNameBlur }
+              onFocus={ this.onFocus }
+              onChange={ this.handleChange }
+              defaultValue={ this.state.displayName }
+            />}
+            {errors.displayName && (<div className="invalid-feedback">{errors.displayName}</div>)}
             <h2>Connect Social Media</h2>
             <label>YouTube</label>
             <input
@@ -321,6 +354,7 @@ const mapStateToProps = state => ({
   errors: state.errors,
   _id: state.auth.user._id,
   username: state.profile.username,
+  displayName: state.profile.displayName,
   profileImageUrl: state.profile.profileImageUrl,
   youtube: state.profile.youtube,
   instagram: state.profile.instagram,

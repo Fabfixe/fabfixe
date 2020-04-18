@@ -2,6 +2,7 @@ import Head from 'next/head'
 import MyLayout from '../components/MyLayout'
 import Hero from '../components/Hero'
 import HowItWorks from '../components/HowItWorks'
+import JoinHome from '../components/JoinHome'
 import Footer from '../components/Footer'
 
 export default () => (
@@ -12,6 +13,7 @@ export default () => (
     <MyLayout>
       <Hero headline={<p>Hi, meet <br/>Fabfixe</p>} subheadline="Bridging the gap between the tutorial and your slay" />
       <HowItWorks actionLink="/account/joining-as" />
+      <JoinHome />
       <Footer />
     </MyLayout>
   </React.Fragment>

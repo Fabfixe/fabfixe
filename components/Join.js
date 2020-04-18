@@ -49,13 +49,13 @@ class JoinForm extends Component {
     this.props.registerUser(user)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      })
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if(Object.keys(this.props.errors)) {
+  //     this.setState({
+  //       errors: this.props.errors
+  //     })
+  //   }
+  // }
 
   handleClick() {
     this.setState(state => ({
@@ -65,7 +65,7 @@ class JoinForm extends Component {
 
   render() {
     const display = this.state.isConfirmed ? 'block' : 'none'
-    const { errors } = this.state
+    const { errors } = this.props
 
     return (
       <form id="signup" onSubmit={ this.handleSubmit }>
@@ -116,8 +116,8 @@ class JoinForm extends Component {
             </svg>
           </div>
           <span>By clicking "Create Account" you agree to FabFixe Privacy Policy and Terms of service</span>
-          {this.state.submitted && !this.state.isConfirmed && <div className="invalid-feedback">Required</div>}
         </div>
+        {this.state.submitted && !this.state.isConfirmed && <div className="invalid-feedback">Required</div>}
         <div className="button-container">
           <Button type="submit">Create Account</Button>
         </div>

@@ -1,11 +1,10 @@
 .center {
-  margin: 20px auto;
+  margin: 60px auto 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  padding-top: 80px;
 
   @media (min-width: 768px) {
     width: 80%;
@@ -21,6 +20,10 @@
     display: flex;
     flex-wrap: wrap;
   }
+
+  h1:first-of-type {
+    margin-top: 60px;
+  }
 }
 
 .no-scroll {
@@ -29,6 +32,6 @@
 }
 
 .moss-background {
-  background-color: lighten($moss, 15%);
-  height: 100vh;
+  background-color: $moss-background;
+  min-height: 100vh;
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="43px" height="59px" viewBox="0 0 43 59" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Brush</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Hero" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-55.000000, -53.000000)">
+            <g id="lipandbrush" transform="translate(51.000000, 50.000000)">
+                <g id="Brush" transform="translate(25.563496, 34.333951) rotate(-35.000000) translate(-25.563496, -34.333951) translate(18.063496, 1.833951)">
+                    <polygon id="Polygon" fill="#19191C" points="14.7265525 0.221902629 14.3325782 10.5824874 13.9957141 16.8882801 0.623215777 16.9084121 0.164096825 6.1648687"></polygon>
+                    <rect id="Rectangle" fill="#6E6D6F" x="0.625" y="16.875" width="13.4375" height="10.9375"></rect>
+                    <path d="M0.625,27.8125 L14.0625,27.8125 L13.3726568,52.7137602 C13.4876528,60.6241656 11.5641621,64.6257489 7.60218476,64.71851 C3.64020738,64.8112711 1.70438328,60.7891901 1.79471247,52.6522669 L0.625,27.8125 Z" id="Rectangle" fill="#403E4A"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

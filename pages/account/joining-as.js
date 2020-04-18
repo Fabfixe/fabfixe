@@ -5,6 +5,7 @@ import Nav from '../../components/Nav'
 import Button from '../../components/Button'
 import HowItWorks from '../../components/HowItWorks'
 import Footer from '../../components/Footer'
+const classnames = require('classnames')
 
 export default () => (
   <div>
@@ -17,15 +18,17 @@ export default () => (
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center' }}
-      className="join-container">
+      className={classnames("join-container", "moss-background")}>
         <div className="options-container">
           <h2 style={{ marginBottom: "20px" }}>I'm joining as a:</h2>
+          <div>
           <Link href="/accountType?pupil" as="/join/pupil">
-            <Button>Pupil</Button>
+            <p>Pupil</p>
           </Link>
           <Link href="/accountType?artist" as="/join/artist">
-            <Button>Artist</Button>
+            <p>Artist</p>
           </Link>
+          </div>
         </div>
       </div>
     </MyLayout>

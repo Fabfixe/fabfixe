@@ -1,0 +1,69 @@
+#join-home {
+  min-height: 50vh;
+  padding-top: 60px;
+  padding-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: relative;
+
+  background-image: url('/img/blender.svg'),
+    url('/img/puffandcompact.svg'),
+    url('/img/lipstick.svg'),
+    url('/img/Blowdryer.svg'),
+    url('/img/eyeshadow.svg'),
+    url('/img/brush.svg'),
+    url('/img/tube.svg');
+
+  background-repeat: no-repeat;
+  background-position: 10% 5%, 18% 81%, 13% 105%, 95% 48%, 97% 92%, 88% 1%, 48% 58%;
+
+  @include for-tablet-up {
+    justify-content: center;
+  }
+
+  .options-container  > div {
+    z-index: 1;
+  }
+
+  &:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: rgba(247, 228, 190, 0.55);
+    left: 0;
+    top: 0;
+    z-index: 0;
+    right: 0;
+    position: absolute;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    z-index: 1;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    z-index: 1;
+  }
+
+  p {
+    font-family: $bebas-bold;
+    text-transform: none;
+    letter-spacing: $letter-spacing-xxs;
+    font-size: 30px;
+    background-color: transparentize($moss, 0.5);
+    height: 100px;
+
+     &:before {
+       display: none;
+     }
+
+     &:hover {
+       background-color: transparentize($moss, 0.1);
+     }
+  }
+}

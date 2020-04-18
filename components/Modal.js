@@ -4,7 +4,7 @@ const cn = require('classnames')
 const Modal = (props) => (
   ReactDOM.createPortal(
     <div className='modal'>
-    <div onClick={ props.closeModal } className="close">X</div>
+    <div onClick={ props.closeModal } className="close">✕</div>
       <div className={cn('modal-content', props.layout)}>
         {props.children}
       </div>

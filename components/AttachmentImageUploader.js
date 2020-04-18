@@ -24,11 +24,11 @@ class AttachmentImageUploader extends Component {
     this.removeImage = this.removeImage.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.images) {
-      this.setState({ images: [ nextProps.images ] })
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if() {
+  //     this.setState({ images: [ nextProps.images ] })
+  //   }
+  // }
 
   onChange = e => {
     const files = Array.from(e.target.files)

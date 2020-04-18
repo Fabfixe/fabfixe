@@ -12,7 +12,7 @@ export default props =>
     return (
       <div  key={i} className='fade-in' style={imageStyle}>
         {image !== '' && <div onClick={() => props.removeImage()} className='delete'>
-          <p>X</p>
+          <p>✕</p>
         </div>}
       </div>
     )

@@ -52,9 +52,10 @@ const ModalContent = (props) => (
           <option value="Natural Hair">Natural Hair</option>
           <option value="Wigs/Extensions">Wigs/Extensions</option>
         </select>
-        <label>📎 Add Attachment
+        <div className="session-attachments">
+          <label className="attachment">📎 Add Attachment</label>
           <AttachmentImageUploader onUpload={(url) => { props.getImageUrl(url) }}/>
-        </label>
+        </div>
         <h2>LOOK DESCRIPTION*</h2>
         <textarea
           maxLength="250"
@@ -172,8 +173,7 @@ class Profile extends Component {
       <div className="profile">
           <h1>{this.props.username}</h1>
             <ul>
-              {profileImageUrl && <li style={{ width: '40px',
-                height: '40px',
+              {profileImageUrl && <li className="artist-image" style={{
                 borderRadius: '50%',
                 backgroundImage: `url(${profileImageUrl})`,
                 backgroundSize: 'cover' }} />}

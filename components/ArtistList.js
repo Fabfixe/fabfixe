@@ -8,57 +8,83 @@ import Link from 'next/link'
  const ArtistList = () => {
    const [ pagination, setPagination ] = useState({ limit: 10, offset: 0 })
    const [ artists, amendArtists ] = useState([])
+   const [ isLoading, setIsLoading ] = useState(true)
 
    useEffect(() => {
+     window.addEventListener('scroll', handleScroll, false)
+
      axios.get('/api/profile/artists', { params: pagination })
      .then((res) => {
        amendArtists(artists.concat(res.data.docs))
        setPagination({ ...pagination, offset: pagination.offset + res.data.total })
+       setIsLoading(false)
      })
    }, [])
 
-   return (
-   <div className='artist-list'>
-     <h1>Browse Artists</h1>
-     <ul>
-       {artists.map((artist) => {
-         const imageStyle = artist.profileImageUrl ?
-          { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: 'pink' }
+   const handleScroll = () => {
+     if(!isLoading && getScrollPercent() > 75 && artists.length === pagination.limit) {
+       setIsLoading(true)
 
-         return (
-           <li key={`key-${artist.username}`}>
-            <Link href={`/${artist.username}`}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column'
-              }}>
-                <div
-                  className="artist-image"
-                  style={{...imageStyle,
-                    borderRadius: '50%',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover',
-                    backgroundPosition: '50%',
-                    marginBottom: '10px'
-                  }}
-                />
-                <p style={{ fontWeight: '900', fontSize: '18px' }}>{artist.username}</p>
-                <p>{`$${artist.hourlyRate}/hr`}</p>
-                {Object.keys(artist.expertise).map((key) => {
-                  if(artist.expertise[key].length) {
-                    return <p key={`key-${key}`}><span>{key}</span>{`: ${artist.expertise[key].toString()}`}</p>
-                  }
-                })}
-              </div>
-            </Link>
-           </li>
-         )
-       })}
-     </ul>
+       axios.get('/api/profile/artists', { params: pagination })
+       .then((res) => {
+         amendArtists(artists.concat(res.data.docs))
+         setPagination({ ...pagination, offset: pagination.offset + res.data.total })
+         setIsLoading(false)
+       })
+     }
+   }
+
+   return (
+  <div className="moss-background">
+     <div className='artist-list'>
+       <h1>Browse Artists</h1>
+       {!isLoading ? <ul>
+         {artists.length ? artists.map((artist) => {
+           const imageStyle = artist.profileImageUrl ?
+            { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: 'pink' }
+
+           return (
+             <li key={`key-${artist.username}`}>
+              <Link href={`/${artist.username}`}>
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}>
+                  <div
+                    className="artist-image"
+                    style={{...imageStyle,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'cover',
+                      backgroundPosition: '50%',
+                    }}
+                  />
+                  <div className='artist-metadata'>
+                    <p className='display-name'>{artist.displayName}</p>
+                    <p className='hourly-rate'>{`$${artist.hourlyRate}/hr`}</p>
+                    {Object.keys(artist.expertise).map((key) => {
+                      if(artist.expertise[key].length) {
+                        return <p className='artist-expertise' key={`key-${key}`}>{ `${artist.expertise[key].join(', ')}`}</p>
+                      }
+                    })}
+                    <div className="small-button">Request Session</div>
+                  </div>
+                </div>
+              </Link>
+             </li>
+           )
+         }) : <li>No artists yet, come back soon</li>}
+       </ul> : <p>Loading</p>}
+     </div>
    </div>
   )
+}
+
+function getScrollPercent() {
+  const h = document.documentElement,
+    b = document.body,
+    st = 'scrollTop',
+    sh = 'scrollHeight'
+  return ((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight)) * 100
 }
 
 

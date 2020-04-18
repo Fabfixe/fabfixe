@@ -4,20 +4,54 @@
 
   ul {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
   }
 
   li {
     display: flex;
-    flex-basis: 50%;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
+    flex-basis: 100%;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1px $moss;
+
+    &:first-child {
+      border-top: solid 1px $moss;
+      padding-top: 10px;
+    }
+
+    .artist-metadata {
+      flex-basis: calc(100% - 100px);
+      align-self: flex-start;
+      margin: 10px 0 0 15px;
+    }
+
+    .artist-expertise {
+      font-size: 14px;
+    }
+
+    .hourly-rate {
+      font-family: $bebas-bold;
+      font-size: 21px;
+    }
 
     .artist-image {
-      width: 100px;
-      height: 100px;
+      width: 125px;
+      height: 125px;
+    }
+
+    .display-name {
+      font-family: $bebas-bold;
+      font-size: 21px;
+      font-weight: 400;
+    }
+
+    .small-button {
+      display: inline-block;
+      margin-top: 10px;
+      color: $plum;
+      background-color: lighten($peach, 5%);
     }
 
     p {
@@ -31,5 +65,41 @@
 
   h1 {
     margin-bottom: 30px;
+  }
+
+  @include for-tablet-up {
+    ul {
+      padding-top: 10px;
+      justify-content: space-between;
+      align-items: stretch;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      flex-basis: calc((100vw - 70px) / 2);
+      border: solid 1px $moss;
+
+      .artist-image {
+        width: 150px;
+        height: 150px;
+        margin: 0;
+      }
+
+      &:first-child {
+        padding: 0;
+      }
+    }
+  }
+
+  @include for-desktop-up {
+    padding-left: 100px;
+    padding-right: 100px;
+
+    li {
+      flex-basis: calc(50% - 10px);
+      margin-right: 10px;
+      padding: 0;
+    }
   }
 }

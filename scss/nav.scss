@@ -7,9 +7,10 @@ nav {
   position: fixed;
   top: 0;
   z-index: 5;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.18), transparent);
 
   &.dark {
-    background-color: $eggplant;
+    background: $eggplant;
   }
 
   .nav-logo {
@@ -73,7 +74,6 @@ nav {
   text-transform: none;
   background-color: transparent;
   border: 0;
-  margin: 3px 5px 0 0;
   overflow: visible;
   z-index: 6;
 

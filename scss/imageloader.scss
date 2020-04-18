@@ -1,13 +1,13 @@
 .image-uploader {
-  position: relative;
   width: 168px;
   height: 168px;
-  margin: 0 auto 60px;
+  margin: 0 auto 10px;
+  background-color: $linen;
+  border-radius: 50%;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $linen;
-  border-radius: 50%;
 
   .fade-in {
     overflow: hidden;
@@ -17,9 +17,10 @@
   }
 
   .placeholder {
-    background-image: url('/img/Blowdryer.svg');
+    background-image: url('/img/logo_abbr.svg');
     background-repeat: no-repeat;
     background-position: 50%;
+    background-size: 70px;
   }
 
   label {
@@ -27,13 +28,11 @@
     width: 168px;
     margin: 0 auto;
     background: $moss;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -60px;
     justify-content: center;
     align-items: center;
     padding: 15px 0;
+    position: absolute;
+    bottom: -60px;
   }
 
   .delete {

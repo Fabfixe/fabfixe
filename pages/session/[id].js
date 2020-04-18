@@ -45,6 +45,7 @@ const mapStateToProps = state => ({
   errors: state.errors,
   userId: state.auth.user._id,
   username: state.profile.username,
+  displayName: state.profile.displayName,
   profileImageUrl: state.profile.profileImageUrl,
   youtube: state.profile.youtube,
   instagram: state.profile.instagram,

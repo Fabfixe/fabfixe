@@ -2,6 +2,7 @@ import { SET_PROFILE } from '../actions/types'
 
 const initialState = {
   username: '',
+  displayName: '',
   profileImageUrl: '',
   youtube: '',
   instagram: '',
@@ -18,6 +19,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         username: action.payload.username,
+        displayName: action.payload.displayName,
         profileImageUrl: action.payload.profileImageUrl,
         youtube: action.payload.youtube,
         instagram: action.payload.instagram,
