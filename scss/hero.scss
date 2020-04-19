@@ -8,10 +8,14 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    background-size: cover;
     background-image: url('/img/hero-bkg-mobile.png');
     background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 50% 90%;
+    background-position: 50% 100%;
+
+    // @media (orientation: landscape) {
+    //   background-size: cover;
+    // }
 
     @include for-tablet-portrait-up {
       background-image: url('/img/hero-bkg-mobile.png');
@@ -28,9 +32,9 @@
     flex-direction: column;
     align-items: center;
     position: absolute;
-    padding: 30px 20px;
+    padding: 20px;
     background-color: transparentize($linen, 0.1);
-    bottom: 100px;
+    bottom: 150px;
     margin: 0 30px;
     left: 0;
     right: 0;
@@ -47,7 +51,7 @@
     }
 
     h1 {
-      font-size: 38px;
+      font-size: 34px;
       letter-spacing: $letter-spacing-xxs;
       color: $plum;
       font-weight: 700;
@@ -66,7 +70,7 @@
     h2 {
       @include playfair;
       text-align: center;
-      margin: 10px 0 15px;
+      margin: 5px 0 15px;
       line-height: 1.25;
       color: darken($moss, 50%);
 
@@ -79,13 +83,17 @@
 
   .hero-button {
     @extend %action-button;
+    position: absolute;
+    bottom: -30px;
     font-size: 13px;
-    color: $linen;
     line-height: 1;
+    color: #FFF;
     background-color: $blush;
     letter-spacing: $letter-spacing-m;
 
     @include for-desktop-up {
+      position: relative;
+
       &:hover {
         background-color: darken($blush, 5%);
       }

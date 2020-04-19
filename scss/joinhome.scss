@@ -49,13 +49,14 @@
     margin-bottom: 40px;
     z-index: 1;
   }
+}
 
-  p {
+p.join-link {
     font-family: $bebas-bold;
     text-transform: none;
     letter-spacing: $letter-spacing-xxs;
     font-size: 30px;
-    background-color: transparentize($moss, 0.5);
+    background-color: transparentize($moss, 0.25);
     height: 100px;
 
      &:before {
@@ -65,5 +66,4 @@
      &:hover {
        background-color: transparentize($moss, 0.1);
      }
-  }
 }

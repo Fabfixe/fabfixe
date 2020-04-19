@@ -69,12 +69,6 @@ app.prepare()
   })
 
   server.get('*', (req, res) => {
-    // ArtistProfile.deleteMany()
-    //   .then((wtv) => console.log(wtv))
-    // User.deleteMany()
-    //   .then((wtv) => console.log(wtv))
-    // Sessions.deleteMany()
-    //   .then((wtv) => console.log(wtv))
     return handle(req, res)
   })
 

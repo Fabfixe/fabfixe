@@ -66,7 +66,7 @@ import Link from 'next/link'
                         return <p className='artist-expertise' key={`key-${key}`}>{ `${artist.expertise[key].join(', ')}`}</p>
                       }
                     })}
-                    <div className="small-button">Request Session</div>
+                    <div className="small-button-border">Request Session</div>
                   </div>
                 </div>
               </Link>

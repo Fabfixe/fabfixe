@@ -23,10 +23,10 @@ export default () => (
           <h2 style={{ marginBottom: "20px" }}>I'm joining as a:</h2>
           <div>
           <Link href="/accountType?pupil" as="/join/pupil">
-            <p>Pupil</p>
+            <p className="join-link">Pupil</p>
           </Link>
           <Link href="/accountType?artist" as="/join/artist">
-            <p>Artist</p>
+            <p className="join-link">Artist</p>
           </Link>
           </div>
         </div>

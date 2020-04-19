@@ -132,6 +132,7 @@ class ViewSession extends Component {
       artistId,
       pupilId,
       artist,
+      artistDisplayName,
       pupil,
       isPupil,
       date,
@@ -152,7 +153,7 @@ class ViewSession extends Component {
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
         <h1>View Session</h1>
         <div className="view-session">
-          <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
+          <p>{isPupil ? `Artist: ${artistDisplayName}` : `Pupil: ${pupil}`}</p>
           <p id="time-display">Time: {formatTime(date, duration)}</p>
           <p>Category: {category}</p>
           <p>Description: {description}</p>

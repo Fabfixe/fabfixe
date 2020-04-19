@@ -4,17 +4,16 @@ const Schema = mongoose.Schema
 const Session = require('./Sessions')
 
 const SessionEventsSchema = new Schema({
-  _id: Schema.Types.ObjectId,
   artist: {
-    visitedPreview: [Object]
+    visitedPreview: [String],
   },
   pupil: {
-    visitedPreview: [Object]
+    visitedPreview: [String],
   },
   session: {
-     type: mongoose.Schema.Types.ObjectId,
-     ref: 'sessions'
-  },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'sessions',
+  }
 })
 
 const SessionEvents = mongoose.model('sessionevents', SessionEventsSchema)

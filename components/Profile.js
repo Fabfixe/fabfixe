@@ -1,9 +1,9 @@
 require('dotenv').config()
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
 import Button from '../components/Button'
 import Modal from '../components/Modal'
+import Banner from '../components/Banner'
 import Link from 'next/link'
 import Datetime from 'react-datetime'
 import AttachmentImageUploader from '../components/AttachmentImageUploader'
@@ -67,16 +67,19 @@ const ModalContent = (props) => (
           <Button type="submit">Send Request</Button>
         </div>
       </form>
-      {props.submitted && <div className="submitted">
+      {props.submitted && <Banner
+        style={{ height: '160px', zIndex:  1, padding: '30px' }}
+        handleBanner={ () => ( window.location.reload() )}
+        >
         <p>Congrats! Your session request with <b>{props.username}</b> has been sent</p>
         <p>{`Time: ${formatTime(props.date, props.duration)}`}</p>
-        <p>{`Total: ${calcTotal(props.duration, props.hourlyRate)}`}</p>
-      </div>}
+        <p>{`Total: $${calcTotal(props.duration, props.hourlyRate)}`}</p>
+      </Banner>}
     </React.Fragment>) : (
       <React.Fragment>
         {props.isAuthenticated ?
-         (<Link href='/account/edit-profile/pupil'>Complete your profile to schedule a session</Link>) :
-         (<Link href='/join/pupil'>Sign up to schedule a session</Link>)}
+         (<Link href='/account/edit-profile/pupil'><a>Complete your profile to schedule a session</a></Link>) :
+         (<Link href='/join/pupil'><a>Sign up to schedule a session</a></Link>)}
       </React.Fragment>
     )}
     </React.Fragment>
@@ -137,6 +140,7 @@ class Profile extends Component {
       description,
       duration: timeMap[duration],
       artist: this.state.profile._id,
+      artistDisplayName: this.state.profile.displayName,
       artistUsername: this.props.username,
       pupilUsername: this.props.user.profile.username,
       pupil: this.props.user.auth.user._id,
@@ -155,7 +159,7 @@ class Profile extends Component {
           this.setState({ submitted: true })
         })
         .catch((e) => {
-          console.log('error with session submission:', err)
+          console.log('error with session submission:', e)
         })
     } else {
       this.setState({

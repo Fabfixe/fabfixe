@@ -5,10 +5,10 @@ $form-item-width: calc(100% - #{$form-padding * 2});
 input {
   border: 0;
   border-radius: 0;
-  border-bottom: solid 1px lighten($plum, 50%);
+  border-bottom: solid 1px $moss;
   width: $form-item-width;
-  padding: 0 0 10px 10px;
-  margin: 10px auto 0;
+  padding: 10px;
+  margin: 0 auto;
   background-color: transparent;
 
   &::-webkit-input-placeholder,
@@ -19,6 +19,12 @@ input {
   .moss-background & {
     background-color: $moss;
     padding: 10px;
+    margin-bottom: 10px;
+    border: 0;
+
+    &::-webkit-input-placeholder {
+      color: white;
+    }
   }
 
   &.email {
@@ -42,7 +48,7 @@ input {
 }
 
 .terms {
-  font-family: $bebas-bold;
+  @include nunito;
   margin: 20px 0 0 30px;
   display: flex;
   align-items: center;

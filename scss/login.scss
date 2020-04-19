@@ -102,17 +102,4 @@
       margin-bottom: 40px;
       z-index: 1;
     }
-
-    p {
-      font-family: $bebas-bold;
-      text-transform: none;
-      letter-spacing: $letter-spacing-xxs;
-      font-size: 30px;
-      background-color: transparentize($moss, 0.5%);
-      height: 100px;
-
-       &:before {
-         display: none;
-       }
-    }
 }
