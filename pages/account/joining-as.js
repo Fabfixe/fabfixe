@@ -12,7 +12,6 @@ export default () => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
-    <Nav />
     <MyLayout>
       <div style={{ height: '100vh',
       display: 'flex',

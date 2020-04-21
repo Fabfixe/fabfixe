@@ -49,13 +49,18 @@
   }
 
   button {
-    font-size: 22px;
+    @extend %action-button;
     text-transform: uppercase;
     width: 100%;
-    background: $moss;
     padding: 10px;
     border: 0;
     margin: 15px auto;
+    background-color: $eggplant;
+    color: #FFF;
+
+    &:hover {
+      opacity: 0.75;
+    }
   }
 
   &.single-session button,

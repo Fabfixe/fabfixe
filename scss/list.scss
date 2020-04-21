@@ -1,34 +1,53 @@
+$list-margin-mobile: 5px;
+$list-margin-tablet: 10px;
+$list-margin-desktop: 15px;
+
 .artist-list {
   min-height: 100vh;
-  padding: 150px 30px 80px;
 
   ul {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   li {
     display: flex;
-    flex-basis: 100%;
+    width: 430px;
     align-items: flex-start;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: solid 1px $moss;
+    margin: $list-margin-mobile;
+    background-color: #FFF;
+    cursor: pointer;
+    height: 150px;
 
-    &:first-child {
-      border-top: solid 1px $moss;
-      padding-top: 10px;
+      &:hover {
+        opacity: 0.75;
+      }
+    }
+
+    .artist-image {
+      width: 125px;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
     }
 
     .artist-metadata {
-      flex-basis: calc(100% - 100px);
       align-self: flex-start;
-      margin: 10px 0 0 15px;
+      padding: 10px 15px 10px;
     }
 
     .artist-expertise {
-      font-size: 14px;
+      @include nunito-bold;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: $letter-spacing-s;
+      line-height: 1.5;
+      color: darken($peach, 10%);
     }
 
     .hourly-rate {
@@ -36,15 +55,14 @@
       font-size: 21px;
     }
 
-    .artist-image {
-      width: 125px;
-      height: 125px;
-    }
-
     .display-name {
       font-family: $bebas-bold;
       font-size: 21px;
       font-weight: 400;
+
+      @include for-desktop-up {
+        font-size: 26px;
+      }
     }
 
     .small-button-border {
@@ -53,51 +71,46 @@
     }
 
     p {
-      margin-bottom: 5px;
+      margin: 5px 0 10px;
     }
 
     span {
       text-transform: capitalize;
     }
-  }
 
-  h1 {
-    margin-bottom: 30px;
-  }
+    @include for-tablet-up {
+      ul {
+        padding-top: 10px;
+        align-items: stretch;
+      }
 
-  @include for-tablet-up {
-    ul {
-      padding-top: 10px;
-      justify-content: space-between;
-      align-items: stretch;
-    }
+      li {
+        display: flex;
+        align-items: center;
+        max-width: calc(50% - (#{$list-margin-tablet} * 2));
+        height: 175px;
+        margin: $list-margin-tablet;
+      }
 
-    li {
-      display: flex;
-      align-items: center;
-      flex-basis: calc((100vw - 70px) / 2);
-      border: solid 1px $moss;
+      .artist-metadata {
+        padding: 20px;
+      }
 
       .artist-image {
         width: 150px;
-        height: 150px;
         margin: 0;
       }
+    }
 
-      &:first-child {
+    @include for-desktop-up {
+      li {
+        max-width: 450px;
         padding: 0;
+        margin: $list-margin-desktop;
+      }
+
+      .artist-image {
+        width: 175px;
       }
     }
   }
-
-  @include for-desktop-up {
-    padding-left: 100px;
-    padding-right: 100px;
-
-    li {
-      flex-basis: calc(50% - 10px);
-      margin-right: 10px;
-      padding: 0;
-    }
-  }
-}

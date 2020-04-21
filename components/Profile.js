@@ -28,6 +28,7 @@ const ModalContent = (props) => (
         />
         {props.errors.date && (<div className="invalid-feedback">{props.errors.date}</div>)}
         <h2>SESSION DURATION*</h2>
+        <div className="select-container">
         <select
           onChange={ props.onSelect }
           name="duration"
@@ -38,20 +39,25 @@ const ModalContent = (props) => (
           <option value="1 hour 30 min">{`1 hour 30 min: $${calcTotal("1 hour 30 min", props.hourlyRate)}`}</option>
           <option value="2 hours">{`2 hours: $${calcTotal("2 hours", props.hourlyRate)}`}</option>
         </select>
+        <p>▾</p>
+        </div>
         <h2>CATEGORY</h2>
-        <select
-          onChange={ props.onSelect }
-          name="expertise"
-        >
-          <option value="Eyes">Eyes</option>
-          <option value="Lips">Lips</option>
-          <option value="Foundation/Face">Foundation/Face</option>
-          <option value="Nails">Nails</option>
-          <option value="Styling">Styling</option>
-          <option value="Braiding">Braiding</option>
-          <option value="Natural Hair">Natural Hair</option>
-          <option value="Wigs/Extensions">Wigs/Extensions</option>
-        </select>
+        <div className="select-container">
+          <select
+            onChange={ props.onSelect }
+            name="expertise"
+          >
+            <option value="Eyes">Eyes</option>
+            <option value="Lips">Lips</option>
+            <option value="Foundation/Face">Foundation/Face</option>
+            <option value="Nails">Nails</option>
+            <option value="Styling">Styling</option>
+            <option value="Braiding">Braiding</option>
+            <option value="Natural Hair">Natural Hair</option>
+            <option value="Wigs/Extensions">Wigs/Extensions</option>
+          </select>
+          <p>▾</p>
+        </div>
         <div className="session-attachments">
           <label className="attachment">📎 Add Attachment</label>
           <AttachmentImageUploader onUpload={(url) => { props.getImageUrl(url) }}/>

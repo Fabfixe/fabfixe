@@ -45,3 +45,13 @@
     margin: 20px 0;
   }
 }
+
+.view-session  {
+   h4 + p {
+    margin: 10px 0 20px !important;
+  }
+}
+
+.paypal-button.paypal-button-color-black {
+  background: $plum !important;
+}

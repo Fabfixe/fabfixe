@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import MyLayout from '../../components/MyLayout'
-import Nav from '../../components/Nav'
 import HowItWorks from '../../components/HowItWorks'
 import Footer from '../../components/Footer'
 
@@ -12,7 +11,6 @@ export default () => (
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
     <MyLayout background="moss-background">
-      <Nav />
       <HowItWorks heading="For Pupils" actionLink="/join/pupil" />
       <HowItWorks heading="For Artists" actionLink="/join/artist" />
       <Footer />

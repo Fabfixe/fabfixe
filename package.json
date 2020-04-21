@@ -7,8 +7,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "dev": "nodemon -w server.js server.js",
+    "staging": "NODE_ENV=staging node server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "prod": "NODE_ENV=production node server.js"
   },
   "keywords": [],
   "author": "",

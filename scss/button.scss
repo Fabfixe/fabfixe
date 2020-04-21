@@ -8,7 +8,7 @@ button.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: $letter-spacing-s;
+  letter-spacing: $letter-spacing-m;
   text-transform: uppercase;
 
   &.select {
@@ -29,6 +29,10 @@ button.button {
   @include for-tablet-portrait-up {
     padding: 15px 25px;
   }
+
+  &:hover {
+    opacity: 0.75;
+  }
 }
 
 .small-button {
@@ -38,6 +42,13 @@ button.button {
   margin: 0 10px 0 0;
   border: 0;
   padding: 5px 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-s;
+
+  &:hover {
+    opacity: 0.75;
+  }
 }
 
 .small-button-border {
@@ -47,9 +58,11 @@ button.button {
   color: $plum;
   display: inline-block;
   padding: 5px 10px;
+  text-transform: uppercase;
 
   &:hover {
-    border-width: 2px;
+    background-color: $plum;
+    color: #FFF;
   }
 }
 
@@ -60,6 +73,10 @@ button.button {
   padding: 20px 30px;
   letter-spacing: $letter-spacing-s;
   text-decoration: none;
+
+  &:hover {
+    opacity: 0.75;
+  }
 }
 
 button[type='submit'] {
@@ -77,6 +94,13 @@ button[type='submit'] {
 .button-row {
   display: flex;
   flex-wrap: wrap;
+}
+
+.action-link {
+  @include nunito-bold;
+  cursor: pointer;
+  margin-right: 10px;
+  border-bottom: solid 1px;
 }
 
 .row {

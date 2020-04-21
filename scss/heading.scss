@@ -24,6 +24,14 @@ h3 {
   width: 100%;
 }
 
+h4 {
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-xs;
+  color: darken($peach, 10%);
+}
+
 // Funky Headings
 .heading-container {
   position: absolute;

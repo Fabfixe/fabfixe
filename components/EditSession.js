@@ -174,7 +174,7 @@ class EditSession extends Component {
             <option value="120">{`2 hours: $${calcTotal("2 hours", hourlyRate)}`}</option>
           </select>
         </div>}
-        <p>Category: {category}</p>
+        <p style={{ marginTop: "10px" }}>Category: {category}</p>
         <p>Description: {description}</p>
         {attachment && <div style={{ backgroundImage: `url(${attachment})`,
           width: '100px',
@@ -191,7 +191,11 @@ class EditSession extends Component {
         {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
         <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>Submit Change</Button>
         {(status === 'cancelled'|| status === 'expired') && <Button onClick={this.deleteSession}>Delete Session</Button>}
-        {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
+        {this.state.displayBanner && <Banner
+          style={{ zIndex: 5, minHeight: '100px' }}
+          handleBanner={this.handleBanner}>
+            {this.state.bannerMessage}
+          </Banner>}
       </div>
     )
   }

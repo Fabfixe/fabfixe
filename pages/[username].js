@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
 import MyLayout from '../components/MyLayout'
-import Nav from '../components/Nav'
 
 import Profile from '../components/Profile'
 import axios from 'axios'
@@ -12,7 +11,7 @@ function ProfileRouting({ profile, query }) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <MyLayout alignment="center">
+      <MyLayout alignment="center" justify="top">
         {profile.username ? <Profile { ...query } profile={profile} /> : <div>No profile</div> }
       </MyLayout>
     </div>

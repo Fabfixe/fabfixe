@@ -14,8 +14,8 @@ export default () => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
-    <MyLayout alignment="center">
-      <h1 alignment="center" style={{ marginTop: '80px' }}>Login</h1>
+    <MyLayout alignment="center" width="column">
+      <h1 alignment="center">Login</h1>
       <Login />
     </MyLayout>
   </React.Fragment>

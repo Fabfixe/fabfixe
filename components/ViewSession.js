@@ -153,19 +153,22 @@ class ViewSession extends Component {
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
         <h1>View Session</h1>
         <div className="view-session">
-          <p>{isPupil ? `Artist: ${artistDisplayName}` : `Pupil: ${pupil}`}</p>
-          <p id="time-display">Time: {formatTime(date, duration)}</p>
-          <p>Category: {category}</p>
-          <p>Description: {description}</p>
+          <h4>{isPupil ? 'Artist' : 'Pupil'}</h4>
+          <p>{ isPupil ? artistDisplayName : pupil }</p>
+          <h4>Time</h4>
+          <p id="time-display">{formatTime(date, duration)}</p>
+          <h4>Description</h4>
+          <p>{description}</p>
           {attachment && <div style={{backgroundImage: `url(${attachment})`,
             width: '100px',
             height: '100px',
             backgroundSize: 'cover',
             marginBottom: '20px'
           }} />}
-          <p>Status: {status}</p>
+          <h4>Status</h4>
+          <p style={{ textTransform: 'capitalize' }}>{status}</p>
           {showPaymentButton && <div className="paypal-container">
-            <p>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
+            <p style={{ marginBottom: '0' }}>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
             <PayPalButton
               createOrder={(data, actions) => {
                 return actions.order.create({
@@ -210,12 +213,14 @@ class ViewSession extends Component {
           {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
           <div className="button-row">
             {status === 'pending' && !isPupil && !artistApproved && <Button containerStyle="row" onClick={this.onApprove}>Approve Session</Button>}
-            {status === 'pending' && <Button containerStyle="row" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</Button>}
-            {(status === 'pending' || status === 'upcoming') && <Button containerStyle="row" onClick={() => { this.props.changeModal('messages')}}>Messages</Button>}
-            {(status === 'expired' || status === 'cancelled') && <Button containerStyle="row" onClick={this.deleteSession}>Delete Session</Button>}
+            {(status === 'pending' || status === 'upcoming') && <p className="action-link" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</p>}
+            {(status === 'pending' || status === 'upcoming') && <p className="action-link" onClick={() => { this.props.changeModal('messages')}}>View Messages</p>}
+            {(status === 'expired' || status === 'cancelled') && <p className="action-link" onClick={this.deleteSession}>Delete Session</p>}
           </div>
         </div>
-        {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
+        {this.state.displayBanner && <Banner
+          style={{ zIndex: 5, minHeight: '100px' }}
+          handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
       </React.Fragment>
     )
   }

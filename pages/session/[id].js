@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import MyLayout from '../../components/MyLayout'
 import Nav from '../../components/Nav'
 
 import VideoSession from '../../components/VideoSession'

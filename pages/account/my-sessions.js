@@ -20,7 +20,7 @@ const MySessions = (props) => {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <MyLayout alignment="center">
+      <MyLayout alignment="center column">
         <h1 alignment="center">My Sessions</h1>
         <Sessions />
       </MyLayout>

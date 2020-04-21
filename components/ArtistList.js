@@ -35,7 +35,7 @@ import Link from 'next/link'
    }
 
    return (
-  <div className="moss-background">
+  <React.Fragment>
      <div className='artist-list'>
        <h1>Browse Artists</h1>
        {!isLoading ? <ul>
@@ -44,12 +44,8 @@ import Link from 'next/link'
             { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: 'pink' }
 
            return (
-             <li key={`key-${artist.username}`}>
-              <Link href={`/${artist.username}`}>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                }}>
+             <Link href={`/${artist.username}`}>
+               <li key={`key-${artist.username}`}>
                   <div
                     className="artist-image"
                     style={{...imageStyle,
@@ -59,23 +55,21 @@ import Link from 'next/link'
                     }}
                   />
                   <div className='artist-metadata'>
-                    <p className='display-name'>{artist.displayName}</p>
+                    <h2 className='display-name'>{artist.displayName}</h2>
                     <p className='hourly-rate'>{`$${artist.hourlyRate}/hr`}</p>
                     {Object.keys(artist.expertise).map((key) => {
                       if(artist.expertise[key].length) {
                         return <p className='artist-expertise' key={`key-${key}`}>{ `${artist.expertise[key].join(', ')}`}</p>
                       }
                     })}
-                    <div className="small-button-border">Request Session</div>
                   </div>
-                </div>
-              </Link>
-             </li>
+               </li>
+             </Link>
            )
          }) : <li>No artists yet, come back soon</li>}
        </ul> : <p>Loading</p>}
      </div>
-   </div>
+   </React.Fragment>
   )
 }
 

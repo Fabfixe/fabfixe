@@ -10,10 +10,9 @@ export default () => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
-    <MyLayout>
-      <Nav />
+    <MyLayout alignment='center' width="wide" background="moss-background">
       <ArtistList/>
-      <Footer />
     </MyLayout>
+    <Footer />
   </div>
 )

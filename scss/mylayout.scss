@@ -1,17 +1,27 @@
 .center {
-  margin: 60px auto 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
+  padding: 150px 30px 50px;
+  min-height: 100vh;
+  margin: 0 auto;
 
-  @media (min-width: 768px) {
-    width: 80%;
+  &.column {
+    @include for-tablet-up {
+      width: 80%;
+    }
+
+    @include for-desktop-up {
+      width: 40%;
+    }
   }
 
-  @media (min-width: 1024px) {
-    width: 40%;
+  &.full {
+    @include for-desktop-up {
+
+    }
   }
 
   .center-module {
@@ -20,10 +30,10 @@
     display: flex;
     flex-wrap: wrap;
   }
+}
 
-  h1:first-of-type {
-    margin-top: 60px;
-  }
+.top {
+  justify-content: flex-start;
 }
 
 .no-scroll {
@@ -33,5 +43,4 @@
 
 .moss-background {
   background-color: $moss-background;
-  min-height: 100vh;
 }

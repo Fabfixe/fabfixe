@@ -2,9 +2,11 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const paypal = require('paypal-rest-sdk')
-console.log('ENV', process.env)
+
+const env = process.env.NODE_ENV || 'sandbox'
+
 paypal.configure({
-  mode: 'sandbox', // Sandbox or live
+  mode: env, // Sandbox or live
   client_id: process.env.client_id,
   client_secret: process.env.client_secret
 })

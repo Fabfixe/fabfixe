@@ -137,7 +137,7 @@ class Sessions extends Component {
                     return (
                       <li key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
-                        <p>{`Time: ${formatTime(session.date, session.duration)}`}</p>
+                        <p>{formatTime(session.date, session.duration)}</p>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'edit')}}>Edit</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
@@ -156,7 +156,7 @@ class Sessions extends Component {
 
                     return (
                       <li className={cn({ 'soon': withinThirty })} key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                         {!withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>

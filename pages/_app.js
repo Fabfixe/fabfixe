@@ -36,7 +36,7 @@ class Fabfixe extends App {
     return { pageProps }
   }
 
-  componentDidMount() {  
+  componentDidMount() {
     const { store } = this.props
 
     if(process.browser) {

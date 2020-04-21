@@ -145,59 +145,61 @@ class MessagesModal extends Component {
       <React.Fragment>
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
         <h1>Session Messages</h1>
-        <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
-        <p id="time-display">Time: {formatTime(date, duration)}</p>
-        {this.state.schedulerOpen && <div className="session-scheduler">
-        <h2>CHOOSE TIME</h2>
-          <Datetime
-            isValidDate={validDateSelection}
-            inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
-            onChange={this.onChange}
-          />
-          <h2>SESSION DURATION</h2>
-          <select
-            onChange={this.onSelect}
-            name="duration"
-            value={this.state.duration}>
-            <option value="30">{`30 min: $${calcTotal("30 min", hourlyRate)}`}</option>
-            <option value="60">{`1 hour: $${calcTotal("1 hour", hourlyRate)}`}</option>
-            <option value="90">{`1 hour 30 min: $${calcTotal("1 hour 30 min", hourlyRate)}`}</option>
-            <option value="120">{`2 hours: $${calcTotal("2 hours", hourlyRate)}`}</option>
-          </select>
-        </div>}
-        <p>Category: {category}</p>
-        <p>Description: {description}</p>
-        {attachment && <div style={{backgroundImage: `url(${attachment})`,
-          width: '100px',
-          height: '100px',
-          backgroundSize: 'cover',
-          marginBottom: '20px'
-        }} />}
-        <p style={{ textTransform: 'capitalize', display: 'inline-block' }}>Status: {status}</p>
-        {messages && messages.length > 0 &&
-          <div>
-            <h2>Messages</h2>
-            <div className="modal-messages">
-              {messages.map((message, id) => {
-                return (
-                  <div style={{
-                    borderTop: 'dashed black 1px',
-                    paddingTop: '10px' }} key={id}>
-                    <p>Sent: {moment(message.time).format("MM/DD/YYYY h:mma")}</p>
-                    <p>From: {message.from === this.props.userId ? 'You' : isPupil ? artist : pupil }</p>
-                    <p>{message.body}</p>
-                  </div>
-                )})}
-            </div>
-          </div>}
-          {(status === 'pending' || status === 'upcoming') &&
-            <React.Fragment>
-              <h2>Add a Message</h2>
-              <textarea ref={this.textArea} onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
-            </React.Fragment>}
-        <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>Submit Message</Button>
-        {(status === 'cancelled'|| status === 'expired') && <Button onClick={this.deleteSession}>Delete Session</Button>}
-        {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
+        <div className="messages-container">
+          <p>{isPupil ? `Artist: ${artist}` : `Pupil: ${pupil}`}</p>
+          <p id="time-display">Time: {formatTime(date, duration)}</p>
+          {this.state.schedulerOpen && <div className="session-scheduler">
+          <h2>CHOOSE TIME</h2>
+            <Datetime
+              isValidDate={validDateSelection}
+              inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
+              onChange={this.onChange}
+            />
+            <h2>SESSION DURATION</h2>
+            <select
+              onChange={this.onSelect}
+              name="duration"
+              value={this.state.duration}>
+              <option value="30">{`30 min: $${calcTotal("30 min", hourlyRate)}`}</option>
+              <option value="60">{`1 hour: $${calcTotal("1 hour", hourlyRate)}`}</option>
+              <option value="90">{`1 hour 30 min: $${calcTotal("1 hour 30 min", hourlyRate)}`}</option>
+              <option value="120">{`2 hours: $${calcTotal("2 hours", hourlyRate)}`}</option>
+            </select>
+            </div>}
+            <p>Category: {category}</p>
+            <p>Description: {description}</p>
+            {attachment && <div style={{backgroundImage: `url(${attachment})`,
+              width: '100px',
+              height: '100px',
+              backgroundSize: 'cover',
+              marginBottom: '20px'
+            }} />}
+            <p style={{ textTransform: 'capitalize', display: 'inline-block' }}>Status: {status}</p>
+            {messages && messages.length > 0 &&
+              <div>
+                <h2>Messages</h2>
+                <div className="modal-messages">
+                  {messages.map((message, id) => {
+                    return (
+                      <div style={{
+                        borderTop: 'dashed black 1px',
+                        paddingTop: '10px' }} key={id}>
+                        <p>Sent: {moment(message.time).format("MM/DD/YYYY h:mma")}</p>
+                        <p>From: {message.from === this.props.userId ? 'You' : isPupil ? artist : pupil }</p>
+                        <p>{message.body}</p>
+                      </div>
+                    )})}
+                </div>
+              </div>}
+              {(status === 'pending' || status === 'upcoming') &&
+                <React.Fragment>
+                  <h2>Add a Message</h2>
+                  <textarea ref={this.textArea} onChange={this.onTextChange} style={{ marginBottom: '30px' }} maxLength="250"/>
+                </React.Fragment>}
+                <Button disabled={!this.state.submitReady} onClick={this.onSubmit}>Submit Message</Button>
+                {(status === 'cancelled'|| status === 'expired') && <Button onClick={this.deleteSession}>Delete Session</Button>}
+                </div>
+              {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
       </React.Fragment>
     )
   }

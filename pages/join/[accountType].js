@@ -24,12 +24,12 @@ class JoinRouting extends Component {
 
   render() {
     return (
-      <div className="moss-background">
+      <div>
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
         <MyLayout alignment='center'>
-          <h1 alignment='center' style={{ marginTop: '80px', width: '100%' }}>Create an Account</h1>
+          <h1 alignment='center' style={{ width: '100%' }}>Create an Account</h1>
           <JoinForm accountType={ this.state.accountType } />
         </MyLayout>
       </div>

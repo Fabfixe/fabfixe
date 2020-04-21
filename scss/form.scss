@@ -1,18 +1,18 @@
 $form-padding: 30px;
 $form-item-width: calc(100% - #{$form-padding * 2});
 
-
 input {
-  border: 0;
   border-radius: 0;
-  border-bottom: solid 1px $moss;
+  border: 0;
+  border-bottom: solid 1px lighten($moss, 10%);
   width: $form-item-width;
   padding: 10px;
-  margin: 0 auto;
+  margin: 0 auto 15px;
   background-color: transparent;
 
   &::-webkit-input-placeholder,
   &::placeholder {
+    font-size: 12px;
     letter-spacing: $letter-spacing-s;
   }
 
@@ -34,6 +34,8 @@ input {
   }
 
   &[type='number'] {
+    font-size: 1rem;
+    padding: 10px 0 10px 10px;
     width: 50px;
     margin: 0;
   }
@@ -44,6 +46,21 @@ input {
     padding: 10px;
     border: 0;
     margin: 14px 0;
+  }
+}
+
+select {
+  @include nunito;
+}
+
+.select-container {
+  width: 100%;
+  position: relative;
+
+  p {
+    position: absolute;
+    right: -20px;
+    top: 8px;
   }
 }
 
@@ -71,6 +88,10 @@ form {
   margin: 70px auto 0;
   display: flex;
   flex-wrap: wrap;
+
+  .center & {
+    max-width: 500px;
+  }
 
   .noLabel + & {
     margin-top: 0;
@@ -120,7 +141,8 @@ p.dollar-prefix {
 }
 
 p.hour-suffix {
-  margin-left: 0;
+  margin-left: 5px;
+  line-height: 3;
 }
 
 .expertise-tags {
@@ -130,18 +152,25 @@ p.hour-suffix {
   flex-wrap: wrap;
 
   li {
-    background-color: $moss;
+    font-size: 12px;
+    text-transform: uppercase;
     margin: 0 5px 10px;
     padding: 10px;
     border-radius: 5px;
+    color: lighten($eggplant, 30%);
+    border: solid 1px lighten($eggplant, 30%);
     transition: background-color 0.5s ease;
+    letter-spacing: $letter-spacing-xs;
 
     &:hover {
-      background-color: #C0C0C0;
+      border-color: $eggplant;
+      color: $eggplant;
     }
 
     &.selected {
-      background-color: darken($moss, 15%);
+      background-color: $eggplant;
+      border-color: $eggplant;
+      color: #FFF;
     }
   }
 }

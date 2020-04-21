@@ -243,7 +243,7 @@ class EditProfile extends Component {
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         </Head>
-        <MyLayout alignment='center'>
+        <MyLayout alignment='center' width="column">
           <h1 alignment='center' scroll='no-scroll'>Edit Profile</h1>
           <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
           <form onSubmit={ this.handleSubmit }>
@@ -317,7 +317,7 @@ class EditProfile extends Component {
                 onChange={ this.handleChange }
                 defaultValue={ this.state.hourlyRate }
               />
-              <p className='hour-suffix'>/hr</p>
+              <p className='hour-suffix'> / hr</p>
               <h2>Add Expertise</h2>
               <p>Add tags to show the things you slay at. Clients will be able to search based on these things</p>
               <h3>Makeup</h3>
