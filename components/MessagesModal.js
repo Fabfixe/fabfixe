@@ -57,7 +57,7 @@ class MessagesModal extends Component {
   onSubmit() {
     this.setState({ loading: true })
     const { isPupil } = this.props
-    const recipient = isPupil ? this.props.pupilId : this.props.artistId
+    const recipient = isPupil ? this.props.artistId : this.props.pupilId
     const fromName = isPupil ? this.props.pupil : this.props.artist
     const toName = isPupil ? this.props.artist : this.props.pupil
 

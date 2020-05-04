@@ -21,7 +21,12 @@ class Button extends Component {
     const buttonClasses = cn(this.props.class || 'button', { "select": this.props.isSelect, "isSelected": this.state.isSelected })
     return (
       <div className={this.props.containerStyle} onClick={ this.handleClick }>
-      <button disabled={this.props.disabled} type={ this.props.type } form={ this.props.form } onClick={this.props.onClick} className={ buttonClasses }>
+      <button 
+        disabled={this.props.disabled}
+        type={ this.props.type }
+        form={ this.props.form }
+        onClick={this.props.onClick}
+        className={ buttonClasses }>
         {this.props.children}
       </button>
       </div>

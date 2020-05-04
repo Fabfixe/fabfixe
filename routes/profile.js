@@ -29,7 +29,6 @@ router.post('/username', function(req, res) {
     username: req.body.username
   }).then((profile) => {
     if(profile) {
-      console.log('profile.artist', profile)
       return res.json(profile)
     } else {
       PupilProfile.findOne({

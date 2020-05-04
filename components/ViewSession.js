@@ -85,7 +85,7 @@ class ViewSession extends Component {
 
   cancelSession() {
     if(window.confirm('Are you sure you want to cancel?')) {
-      cancelSession(this.props._id)
+      cancelSession(this.props._id, this.props.isPupil)
       .then((res) => {
         if(res.status === 200) {
           Router.push('/account/my-sessions')
@@ -212,10 +212,10 @@ class ViewSession extends Component {
           </div>}
           {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
           <div className="button-row">
-            {status === 'pending' && !isPupil && !artistApproved && <Button containerStyle="row" onClick={this.onApprove}>Approve Session</Button>}
-            {(status === 'pending' || status === 'upcoming') && <p className="action-link" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</p>}
-            {(status === 'pending' || status === 'upcoming') && <p className="action-link" onClick={() => { this.props.changeModal('messages')}}>View Messages</p>}
-            {(status === 'expired' || status === 'cancelled') && <p className="action-link" onClick={this.deleteSession}>Delete Session</p>}
+            {status === 'pending' && !isPupil && !artistApproved && <Button class="small-button" onClick={this.onApprove}>Approve Session</Button>}
+            {(status === 'pending' || status === 'upcoming') && <Button  class="small-button" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</Button>}
+            {(status === 'pending' || status === 'upcoming') && <Button  class="small-button" onClick={() => { this.props.changeModal('messages')}}>View Messages</Button>}
+            {(status === 'expired' || status === 'cancelled') && <Button class="small-button"  onClick={this.deleteSession}>Delete Session</Button>}
           </div>
         </div>
         {this.state.displayBanner && <Banner

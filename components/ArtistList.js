@@ -41,7 +41,7 @@ import Link from 'next/link'
        {!isLoading ? <ul>
          {artists.length ? artists.map((artist) => {
            const imageStyle = artist.profileImageUrl ?
-            { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: 'pink' }
+            { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: '#F7E4BE' }
 
            return (
              <Link href={`/${artist.username}`}>
@@ -66,7 +66,7 @@ import Link from 'next/link'
                </li>
              </Link>
            )
-         }) : <li>No artists yet, come back soon</li>}
+         }) : <li style={{ backgroundColor: '#d2d4cb'}}>No artists yet, come back soon</li>}
        </ul> : <p>Loading</p>}
      </div>
    </React.Fragment>

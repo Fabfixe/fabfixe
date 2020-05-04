@@ -3,7 +3,7 @@ const CLIENT_ORIGIN = require('./config')
 const express = require('express')
 const next = require('next')
 const cors = require('cors')
-const dev = process.env.NODE_ENV !== 'production'
+const dev = process.env.ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 const formData = require('express-form-data')
@@ -21,6 +21,8 @@ const emails = require('./routes/emails')
 const payments = require('./routes/payments')
 const token = require('./routes/token')
 const sessionEvents = require('./routes/sessionEvents')
+const dashboard = require('./routes/dashboard')
+
 const ArtistProfile = require('./models/ArtistProfile')
 const PupilProfile = require('./models/PupilProfile')
 const User = require('./models/User')
@@ -63,6 +65,8 @@ app.prepare()
   server.use('/api/token', token)
 
   server.use('/api/sessionEvents', sessionEvents)
+
+  server.use('/api/dashboard', dashboard)
 
   server.get('/', (req, res) => {
     return app.render(req, res, '/index', {})

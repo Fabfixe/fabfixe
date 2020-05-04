@@ -6,6 +6,7 @@ const Session = require('../models/Sessions')
 const SessionEvents = require('../models/SessionEvents')
 const PupilProfile = require('../models/PupilProfile')
 const ArtistProfile = require('../models/ArtistProfile')
+const axios = require('axios')
 
 router.post('/', function(req, res) {
   const newSession = new Session({
@@ -24,10 +25,18 @@ router.post('/', function(req, res) {
     messages: req.body.messages,
     sessionEvents: {
       artist: {
-        visitedPreview: []
+        visitedPreview: [],
+        visitedSession: [],
+        cancelledSession: '',
+        mediaConnectionError: [],
+        roomConnectFailedError: []
       },
       pupil: {
-        visitedPreview: []
+        visitedPreview: [],
+        visitedSession: [],
+        cancelledSession: '',
+        mediaConnectionError: [],
+        roomConnectFailedError: []
       },
     }
   })
@@ -39,13 +48,6 @@ router.post('/', function(req, res) {
     res.json(session)
   })
   .catch((e) => console.log(e))
-
-  // newSessionEvents
-  // .save()
-  // .then(sessionEvents => {
-  //   console.log('session events on creation', sessionEvents)
-  // })
-  // .catch((e) => console.log(e))
 })
 
 router.post('/bySessionId', function(req, res) {
@@ -149,7 +151,10 @@ router.post('/artistApprove', (req, res) => {
 
 router.post('/cancel', (req, res) => {
   return Session.updateOne({ _id: req.body._id }, { $set: { status: 'cancelled' } })
-    .then(() => res.send('cancelled'))
+    .then(() => {
+      axios.post('/api/sessionEvents/cancel', { _id: req.body._id, isPupil: req.body.isPupil })
+      res.send('cancelled')
+    })
     .catch((err) => res.send(err))
 })
 

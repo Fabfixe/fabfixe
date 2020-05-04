@@ -113,8 +113,17 @@ export default class VideoSession extends Component {
 
       let previewContainer = this.refs.localMedia
       if (!previewContainer.querySelector('video')) {
-        attachTracks(getTracks(room.localParticipant), previewContainer);
+        attachTracks(getTracks(room.localParticipant), previewContainer)
       }
+
+      // send the session event
+      const session = this.props.session[0]
+      const accountType = this.props.auth.user.accountType
+      axios.post('/api/sessionEvents/visitedSession', {
+        accountType: accountType,
+        time: moment(),
+        _id: session._id
+      })
 
       // Attach the Tracks of the Room's Participants.
       let remoteMediaContainer = this.refs.remoteMedia
@@ -166,6 +175,21 @@ export default class VideoSession extends Component {
         room.participants.forEach(this.detachParticipantTracks)
         this.setState({ activeRoom: null })
       })
+    })
+    .catch((e) => {
+      const { code } = e
+      const errorMap = {
+        53405: 'mediaConnectionError',
+        53104: 'roomConnectFailedError'
+      }
+
+      if(errorMap[code]) {
+        axios.post(`/api/sessionEvents/${errorMap[code]}`, {
+          accountType: this.state.accountType,
+          time: moment(),
+          _id: session._id
+        })
+      }
     })
   }
 

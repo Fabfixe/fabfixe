@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 const paypal = require('paypal-rest-sdk')
 
-const env = process.env.NODE_ENV || 'sandbox'
+const env = process.env.ENV === 'production' ? 'production' : 'sandbox' // check to see what the prod name of paypal is
 
 paypal.configure({
   mode: env, // Sandbox or live
@@ -17,16 +17,16 @@ router.post('/', function(req, res) {
     payer: {
       payment_method:'paypal'
     },
-    redirect_urls:{
-      return_url:'http://localhost:4000/process',
-      cancel_url:'http://localhost:4000/cancel'
+    redirect_urls: {
+      return_url: 'http://localhost:4000/process',
+      cancel_url: 'http://localhost:4000/cancel'
     },
-    transactions:[{
+    transactions: [{
       amount:{
-        total:'10',
-        currency:'USD'
+        total: '10',
+        currency: 'USD'
       },
-      description:'This is the payment transaction description.'
+      description: 'This is the payment transaction description.'
     }]
   })
 
