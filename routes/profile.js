@@ -35,7 +35,6 @@ router.post('/username', function(req, res) {
         username: req.body.username
       }).then((profile) => {
         if(profile) {
-          console.log('profile pupil', profile)
           //might be able to remove these returns
           return res.json(profile)
         } else {

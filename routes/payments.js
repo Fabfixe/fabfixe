@@ -2,10 +2,10 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const paypal = require('paypal-rest-sdk')
-const env = process.env.NODE_ENV === 'production' ? 'production' : 'sandbox' // check to see what the prod name of paypal is
+const env = process.env.ENV === 'production' ? 'production' : 'sandbox' // check to see what the prod name of paypal is
 
 paypal.configure({
-  mode: env, // Sandbox or live
+  mode: env, // Sandbox or production
   client_id: process.env.client_id,
   client_secret: process.env.client_secret
 })
@@ -15,10 +15,6 @@ router.post('/', function(req, res) {
     intent:'sale',
     payer: {
       payment_method:'paypal'
-    },
-    redirect_urls: {
-      return_url: 'http://localhost:4000/process',
-      cancel_url: 'http://localhost:4000/cancel'
     },
     transactions: [{
       amount:{
