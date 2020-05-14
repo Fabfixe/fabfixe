@@ -13,7 +13,8 @@
   }
 
   li {
-    margin-bottom: 30px;
+    padding: 10px;
+    margin-bottom: 20px;
   }
 
   .username {
@@ -27,7 +28,7 @@
   }
 
   .soon {
-    border: solid 1px red;
+    border: solid 1px $peach;
   }
 
   .small-button:first-of-type {

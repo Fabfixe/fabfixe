@@ -39,7 +39,6 @@ class Sessions extends Component {
     const { _id, accountType } = this.props.user
     getSessions(_id, accountType)
     .then((res) => {
-      console.log(res)
       const validSessions = res.data.filter(session => !session[this.state.user.accountType + 'Deleted'] && session.artist !== null)
 
       const sessions = validSessions.map((session) => {
@@ -153,12 +152,13 @@ class Sessions extends Component {
                   {upcomingSessions.map((session, id) => {
                     // Check if session is within 30 minutes
                     const withinThirty = moment(session.date).subtract(30, 'minutes').isSameOrBefore(moment())
+                    console.log(`/session/${session._id}`)
 
                     return (
                       <li className={cn({ 'soon': withinThirty })} key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
-                        {!withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
+                        {withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
