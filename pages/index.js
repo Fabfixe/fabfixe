@@ -11,7 +11,6 @@ export default () => (
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
     <MyLayout>
-      <div className={process.env.TEST} />
       <Hero headline={<p>Hi, meet <br/>Fabfixe</p>} subheadline="Bridging the gap between the tutorial and your slay" />
       <HowItWorks actionLink="/account/joining-as" />
       <JoinHome />
