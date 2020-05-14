@@ -25,7 +25,8 @@ export default class VideoSession extends Component {
       remoteMessages: [],
       localDataTrack: null,
       unreads: 0,
-      accountType: ''
+      accountType: '',
+      session: {}
    }
 
 
@@ -46,29 +47,37 @@ export default class VideoSession extends Component {
 
   componentDidMount() {
     const { userId } = this.props
-    const session = this.props.session[0]
 
-    // Store the accountType of the local participant
-    this.setState({ accountType: this.props.auth.user.accountType })
+    axios.post('/api/sessions/bySessionId', { id: this.props.id })
+    .then((res) => {
+      const session = res.data[0]
+      if(session) {
+        // Store the accountType of the local participant
+        this.setState({
+          accountType: this.props.auth.user.accountType,
+          session,
+         })
 
-    // Make an API call to get the token and identity and update the corresponding state variables.
-      // Check if the props id matches the ids from the session obj
-    if(userId === session.artist || session.pupil ) {
-      const accountType = this.props.auth.user.accountType
-      axios.post('/api/sessionEvents/visitedPreview', {
-        accountType: accountType,
-        time: moment(),
-        _id: session._id
-      })
-
-      axios.post('/api/token', { identity: userId, _id: session._id })
-      .then((result) => {
-        const { identity, token } = result.data
-        this.setState({ identity, token, roomName: session._id })
-        this.setupPreview()
-      })
-    }
-    // show an error screen if the id doens't match the session
+        // Make an API call to get the token and identity and update the corresponding state variables.
+          // Check if the props id matches the ids from the session obj
+        if(userId === this.state.session.artist || this.state.session.pupil ) {
+          const accountType = this.props.auth.user.accountType
+          axios.post('/api/sessionEvents/visitedPreview', {
+            accountType: accountType,
+            time: moment(),
+            _id: this.state.session._id
+          })
+          axios.post('/api/token', { identity: userId, _id: this.state.session._id })
+          .then((result) => {
+            const { identity, token } = result.data
+            this.setState({ identity, token, roomName: this.state.session._id })
+            this.setupPreview()
+          })
+          .catch(e => console.log('e:', e))
+        }
+        // show an error screen if the id doesn't match the session
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -90,7 +99,11 @@ export default class VideoSession extends Component {
         localMediaAvailable: true
      })
 
+
      if(this.refs.localMedia) tracks.forEach(track => this.refs.localMedia.appendChild(track.attach()))
+    })
+    .catch((e) => {
+      console.log(e)
     })
   }
 
@@ -117,7 +130,7 @@ export default class VideoSession extends Component {
       }
 
       // send the session event
-      const session = this.props.session[0]
+      const {session} = this.state
       const accountType = this.props.auth.user.accountType
       axios.post('/api/sessionEvents/visitedSession', {
         accountType: accountType,
@@ -283,7 +296,9 @@ export default class VideoSession extends Component {
     */
     const joinOrLeaveRoomButton = this.state.hasJoinedRoom ? (
         <FixedBottom offset={20}>
-          <button label="Leave Room"
+          <button
+          style={{ left: 0, right: 0, width: '200px'}}
+          label="Leave Room"
           secondary={'true'}
           onClick={this.leaveRoom}>
             Leave Session
@@ -305,7 +320,7 @@ export default class VideoSession extends Component {
   }
 
   const displayJoin = !this.state.hasJoinedRoom && this.state.localMediaAvailable && this.state.token
-  const session = this.props.session[0]
+  const {session} = this.state
 
   return (
      <div id="session-container" className={status()}>
