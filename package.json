@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "dev": "nodemon -w server.js server.js",
+    "dev": "ENV=dev nodemon -w server.js server.js",
     "staging": "NODE_ENV=production ENV=staging node server.js",
     "build": "next build",
     "prod": "NODE_ENV=production ENV=production node server.js",
