@@ -10,7 +10,6 @@ const formData = require('express-form-data')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const config = require('./db')
 
 const users = require('./routes/user')
 const username = require('./routes/username')
@@ -31,7 +30,7 @@ const Sessions = require('./models/Sessions')
 async function initDatabase(){
     try {
       // Connect to the MongoDB cluster
-      await mongoose.connect(config.DB[process.env.ENV], { useNewUrlParser: true, useUnifiedTopology: true })
+      await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       console.log('Database is connected')
 
     } catch (e) {
