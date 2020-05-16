@@ -28,10 +28,20 @@ const PupilProfile = require('./models/PupilProfile')
 const User = require('./models/User')
 const Sessions = require('./models/Sessions')
 
-mongoose.connect(config.DB, { useNewUrlParser: true }).then(
-  () => { console.log('Database is connected') },
-  err => { console.log('Cannot connect to the database' + err)}
-)
+async function initDatabase(){
+    try {
+      // Connect to the MongoDB cluster
+      await mongoose.connect(config.DB[process.env.ENV], { useNewUrlParser: true, useUnifiedTopology: true })
+      console.log('Database is connected')
+
+    } catch (e) {
+      console.log('Cannot connect to the database' + err)
+    }
+}
+
+initDatabase().catch(console.error)
+
+
 
 app.prepare()
 .then(() => {

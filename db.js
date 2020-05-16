@@ -1,3 +1,7 @@
+
 module.exports = {
-  DB: 'mongodb://localhost:27017/auth'
+  DB: {
+    dev: 'mongodb://localhost:27017/auth',
+    staging: 'mongodb+srv://fabfixe:fabfixe@cluster0-bmggq.mongodb.net/test?retryWrites=true&w=majority'
+  }
 }
