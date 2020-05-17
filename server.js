@@ -76,6 +76,12 @@ app.prepare()
 
   server.use('/api/dashboard', dashboard)
 
+  server.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", process.env.API_URL)
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    next()
+  })
+
   server.get('/', (req, res) => {
     return app.render(req, res, '/index', {})
   })
