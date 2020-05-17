@@ -3,7 +3,7 @@ const express = require('express')
 const moment = require('moment-timezone')
 const router = express.Router()
 const sgMail = require('@sendgrid/mail')
-const User = require('../models/User')
+const User = require('../../models/User')
 const CronJob = require('cron').CronJob
 
 router.post('/sessionUpdated', function(req, res) {

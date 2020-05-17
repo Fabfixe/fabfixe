@@ -4,11 +4,11 @@ const gravatar = require('gravatar')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
-const validateRegisterInput = require('../validation/register')
-const validateLoginInput = require('../validation/login')
+const validateRegisterInput = require('../../validation/register')
+const validateLoginInput = require('../../validation/login')
 const mongoose = require('mongoose')
 
-const User = require('../models/User')
+const User = require('../../models/User')
 
 router.post('/register', function(req, res) {
   const { errors, isValid } = validateRegisterInput(req.body)

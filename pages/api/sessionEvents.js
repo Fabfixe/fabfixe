@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const moment = require('moment')
-const Session = require('../models/Sessions')
+const Session = require('../../models/Sessions')
 
 router.post('/visitedPreview', function(req, res) {
   const { accountType, time, _id } = req.body

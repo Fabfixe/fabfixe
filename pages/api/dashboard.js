@@ -4,10 +4,10 @@ const moment = require('moment-timezone')
 const router = express.Router()
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const fs = require('fs')
-const User = require('../models/User')
+const User = require('../../models/User')
 const CronJob = require('cron').CronJob
-const Session = require('../models/Sessions')
-const SessionEvents = require('../models/SessionEvents')
+const Session = require('../../models/Sessions')
+const SessionEvents = require('../../models/SessionEvents')
 
 const sheetsIDMap = {
   dev: '10thQrsMuD3ggSDKUoNKMKkUvXsj2fQJ1sA76imY3bMA',

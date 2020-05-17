@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const ArtistProfile = require('../models/ArtistProfile')
-const PupilProfile = require('../models/PupilProfile')
+const ArtistProfile = require('../../models/ArtistProfile')
+const PupilProfile = require('../../models/PupilProfile')
 
 router.post('/', function(req, res) {
   ArtistProfile.findOne({
