@@ -87,6 +87,8 @@ app.prepare()
   })
 
   server.get('*', (req, res) => {
+    res.header("Access-Control-Allow-Origin", process.env.API_URL)
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
     return handle(req, res)
   })
 
