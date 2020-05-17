@@ -11,16 +11,16 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const passport = require('passport')
 
-const users = require('./routes/user')
-const username = require('./routes/username')
-const profileImage = require('./routes/profileImage')
-const profiles = require('./routes/profile')
-const sessions = require('./routes/sessions')
-const emails = require('./routes/emails')
-const payments = require('./routes/payments')
-const token = require('./routes/token')
-const sessionEvents = require('./routes/sessionEvents')
-const dashboard = require('./routes/dashboard')
+const users = require('./api/user')
+const username = require('./api/username')
+const profileImage = require('./api/profileImage')
+const profiles = require('./api/profile')
+const sessions = require('./api/sessions')
+const emails = require('./api/emails')
+const payments = require('./api/payments')
+const token = require('./api/token')
+const sessionEvents = require('./api/sessionEvents')
+const dashboard = require('./api/dashboard')
 
 const ArtistProfile = require('./models/ArtistProfile')
 const PupilProfile = require('./models/PupilProfile')
@@ -44,9 +44,9 @@ initDatabase().catch(console.error)
 app.prepare()
 .then(() => {
   const server = express()
-  // server.use(cors({
-  //   origin: CLIENT_ORIGIN
-  // }))
+  server.use(cors({
+    origin: CLIENT_ORIGIN
+  }))
 
   // Profile Image Route Handler
   server.use('/image-upload-single', profileImage)
