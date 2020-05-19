@@ -46,7 +46,7 @@ nav {
 
     &:after {
       position: absolute;
-      width: 100%;
+      width: calc(100% - #{$letter-spacing-s});
       bottom: -2px;
       left: 0;
       content: '';
