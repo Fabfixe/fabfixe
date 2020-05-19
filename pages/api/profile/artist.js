@@ -1,4 +1,7 @@
 const ArtistProfile = require('../../../models/ArtistProfile')
+import dbConnect from '../../../dbConnect'
+
+dbConnect()
 
 export default (req, res) => {
     let newProfile = {

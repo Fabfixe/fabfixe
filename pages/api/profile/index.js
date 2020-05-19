@@ -1,3 +1,6 @@
+import dbConnect from '../../../dbConnect'
+
+dbConnect()
 
 import ArtistProfile from '../../../models/ArtistProfile'
 import PupilProfile from '../../../models/PupilProfile'

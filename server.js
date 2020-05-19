@@ -28,20 +28,6 @@ const dashboard = require('./pages/api/dashboard')
 const User = require('./models/User')
 // const Sessions = require('./models/Sessions')
 
-async function initDatabase() {
-    try {
-      // Connect to the MongoDB cluster
-      await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-      console.log('Database is connected')
-
-    } catch (e) {
-      console.log('Cannot connect to the database' + e)
-    }
-}
-
-initDatabase().catch(console.error)
-
-
 app.prepare()
 .then(() => {
   const server = express()

@@ -1,6 +1,9 @@
 const ArtistProfile = require('../../../models/ArtistProfile')
 const PupilProfile = require('../../../models/PupilProfile')
 
+import dbConnect from '../../../dbConnect'
+
+dbConnect()
 
 export default (req, res) => {
 return  ArtistProfile.findOne({

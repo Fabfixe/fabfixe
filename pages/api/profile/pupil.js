@@ -1,4 +1,7 @@
 const PupilProfile = require('../../../models/PupilProfile')
+import dbConnect from '../../../dbConnect'
+
+dbConnect()
 
 export default (req, res) => {
     let newProfile = {

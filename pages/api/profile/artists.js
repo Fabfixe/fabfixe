@@ -1,5 +1,7 @@
-import mongoose from 'mongoose'
+import dbConnect from '../../../dbConnect'
 const ArtistProfile = require('../../../models/ArtistProfile')
+
+dbConnect()
 
 export default (req, res) => {
   const { offset, limit } = req.query
