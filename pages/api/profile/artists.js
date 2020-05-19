@@ -1,4 +1,4 @@
-import dbConnect from '../../../dbConnect'
+import dbConnect from '../../../dbconnect'
 const ArtistProfile = require('../../../models/ArtistProfile')
 
 dbConnect()

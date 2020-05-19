@@ -1,7 +1,7 @@
 const ArtistProfile = require('../../../models/ArtistProfile')
 const PupilProfile = require('../../../models/PupilProfile')
 
-import dbConnect from '../../../dbConnect'
+import dbConnect from '../../../dbconnect'
 
 dbConnect()
 
