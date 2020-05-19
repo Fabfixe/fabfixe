@@ -45,6 +45,4 @@ const PupilProfileSchema = new Schema({
   }
 })
 
-const PupilProfile = mongoose.model('pupilprofiles', PupilProfileSchema)
-
-module.exports = PupilProfile
+module.exports = mongoose.models.pupilprofiles || mongoose.model('pupilprofiles', PupilProfileSchema)

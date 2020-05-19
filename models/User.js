@@ -30,8 +30,8 @@ const UserSchema = new Schema({
       type: Date,
       default: Date.now
     }
-});
+})
 
-const User = mongoose.model('users', UserSchema)
+// const User =
 
-module.exports = User
+module.exports = mongoose.models.users || mongoose.model('users', UserSchema)

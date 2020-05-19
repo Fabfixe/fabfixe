@@ -7,7 +7,6 @@ const fs = require('fs')
 const User = require('../../models/User')
 const CronJob = require('cron').CronJob
 const Session = require('../../models/Sessions')
-const SessionEvents = require('../../models/SessionEvents')
 
 const sheetsIDMap = {
   dev: '10thQrsMuD3ggSDKUoNKMKkUvXsj2fQJ1sA76imY3bMA',

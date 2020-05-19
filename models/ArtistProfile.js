@@ -3,7 +3,7 @@ const mongoosePaginate = require('mongoose-paginate')
 const Schema = mongoose.Schema
 
 
-const Session = require('./Sessions')
+const Sessions = require('./Sessions')
 
 const ArtistProfileSchema = new Schema({
   _id: Schema.Types.ObjectId,
@@ -55,6 +55,4 @@ const ArtistProfileSchema = new Schema({
 
 ArtistProfileSchema.plugin(mongoosePaginate)
 
-const ArtistProfile = mongoose.model('artistprofiles', ArtistProfileSchema)
-
-module.exports = ArtistProfile
+module.exports = mongoose.models.artistprofiles || mongoose.model('artistprofiles', ArtistProfileSchema)
