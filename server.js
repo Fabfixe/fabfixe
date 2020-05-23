@@ -22,7 +22,7 @@ const passport = require('passport')
 // const ArtistProfile = require('./models/ArtistProfile')
 // const PupilProfile = require('./models/PupilProfile')
 
-const emails = require('./pages/api/emails')
+// const emails = require('./pages/api/emails')
 const dashboard = require('./pages/api/dashboard')
 
 const User = require('./models/User')
@@ -59,7 +59,7 @@ app.prepare()
   // server.use('/api/token', token)
   //
   // server.use('/api/sessionEvents', sessionEvents)
-  server.use('/api/emails', emails)
+  // server.use('/api/emails', emails)
 
   server.use('/api/dashboard', dashboard)
 
