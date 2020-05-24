@@ -1,11 +1,10 @@
 require('dotenv').config()
 const express = require('express')
 const moment = require('moment-timezone')
-const router = express.Router()
 const { GoogleSpreadsheet } = require('google-spreadsheet')
+const CronJob = require('cron').CronJob
 const fs = require('fs')
 const User = require('../../models/User')
-const CronJob = require('cron').CronJob
 const Session = require('../../models/Sessions')
 
 const sheetsIDMap = {
@@ -18,9 +17,11 @@ const sheetID = process.env.ENV ? sheetsIDMap[process.env.ENV] : sheetsIDMap.dev
 const doc = new GoogleSpreadsheet(sheetID);
 
 async function updateSheets() {
+  let privateKey = process.env.SHEETS_PRIVATE_KEY
+
   await doc.useServiceAccountAuth({
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    private_key: process.env.SHEETS_PRIVATE_KEY,
+    private_key: privateKey.substring(2, privateKey.length - 2),
   })
 
   await doc.loadInfo()
@@ -28,14 +29,23 @@ async function updateSheets() {
   const secondSheet = doc.sheetsByIndex[1];
   const thirdSheet = doc.sheetsByIndex[2];
   const fourthSheet = doc.sheetsByIndex[3];
-
   const rows = await firstSheet.getRows();
+  let offsetDateISO;
 
-  let offsetDateISO
+  moment.tz.load({
+      version : '2014e',
+      zones : [
+          'America/New_York|EST EDT|50 40|0101|1Lz50 1zb0 Op0'
+      ],
+      links : [
+          'America/New_York|US/Eastern'
+      ]
+  })
 
   try {
     const offsetDate = await rows[rows.length - 1].Date
-    offsetDateISO = moment.tz(offsetDate).utc().toISOString()
+    moment.tz.add('America/New_York|EST EDT|50 40|0101|1Lz50 1zb0 Op0')
+    offsetDateISO = moment.tz(offsetDate, 'MM/DD/YYYY h:mma z', 'America/New_York').toISOString()
   } catch {
     offsetDateISO = moment().toISOString()
   }
@@ -237,6 +247,4 @@ const job = new CronJob('0 0 0 * * *', function() {
   updateSheets()
 })
 
-job.start()
-
-module.exports = router
+module.exports = job
