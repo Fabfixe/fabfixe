@@ -339,6 +339,7 @@ export default class VideoSession extends Component {
         closeDrawer={() => this.toggleWidget('chat')}
         onMessageCreation={this.dealWithMessages}
         remoteMessages={this.state.remoteMessages}
+        session={this.state.session}
       { ...this.props }/>}
       <div className="session-content">
         <div className="video-container">

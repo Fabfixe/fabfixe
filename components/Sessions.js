@@ -14,6 +14,7 @@ import moment from 'moment-timezone'
 import { getSessions, cancelSession, deleteSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
+require('dotenv').config()
 
 class Sessions extends Component {
   constructor(props) {
@@ -122,6 +123,8 @@ class Sessions extends Component {
       return session.status === 'completed'
     })
 
+    const notProd = process.env.ENV !== 'production'
+
     return (
       <React.Fragment>
         {this.state.showSubmit && <div>submitted yo</div>}
@@ -158,7 +161,7 @@ class Sessions extends Component {
                       <li className={cn({ 'soon': withinThirty })} key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
-                        {withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
+                        {(notProd || withinThirty) && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>

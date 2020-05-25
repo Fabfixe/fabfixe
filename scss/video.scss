@@ -81,13 +81,19 @@
       margin: 0 auto;
     }
 
+    video {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 56.25vw !important;
+    }
+
     #local-media {
       margin-bottom: 10px;
     }
   }
 
   video {
-    width: 100%;
+    min-height: 100%;
     transform: scale(-1, 1);
   }
 
@@ -109,6 +115,7 @@
 
   &.double-session video {
     height: 100%;
+    width: 100vw;
   }
 
   &.double-session .video-container > div,

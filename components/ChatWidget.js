@@ -5,10 +5,11 @@ import moment from 'moment-timezone'
 const classNames = require('classnames')
 
 export default props => {
+  console.log('chat props', props)
   const textArea = useRef()
   const [message, updateMessage] = useState('')
   const [submitReady, setSubmitReady] = useState(false)
-  const [messages, updateMessages] = useState(props.session[0].videoMessages || [])
+  const [messages, updateMessages] = useState(props.session.videoMessages || [])
 
   useEffect(() => {
     const latestRemoteMessage = props.remoteMessages[props.remoteMessages.length - 1]
@@ -32,7 +33,7 @@ export default props => {
     }
 
     let newSession = {
-      _id: props.session[0]._id,
+      _id: props.session._id,
       isPupil: props.isPupil,
       videoMessages: messages.concat([newMessage])
     }
@@ -62,8 +63,8 @@ export default props => {
           {messages && messages.map((message, idx) => {
             if (!message )return
             const isPupil = props.accountType === 'pupil'
-            const artistUsername = props.session[0].artist.username
-            const pupilUsername = props.session[0].pupil.username
+            const artistUsername = props.session.artist.username
+            const pupilUsername = props.session.pupil.username
             const messageSender = message.from === props.userId ? 'You' : isPupil ? artistUsername : pupilUsername
 
             return (

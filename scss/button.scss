@@ -43,10 +43,14 @@ button.button {
   border: 0;
   padding: 7px 5px 8px 9px;
   line-height: 1;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: $letter-spacing-s;
 
+  @include for-tablet-up {
+    font-size: 12px;
+  }
+  
   &:hover {
     opacity: 0.75;
   }

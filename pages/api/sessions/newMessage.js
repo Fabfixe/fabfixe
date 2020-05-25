@@ -10,4 +10,4 @@ export default (req, res) => {
       if(writeOpResult) res.send(writeOpResult)
     })
     .catch((err) => res.send(err))
-})
+}

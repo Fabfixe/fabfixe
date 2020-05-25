@@ -41,10 +41,10 @@ class ViewSession extends Component {
 
   componentDidMount() {
     // Delay load for pupils due to problems with paypal button
-    if(this.props.isPupil) {
+    if(this.props.isPupil && this.props.artistApproved && this.props.status === 'pending') {
       this.timer = setTimeout(
         () => this.setState({ isLoading: false }),
-        3000,
+        4000,
       )
     } else {
       this.setState({ isLoading: false })
