@@ -11,6 +11,10 @@ const PupilProfileSchema = new Schema({
     type: String,
     required: false
   },
+  profileImagePublicId: {
+    type: String,
+    required: false
+  },
   youtube: {
     type: String,
     required: false

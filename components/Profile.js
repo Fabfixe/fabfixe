@@ -133,7 +133,7 @@ class Profile extends Component {
     })
   }
 
-  getImageUrl(url) {
+  getImageUrl({url}) {
     this.setState({ attachment: url })
   }
 
@@ -222,6 +222,7 @@ class Profile extends Component {
             <Modal closeModal={this.handleModal}>
                 <div className="center-modal">
                   <ModalContent
+                    isAuthenticated
                     username={username}
                     hourlyRate={hourlyRate}
                     date={this.state.date}

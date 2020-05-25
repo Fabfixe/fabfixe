@@ -13,7 +13,8 @@ const passport = require('passport')
 const dashboard = require('./pages/api/dashboard')
 const User = require('./models/User')
 const port = parseInt(process.env.PORT, 10) || 4000
-
+const payments = require('./pages/api/payments')
+const cloudinary = require('cloudinary')
 
 app.prepare()
 .then(() => {
@@ -27,11 +28,19 @@ app.prepare()
 
   // Update dashboard at 12:00am
   dashboard.start()
-  
+
   // Authentication Route Handler
   server.use(passport.initialize())
   require('./passport')(passport)
 
+  // Handle payments
+  server.use('/api/payments', payments)
+
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  })
   // server.use(bodyParser.urlencoded({ extended: false }))
   // server.use(bodyParser.json())
 

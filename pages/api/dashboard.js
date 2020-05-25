@@ -1,9 +1,8 @@
 require('dotenv').config()
-const express = require('express')
 const moment = require('moment-timezone')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const CronJob = require('cron').CronJob
-const fs = require('fs')
+const fs = require('fs') // can this be removed?
 const User = require('../../models/User')
 const Session = require('../../models/Sessions')
 

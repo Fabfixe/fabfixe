@@ -1,9 +1,10 @@
-const express = require('express')
-const router = express.Router()
+import dbConnect from '../../../dbconnect'
 const ArtistProfile = require('../../models/ArtistProfile')
 const PupilProfile = require('../../models/PupilProfile')
 
-router.post('/', function(req, res) {
+dbConnect()
+
+export default (req, res) => {
   ArtistProfile.findOne({
     username: req.body.username
   })
@@ -25,8 +26,4 @@ router.post('/', function(req, res) {
     }
   })
   .catch((err) => console.log(err))
-})
-
-
-
-module.exports = router
+}

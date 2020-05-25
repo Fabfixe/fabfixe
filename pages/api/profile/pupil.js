@@ -1,5 +1,5 @@
-const PupilProfile = require('../../../models/PupilProfile')
 import dbConnect from '../../../dbconnect'
+const PupilProfile = require('../../../models/PupilProfile')
 
 dbConnect()
 

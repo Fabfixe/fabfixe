@@ -29,6 +29,7 @@ class EditProfile extends Component {
       displayName: this.props.displayName,
       username: this.props.username,
       profileImageUrl: this.props.profileImageUrl,
+      profileImagePublicId: this.props.profileImagePublicId,
       youtube: this.props.youtube,
       instagram: this.props.instagram,
       twitter: this.props.twitter,
@@ -112,8 +113,8 @@ class EditProfile extends Component {
     }
   }
 
-  getImageUrl(url) {
-    this.setState({ profileImageUrl: url})
+  getImageUrl({url, public_id}) {
+    this.setState({ profileImageUrl: url, profileImagePublicId: public_id })
   }
 
   handleChange(e) {
@@ -159,6 +160,7 @@ class EditProfile extends Component {
         username: this.state.username,
         displayName: this.state.displayName,
         profileImageUrl: this.state.profileImageUrl,
+        profileImagePublicId: this.state.profileImagePublicId,
         youtube: this.state.youtube,
         instagram: this.state.instagram,
         twitter: this.state.twitter,
@@ -172,6 +174,7 @@ class EditProfile extends Component {
         _id: this.props._id,
         username: this.state.username,
         profileImageUrl: this.state.profileImageUrl,
+        profileImagePublicId: this.state.profileImagePublicId,
         youtube: this.state.youtube,
         instagram: this.state.instagram,
         twitter: this.state.twitter,
@@ -356,6 +359,7 @@ const mapStateToProps = state => ({
   username: state.profile.username,
   displayName: state.profile.displayName,
   profileImageUrl: state.profile.profileImageUrl,
+  profileImagePublicId: state.profile.profileImagePublicId,
   youtube: state.profile.youtube,
   instagram: state.profile.instagram,
   twitter: state.profile.twitter,

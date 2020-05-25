@@ -1,5 +1,5 @@
-const ArtistProfile = require('../../../models/ArtistProfile')
 import dbConnect from '../../../dbconnect'
+const ArtistProfile = require('../../../models/ArtistProfile')
 
 dbConnect()
 

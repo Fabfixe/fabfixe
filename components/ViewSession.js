@@ -26,6 +26,7 @@ class ViewSession extends Component {
       displayBanner: false,
       bannerMessage: 'Your update has been sent',
       showSummary: true,
+      isLoading: true,
     }
 
     this.handleScheduler = this.handleScheduler.bind(this)
@@ -36,6 +37,24 @@ class ViewSession extends Component {
     this.deleteSession = this.deleteSession.bind(this)
     this.onTextChange = this.onTextChange.bind(this)
     this.onApprove = this.onApprove.bind(this)
+  }
+
+  componentDidMount() {
+    // Delay load for pupils due to problems with paypal button
+    if(this.props.isPupil) {
+      this.timer = setTimeout(
+        () => this.setState({ isLoading: false }),
+        3000,
+      )
+    } else {
+      this.setState({ isLoading: false })
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.props.isPupil) {
+      clearTimeout(this.timer)
+    }
   }
 
   handleScheduler() {
@@ -60,7 +79,7 @@ class ViewSession extends Component {
     this.setState({ loading: true })
 
     if(this.confirmApproval.current.checked) {
-      axios.post('/api/sessions/artistApprove/', newSession)
+      axios.post('/api/sessions/artistApprove', newSession)
       .then((res) => {
         if(res.data.n === 1) {
           this.props.showSubmit(newSession)
@@ -148,9 +167,12 @@ class ViewSession extends Component {
       artistApproved,
     } = this.props
     const showPaymentButton = isPupil && artistApproved && status === 'pending'
+
     return (
       <React.Fragment>
+        {this.state.isLoading && <p>Loading</p>}
         {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
+        {!this.state.isLoading && <React.Fragment>
         <h1>View Session</h1>
         <div className="view-session">
           <h4>{isPupil ? 'Artist' : 'Pupil'}</h4>
@@ -159,7 +181,8 @@ class ViewSession extends Component {
           <p id="time-display">{formatTime(date, duration)}</p>
           <h4>Description</h4>
           <p>{description}</p>
-          {attachment && <div style={{backgroundImage: `url(${attachment})`,
+          {attachment && <div style={{
+            backgroundImage: `url(${attachment})`,
             width: '100px',
             height: '100px',
             backgroundSize: 'cover',
@@ -174,8 +197,8 @@ class ViewSession extends Component {
                 return actions.order.create({
                   purchase_units: [{
                     amount: {
-                    currency_code: "USD",
-                    value: digitCalcTotal(duration, hourlyRate)
+                      currency_code: "USD",
+                      value: digitCalcTotal(duration, hourlyRate)
                      }
                    }]
                 })
@@ -221,6 +244,7 @@ class ViewSession extends Component {
         {this.state.displayBanner && <Banner
           style={{ zIndex: 5, minHeight: '100px' }}
           handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
+      </React.Fragment>}
       </React.Fragment>
     )
   }

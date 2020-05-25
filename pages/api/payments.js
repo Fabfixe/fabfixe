@@ -10,6 +10,8 @@ paypal.configure({
   client_secret: process.env.client_secret
 })
 
+console.log('payments included')
+
 router.post('/', function(req, res) {
   const payReq = JSON.stringify({
     intent:'sale',
@@ -26,10 +28,10 @@ router.post('/', function(req, res) {
   })
 
   paypal.payment.create(payReq, function(error, payment){
-    var links = {}
+    let links = {}
 
     if(error){
-      console.error(JSON.stringify(error));
+      console.error(JSON.stringify(error))
     } else {
       // Capture HATEOAS links
       payment.links.forEach(function(linkObj){
@@ -40,7 +42,7 @@ router.post('/', function(req, res) {
       })
 
       // If the redirect URL is present, redirect the customer to that URL
-      if (links.hasOwnProperty('approval_url')){
+      if (links.hasOwnProperty('approval_url')) {
         // Redirect the customer to links['approval_url'].href
       } else {
         console.error('no redirect URI present')
@@ -56,9 +58,9 @@ router.post('/', function(req, res) {
       console.error(JSON.stringify(error));
     } else {
       if (payment.state == 'approved'){
-        console.log('payment completed successfully');
+        console.log('payment completed successfully')
       } else {
-        console.log('payment not successful');
+        console.log('payment not successful')
       }
     }
   })
