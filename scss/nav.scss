@@ -28,7 +28,7 @@ nav {
 
   a {
     @include nunito-bold;
-    font-size: 1rem;
+    font-size: 14px;
     text-transform: uppercase;
     letter-spacing: $letter-spacing-s;
     margin-right: 25px;
@@ -167,9 +167,15 @@ nav {
   justify-content: center;
 
   a {
-    margin-bottom: 10px;
-    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-xs;
+    margin-bottom: 30px;
+    font-size: 14px;
     text-decoration: none;
+
+    @include for-tablet-up {
+      font-size: 16px;
+    }
   }
 }
 
