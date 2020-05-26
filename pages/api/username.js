@@ -1,4 +1,4 @@
-import dbConnect from '../../../dbconnect'
+import dbConnect from '../../dbconnect'
 const ArtistProfile = require('../../models/ArtistProfile')
 const PupilProfile = require('../../models/PupilProfile')
 
