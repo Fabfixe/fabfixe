@@ -48,11 +48,7 @@ import Link from 'next/link'
                <li>
                   <div
                     className="artist-image"
-                    style={{...imageStyle,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'cover',
-                      backgroundPosition: '50%',
-                    }}
+                    style={{ ...imageStyle }}
                   />
                   <div className='artist-metadata'>
                     <h2 className='display-name'>{artist.displayName}</h2>

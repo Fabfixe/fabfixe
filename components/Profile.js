@@ -222,7 +222,7 @@ class Profile extends Component {
             <Modal closeModal={this.handleModal}>
                 <div className="center-modal">
                   <ModalContent
-                    isAuthenticated
+                    isAuthenticated={isAuthenticated}
                     username={username}
                     hourlyRate={hourlyRate}
                     date={this.state.date}

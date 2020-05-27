@@ -65,7 +65,7 @@ select {
 }
 
 .terms {
-  @include nunito;
+  font-size: 12px;
   margin: 20px 0 0 30px;
   display: flex;
   align-items: center;
@@ -181,6 +181,7 @@ form {
   }
 
   h2, h3 {
+    @include small-header;
     width: $form-item-width;
     margin: $form-padding;
   }

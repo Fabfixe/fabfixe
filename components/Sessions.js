@@ -176,7 +176,7 @@ class Sessions extends Component {
                   {completedSessions.map((session, id) => {
                     return (
                       <li key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
@@ -192,7 +192,7 @@ class Sessions extends Component {
                   {cancelledSessions.map((session, id) => {
                     return (
                       <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artist.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                       </li>
                     )
@@ -206,7 +206,7 @@ class Sessions extends Component {
                   {expiredSessions.map((session, id) => {
                     return (
                       <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                       </li>
                     )

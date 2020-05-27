@@ -17,13 +17,15 @@
   }
 
   .placeholder {
-    background-image: url('/img/logo_abbr.svg');
+    background-image: url('/img/avatar.svg');
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: 70px;
   }
 
   label {
+    @include small-header;
+    font-size: 12px;
     display: inline-flex;
     width: 168px;
     margin: 0 auto;

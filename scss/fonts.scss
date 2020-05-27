@@ -43,6 +43,36 @@ $letter-spacing-l: 8px;
   font-weight: 400;
 }
 
+@mixin small-header {
+  @include nunito-bold;
+  font-size: 14px;
+  letter-spacing: $letter-spacing-xs;
+  text-transform: uppercase;
+}
+
+@mixin underline-header {
+  @include small-header;
+  position: relative;
+  display: inline-block;
+  position: relative;
+  width: auto;
+  padding-bottom: 3px;
+
+  &:after {
+    position: absolute;
+    width: calc(100% - #{$letter-spacing-xs});
+    // bottom: -2px;
+    // left: 0;
+    // content: '';
+    // border-bottom: solid 3px $linen;
+    bottom: 0;
+    left: 5px;
+    content: '';
+    border-bottom: solid 10px transparentize($linen, 0.3);
+    z-index: -1;
+  }
+}
+
 p, input, div, button, h2, h3, ul, li {
   font-family: $nunito;
 }

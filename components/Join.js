@@ -115,7 +115,7 @@ class JoinForm extends Component {
               <path d="M9 16.172L19.594 5.578 21 6.984l-12 12-5.578-5.578L4.828 12z"></path>
             </svg>
           </div>
-          <span>By clicking "Create Account" you agree to FabFixe Privacy Policy and Terms of service</span>
+          <span>By clicking "Create Account" you agree to our Privacy Policy and Terms of service</span>
         </div>
         {this.state.submitted && !this.state.isConfirmed && <div className="invalid-feedback">Required</div>}
         <div className="button-container">

@@ -30,6 +30,15 @@ $list-margin-desktop: 15px;
       width: 125px;
       height: 100%;
       flex-shrink: 0;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
+
+      &.no-image {
+        background-color: $linen;
+        background-image: url('/img/avatar.svg') !important;
+        background-size: 50%;
+      }
     }
 
     h1 {
