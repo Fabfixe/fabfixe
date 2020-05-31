@@ -15,7 +15,6 @@ export default (req, res) => {
 
   const email = req.body.email
   const password = req.body.password
-console.log('password', password)
   User.findOne({ email })
   .then(user => {
     if(!user) {

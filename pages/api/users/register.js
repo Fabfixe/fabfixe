@@ -1,4 +1,6 @@
 import dbConnect from '../../../dbconnect'
+import mongoose from 'mongoose'
+const bcrypt = require('bcryptjs')
 const User = require('../../../models/User')
 const gravatar = require('gravatar')
 const validateRegisterInput = require('../../../validation/register')
@@ -34,6 +36,7 @@ export default (req, res) => {
         email: req.body.email,
         password: req.body.password,
         accountType: req.body.accountType,
+        passwordResetToken: 'test',
         avatar
       })
 
@@ -44,7 +47,7 @@ export default (req, res) => {
             if(err) console.error('There was an error', err)
               else {
                 newUser.password = hash
-
+                console.log(newUser, 'newUser')
                 newUser
                 .save()
                 .then(user => {

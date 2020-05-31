@@ -25,20 +25,20 @@ module.exports = function validateRegisterInput(data) {
     errors.email = 'Email is required'
   }
 
-  if(!Validator.isLength(data.password, {min: 6, max: 30})) {
-    errors.password = 'Password must have 6 chars'
+  if(!Validator.isLength(data.password, { min: 6, max: 30 })) {
+    errors.password = 'Passwords must have between 6 and 30 characters'
   }
 
   if(Validator.isEmpty(data.password)) {
     errors.password = 'Password is required'
   }
 
-  if(!Validator.isLength(data.password_confirm, {min: 6, max: 30})) {
-    errors.password_confirm = 'Password must have 6 chars'
+  if(!Validator.isLength(data.password_confirm, { min: 6, max: 30 })) {
+    errors.password_confirm = 'Passwords must have between 6 and 30 characters'
   }
 
   if(!Validator.equals(data.password, data.password_confirm)) {
-    errors.password_confirm = 'Password and Confirm Password must match'
+    errors.password_confirm = 'Passwords must match'
   }
 
   if(Validator.isEmpty(data.password_confirm)) {
