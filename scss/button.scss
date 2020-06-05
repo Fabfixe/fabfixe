@@ -27,7 +27,7 @@ button.button {
   }
 
   @include for-tablet-portrait-up {
-    padding: 15px 25px;
+    padding: 15px 25px 15px 30px;
   }
 
   &:hover {

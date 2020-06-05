@@ -75,8 +75,8 @@ class NavLinks extends Component {
             <Link href="/account/my-sessions">
               <a>My Sessions</a>
             </Link>
-            <Link href="/about/how-it-works">
-              <a>How It Works</a>
+            <Link href="/account/my-calendar">
+              <a>My Calendar</a>
             </Link>
             <Link href="/browse/artists">
               <a>Browse Artists</a>
