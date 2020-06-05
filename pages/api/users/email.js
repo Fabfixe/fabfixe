@@ -22,7 +22,7 @@ export default (req, res) => {
   User.findOneAndUpdate({ email }, { passwordResetToken })
   .then(user => {
     if(!user) {
-      errors.email = 'User not found'
+      errors.email = `No account for ${email} exists`
       return res.status(404).json(errors)
     } else {
       const { firstName, email } = user
