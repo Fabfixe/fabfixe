@@ -3,11 +3,11 @@ import axios from 'axios'
 
 export const updateProfile = (accountType, profile) => {
   console.log('profile in action creator', profile)
-  return axios.post(`/api/profile/${accountType}/`, profile)
+  return axios.post(`/api/profile/${accountType}`, profile)
 }
 
 export const getProfile = (_id) => {
-   return axios.post('/api/profile/', { _id })
+   return axios.post('/api/profile', { _id })
     .then(res => res.data)
     .catch((err) => {
       console.log('err from getProfile', err)

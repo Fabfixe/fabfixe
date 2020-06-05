@@ -1,9 +1,7 @@
-const express = require('express')
-const router = express.Router()
-let AccessToken = require('twilio').jwt.AccessToken
-let VideoGrant = AccessToken.VideoGrant
+const AccessToken = require('twilio').jwt.AccessToken
+const VideoGrant = AccessToken.VideoGrant
 
-router.post('/', function(req, res) {
+export default (req, res) => {
   const { identity, _id } = req.body
   const accountSid = process.env.TWILIO_ACCOUNT_SID
   const apiKey = process.env.TWILIO_API_KEY
@@ -40,13 +38,10 @@ router.post('/', function(req, res) {
     room: _id
   })
 
-  // grant.configurationProfileSid = process.env.TWILIO_CONFIGURATION_SID;
   token.addGrant(grant)
 
   res.send({
     identity: identity,
     token: token.toJwt()
   })
-})
-
-module.exports = router
+}

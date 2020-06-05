@@ -37,15 +37,19 @@ button.button {
 
 .small-button {
   @include nunito;
-  background-color: $eggplant;
+  background-color: $moss;
   color: white;
   margin: 0 10px 0 0;
   border: 0;
   padding: 7px 5px 8px 9px;
   line-height: 1;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: $letter-spacing-s;
+
+  @include for-tablet-up {
+    font-size: 12px;
+  }
 
   &:hover {
     opacity: 0.75;
@@ -54,15 +58,15 @@ button.button {
 
 .small-button-border {
   @include nunito;
-  border: solid 1px $plum;
+  border: solid 1px $blush;
   background-color: transparent;
-  color: $plum;
+  color: $blush;
   display: inline-block;
   padding: 5px 10px;
   text-transform: uppercase;
 
   &:hover {
-    background-color: $plum;
+    background-color: $blush;
     color: #FFF;
   }
 }

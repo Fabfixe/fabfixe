@@ -4,9 +4,6 @@ import Banner from '../components/Banner'
 import Datetime from 'react-datetime'
 import Router from 'next/router'
 import { currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
-import { PayPalButton } from "react-paypal-button-v2"
-// import validateSessionSubmit from '../validation/sessionSubmit'
-// import { deleteSession } from '../actions/session'
 import moment from 'moment'
 import axios from 'axios'
 

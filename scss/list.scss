@@ -30,6 +30,15 @@ $list-margin-desktop: 15px;
       width: 125px;
       height: 100%;
       flex-shrink: 0;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
+
+      &.no-image {
+        background-color: $linen;
+        background-image: url('/img/avatar.svg') !important;
+        background-size: 50%;
+      }
     }
 
     h1 {
@@ -45,7 +54,7 @@ $list-margin-desktop: 15px;
       @include nunito-bold;
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: $letter-spacing-s;
+      letter-spacing: $letter-spacing-xs;
       line-height: 1.5;
       color: darken($peach, 10%);
     }

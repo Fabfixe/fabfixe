@@ -44,15 +44,11 @@ import Link from 'next/link'
             { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: '#F7E4BE' }
 
            return (
-             <Link href={`/${artist.username}`}>
-               <li key={`key-${artist.username}`}>
+             <Link key={`key-${artist.username}`} href={`/${artist.username}`}>
+               <li>
                   <div
                     className="artist-image"
-                    style={{...imageStyle,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundSize: 'cover',
-                      backgroundPosition: '50%',
-                    }}
+                    style={{ ...imageStyle }}
                   />
                   <div className='artist-metadata'>
                     <h2 className='display-name'>{artist.displayName}</h2>

@@ -11,6 +11,10 @@ const PupilProfileSchema = new Schema({
     type: String,
     required: false
   },
+  profileImagePublicId: {
+    type: String,
+    required: false
+  },
   youtube: {
     type: String,
     required: false
@@ -45,6 +49,4 @@ const PupilProfileSchema = new Schema({
   }
 })
 
-const PupilProfile = mongoose.model('pupilprofiles', PupilProfileSchema)
-
-module.exports = PupilProfile
+module.exports = mongoose.models.pupilprofiles || mongoose.model('pupilprofiles', PupilProfileSchema)

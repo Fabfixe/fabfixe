@@ -14,6 +14,7 @@ import moment from 'moment-timezone'
 import { getSessions, cancelSession, deleteSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
+require('dotenv').config()
 
 class Sessions extends Component {
   constructor(props) {
@@ -39,7 +40,6 @@ class Sessions extends Component {
     const { _id, accountType } = this.props.user
     getSessions(_id, accountType)
     .then((res) => {
-      console.log(res)
       const validSessions = res.data.filter(session => !session[this.state.user.accountType + 'Deleted'] && session.artist !== null)
 
       const sessions = validSessions.map((session) => {
@@ -123,6 +123,8 @@ class Sessions extends Component {
       return session.status === 'completed'
     })
 
+    const notProd = process.env.ENV !== 'production'
+
     return (
       <React.Fragment>
         {this.state.showSubmit && <div>submitted yo</div>}
@@ -153,12 +155,13 @@ class Sessions extends Component {
                   {upcomingSessions.map((session, id) => {
                     // Check if session is within 30 minutes
                     const withinThirty = moment(session.date).subtract(30, 'minutes').isSameOrBefore(moment())
+                    console.log(`/session/${session._id}`)
 
                     return (
                       <li className={cn({ 'soon': withinThirty })} key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
-                        {!withinThirty && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
+                        {(notProd || withinThirty) && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
@@ -173,7 +176,7 @@ class Sessions extends Component {
                   {completedSessions.map((session, id) => {
                     return (
                       <li key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
@@ -189,7 +192,7 @@ class Sessions extends Component {
                   {cancelledSessions.map((session, id) => {
                     return (
                       <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artist.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                       </li>
                     )
@@ -203,7 +206,7 @@ class Sessions extends Component {
                   {expiredSessions.map((session, id) => {
                     return (
                       <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
-                        <p className="username">{isPupil ? session.artist : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                       </li>
                     )

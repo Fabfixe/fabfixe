@@ -4,7 +4,7 @@ footer {
   // justify-content: center;
   flex-direction: column;
   width: 100%;
-  background-color: $moss;
+  background-color: $linen;
   padding: 50px;
 
   .footer-logo {
@@ -17,8 +17,10 @@ footer {
 
   a {
     @include playfair;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-xs;
+    font-size: 14px;
     text-decoration: none;
-    color: #FFF;
     margin-bottom: 10px;
   }
 
@@ -43,8 +45,12 @@ footer {
     .text-links {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: flex-start;
       margin-bottom: 20px;
+
+      a {
+        margin-right: 10px;
+      }
 
       @include for-desktop-up {
         width: calc(100% - 300px);
@@ -63,7 +69,8 @@ footer {
       width: 300px;
     }
 
-    svg {
+    svg, svg * {
+      fill: $plum;
       height: 25px;
     }
   }

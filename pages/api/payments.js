@@ -2,24 +2,21 @@ require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const paypal = require('paypal-rest-sdk')
-
-const env = process.env.ENV === 'production' ? 'production' : 'sandbox' // check to see what the prod name of paypal is
+const env = process.env.ENV === 'production' ? 'live' : 'sandbox' // check to see what the prod name of paypal is
 
 paypal.configure({
-  mode: env, // Sandbox or live
+  mode: env, // Sandbox or production
   client_id: process.env.client_id,
   client_secret: process.env.client_secret
 })
+
+console.log('payments included')
 
 router.post('/', function(req, res) {
   const payReq = JSON.stringify({
     intent:'sale',
     payer: {
       payment_method:'paypal'
-    },
-    redirect_urls: {
-      return_url: 'http://localhost:4000/process',
-      cancel_url: 'http://localhost:4000/cancel'
     },
     transactions: [{
       amount:{
@@ -31,10 +28,10 @@ router.post('/', function(req, res) {
   })
 
   paypal.payment.create(payReq, function(error, payment){
-    var links = {}
+    let links = {}
 
     if(error){
-      console.error(JSON.stringify(error));
+      console.error(JSON.stringify(error))
     } else {
       // Capture HATEOAS links
       payment.links.forEach(function(linkObj){
@@ -45,7 +42,7 @@ router.post('/', function(req, res) {
       })
 
       // If the redirect URL is present, redirect the customer to that URL
-      if (links.hasOwnProperty('approval_url')){
+      if (links.hasOwnProperty('approval_url')) {
         // Redirect the customer to links['approval_url'].href
       } else {
         console.error('no redirect URI present')
@@ -61,9 +58,9 @@ router.post('/', function(req, res) {
       console.error(JSON.stringify(error));
     } else {
       if (payment.state == 'approved'){
-        console.log('payment completed successfully');
+        console.log('payment completed successfully')
       } else {
-        console.log('payment not successful');
+        console.log('payment not successful')
       }
     }
   })

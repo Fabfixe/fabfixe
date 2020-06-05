@@ -28,7 +28,7 @@ class ImageUploader extends Component {
 
     this.state = {
       uploading: false,
-      images: [ this.props.images ],
+      images: [this.props.images],
       error: '',
     }
 
@@ -37,7 +37,7 @@ class ImageUploader extends Component {
 
   componentDidUpdate(prevProps) {
     if(prevProps.images.length === 0 && this.props.images.length > 0) {
-      this.setState({ images: [ this.props.images ] })
+      this.setState({ images: [this.props.images] })
     }
   }
 
@@ -65,7 +65,7 @@ class ImageUploader extends Component {
     })
 
     if(this.state.error == '') {
-      axios.post('/image-upload-single', formData)
+      axios.post('/api/image-upload-single', formData)
       .then(res => {
 
         if (res.status != 200) {
@@ -75,7 +75,8 @@ class ImageUploader extends Component {
         return res.data
       })
       .then(images => {
-        images = images.map(image => image.url)
+        images = images.map(({url, public_id}) => ({ url, public_id }))
+
         this.setState({
           uploading: false,
           images,
@@ -110,7 +111,7 @@ class ImageUploader extends Component {
               <p className="error-message">{this.state.error}</p>
             </React.Fragment>
           )
-        case images[0] !== '' && images.length > 0:
+        case images[0].profileImageUrl !== '' && images.length > 0:
           return <Images images={images} removeImage={this.removeImage} />
         default:
           return <AddButton onChange={this.onChange} />
@@ -131,7 +132,10 @@ class ImageUploader extends Component {
 }
 
 const mapStateToProps = state => ({
-  images: state.profile.profileImageUrl,
+  images: {
+    profileImageUrl: state.profile.profileImageUrl,
+    profileImagePublicId: state.profileImagePublicId
+  }
 })
 
 export default connect(mapStateToProps)(ImageUploader)

@@ -14,12 +14,19 @@
     z-index: 10;
 
     div {
-      background-color: $moss;
-      width: 50px;
+      font: 400 11px $nunito;
+      background-color: $blush;
       height: 30px;
+      padding: 0 7px 0 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+
+       p {
+         color: #FFF;
+         text-transform: uppercase;
+         letter-spacing: $letter-spacing-s;
+       }
 
       &#help {
         margin-right: 10px;
@@ -55,7 +62,7 @@
     padding: 10px;
     border: 0;
     margin: 15px auto;
-    background-color: $eggplant;
+    background-color: $blush;
     color: #FFF;
 
     &:hover {
@@ -74,13 +81,20 @@
       margin: 0 auto;
     }
 
+    video {
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 56.25vw !important;
+    }
+
     #local-media {
       margin-bottom: 10px;
     }
   }
 
   video {
-    width: 100%;
+    min-height: 100%;
+    transform: scale(-1, 1);
   }
 
   #local-media,
@@ -101,6 +115,7 @@
 
   &.double-session video {
     height: 100%;
+    width: 100vw;
   }
 
   &.double-session .video-container > div,

@@ -3,7 +3,6 @@ const Schema = mongoose.Schema
 
 const ArtistProfile = require('./ArtistProfile')
 const PupilProfile = require('./PupilProfile')
-const SessionEvents = require('./SessionEvents')
 
 const SessionSchema = new Schema({
   date: {
@@ -64,6 +63,4 @@ const SessionSchema = new Schema({
   }
 }, { strict: false })
 
-const Session = mongoose.model('sessions', SessionSchema)
-
-module.exports = Session
+module.exports = mongoose.models.sessions || mongoose.model('sessions', SessionSchema)

@@ -2,9 +2,6 @@ import Link from 'next/link'
 
 const Footer = () => (
   <footer>
-    <Link href="/">
-      <a className="footer-logo"></a>
-      </Link>
       <div className="primary-links">
         <Link href="/">
           <a>Placeholder</a>
@@ -22,16 +19,10 @@ const Footer = () => (
       <div className="secondary-links">
         <div className="text-links">
           <Link href="/">
-            <a>Placeholder</a>
+            <a>Terms</a>
           </Link>
           <Link href="/">
-            <a>Placeholder</a>
-          </Link>
-          <Link href="/">
-            <a>Placeholder</a>
-          </Link>
-          <Link href="/">
-            <a>Placeholder</a>
+            <a>Privacy</a>
           </Link>
         </div>
         <div className="social-links">

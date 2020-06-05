@@ -1,41 +1,26 @@
 import Head from 'next/head'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { useRouter } from 'next/router'
 import Nav from '../../components/Nav'
 
 import VideoSession from '../../components/VideoSession'
 import axios from 'axios'
 
-class SessionRouting extends Component {
+const SessionRouting = (props) => {
 
-  static async getInitialProps (ctx) {
-    const { query } = ctx
-    const config = ctx.req ? { baseURL: 'http://localhost:4000' } : {}
-    return axios.post('/api/sessions/bySessionId', { id: query.id }, config)
-    .then((res) => {
-      const session = res.data
-      if(session) {
-        return { session }
-      } else {
-        return { session: null }
-      }
-    })
-    .catch((err) =>  {
-      return null
-    })
-  }
+  const router = useRouter()
+  const { id } = router.query
 
-  render() {
-    return (
-      <div>
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </Head>
-        <Nav />
-          {this.props.userId && <VideoSession { ...this.props } />}
-      </div>
-    )
-  }
+  return (
+    <div>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <Nav />
+        {props.userId && <VideoSession id={id} {...props} />}
+    </div>
+  )
 }
 
 const mapStateToProps = state => ({

@@ -54,7 +54,7 @@ class AttachmentImageUploader extends Component {
     })
 
     if(this.state.error == '') {
-      axios.post('/image-upload-single', formData)
+      axios.post('/api/image-upload-single', formData, {headers: { 'content-type': 'multipart/form-data' }})
       .then(res => {
 
         if (res.status != 200) {
@@ -64,7 +64,7 @@ class AttachmentImageUploader extends Component {
         return res.data
       })
       .then(images => {
-        images = images.map(image => image.url)
+        images = images.map(({url, public_id}) => ({ url, public_id }))
         this.setState({
           uploading: false,
           images,

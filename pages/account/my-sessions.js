@@ -6,7 +6,7 @@ import Login from '../../components/Login'
 import MyLayout from '../../components/MyLayout'
 import Hero from '../../components/Hero'
 import HowItWorks from '../../components/HowItWorks'
-
+import Footer from '../../components/Footer'
 import Sessions from '../../components/Sessions'
 import Router from 'next/router'
 

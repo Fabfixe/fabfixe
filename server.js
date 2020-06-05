@@ -10,28 +10,11 @@ const formData = require('express-form-data')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const config = require('./db')
-
-const users = require('./routes/user')
-const username = require('./routes/username')
-const profileImage = require('./routes/profileImage')
-const profiles = require('./routes/profile')
-const sessions = require('./routes/sessions')
-const emails = require('./routes/emails')
-const payments = require('./routes/payments')
-const token = require('./routes/token')
-const sessionEvents = require('./routes/sessionEvents')
-const dashboard = require('./routes/dashboard')
-
-const ArtistProfile = require('./models/ArtistProfile')
-const PupilProfile = require('./models/PupilProfile')
+const dashboard = require('./pages/api/dashboard')
 const User = require('./models/User')
-const Sessions = require('./models/Sessions')
-
-mongoose.connect(config.DB, { useNewUrlParser: true }).then(
-  () => { console.log('Database is connected') },
-  err => { console.log('Cannot connect to the database' + err)}
-)
+const port = parseInt(process.env.PORT, 10) || 4000
+const payments = require('./pages/api/payments')
+const cloudinary = require('cloudinary')
 
 app.prepare()
 .then(() => {
@@ -41,44 +24,34 @@ app.prepare()
   }))
 
   // Profile Image Route Handler
-  server.use('/image-upload-single', profileImage)
+  // server.use('/image-upload-single', profileImage)
+
+  // Update dashboard at 12:00am
+  dashboard.start()
 
   // Authentication Route Handler
   server.use(passport.initialize())
   require('./passport')(passport)
 
-  server.use(bodyParser.urlencoded({ extended: false }))
-  server.use(bodyParser.json())
-
-  server.use('/api/users', users)
-
-  server.use('/api/usernames', username)
-
-  server.use('/api/profile', profiles)
-
-  server.use('/api/sessions', sessions)
-
-  server.use('/api/emails', emails)
-
+  // Handle payments
   server.use('/api/payments', payments)
 
-  server.use('/api/token', token)
-
-  server.use('/api/sessionEvents', sessionEvents)
-
-  server.use('/api/dashboard', dashboard)
-
-  server.get('/', (req, res) => {
-    return app.render(req, res, '/index', {})
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
   })
+  // server.use(bodyParser.urlencoded({ extended: false }))
+  // server.use(bodyParser.json())
 
-  server.get('*', (req, res) => {
-    return handle(req, res)
-  })
 
-  server.listen(4000, (err) => {
+  server.all('*', (req, res) => {
+     return handle(req, res)
+   })
+
+  server.listen(port, (err) => {
     if (err) throw err
-    console.log('> Ready on http://localhost:4000')
+    console.log(`> Ready on http://localhost:${port}`)
   })
 })
 .catch((ex) => {

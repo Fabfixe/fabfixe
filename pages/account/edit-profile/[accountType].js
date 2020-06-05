@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Router from 'next/router'
 import MyLayout from '../../../components/MyLayout'
 import Button from '../../../components/Button'
-
+import Banner from '../../../components/Banner'
 import ImageUploader from '../../../components/ImageUploader'
 import Footer from '../../../components/Footer'
 import { connect } from 'react-redux'
@@ -15,7 +15,7 @@ import axios from 'axios'
 const classnames = require('classnames')
 
 const usernameExists = (username) => {
-  return axios.post('/api/usernames', { username })
+  return axios.post('/api/username', { username })
 }
 
 class EditProfile extends Component {
@@ -26,9 +26,11 @@ class EditProfile extends Component {
       accountType: this.props.query.accountType,
       flagErrors: false,
       errors: {},
+      displayBanner: false,
       displayName: this.props.displayName,
       username: this.props.username,
       profileImageUrl: this.props.profileImageUrl,
+      profileImagePublicId: this.props.profileImagePublicId,
       youtube: this.props.youtube,
       instagram: this.props.instagram,
       twitter: this.props.twitter,
@@ -41,6 +43,7 @@ class EditProfile extends Component {
       }
     }
 
+    this.handleBanner = this.handleBanner.bind(this)
     this.handleUsernameBlur = this.handleUsernameBlur.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -65,6 +68,10 @@ class EditProfile extends Component {
     }
   }
 
+  handleBanner() {
+    window.location.reload()
+  }
+  
   handleUsernameBlur(e) {
     if(errors.displayName) {
       return {
@@ -112,8 +119,8 @@ class EditProfile extends Component {
     }
   }
 
-  getImageUrl(url) {
-    this.setState({ profileImageUrl: url})
+  getImageUrl({url, public_id}) {
+    this.setState({ profileImageUrl: url, profileImagePublicId: public_id })
   }
 
   handleChange(e) {
@@ -159,6 +166,7 @@ class EditProfile extends Component {
         username: this.state.username,
         displayName: this.state.displayName,
         profileImageUrl: this.state.profileImageUrl,
+        profileImagePublicId: this.state.profileImagePublicId,
         youtube: this.state.youtube,
         instagram: this.state.instagram,
         twitter: this.state.twitter,
@@ -172,6 +180,7 @@ class EditProfile extends Component {
         _id: this.props._id,
         username: this.state.username,
         profileImageUrl: this.state.profileImageUrl,
+        profileImagePublicId: this.state.profileImagePublicId,
         youtube: this.state.youtube,
         instagram: this.state.instagram,
         twitter: this.state.twitter,
@@ -204,7 +213,7 @@ class EditProfile extends Component {
           .then(res => {
             console.log('res', res)
             if(res.status === 200) {
-              if(!alert('Profile Updated')) window.location.reload()
+              window.location.reload()
             }
             this.setState({
               flagErrors: false,
@@ -221,7 +230,7 @@ class EditProfile extends Component {
       updateProfile(accountType, profile[accountType])
       .then(res => {
         if(res.status === 200) {
-          if(!alert('Profile Updated')) window.location.reload()
+          this.setState({ displayBanner: true })
         }
       })
       .catch((err) => {
@@ -247,18 +256,20 @@ class EditProfile extends Component {
           <h1 alignment='center' scroll='no-scroll'>Edit Profile</h1>
           <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
           <form onSubmit={ this.handleSubmit }>
-            <input
-              type='text'
-              name='username'
-              id='username'
-              placeholder='CHOOSE A USERNAME'
-              onBlur={ this.handleUsernameBlur }
-              onFocus={ this.onFocus }
-              onChange={ this.handleChange }
-              defaultValue={ this.state.username }
-            />
-            {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
-            {accountType === 'artist' && <input
+            <div className="form-input">
+              <input
+                type='text'
+                name='username'
+                id='username'
+                placeholder='CHOOSE A USERNAME'
+                onBlur={ this.handleUsernameBlur }
+                onFocus={ this.onFocus }
+                onChange={ this.handleChange }
+                defaultValue={ this.state.username }
+              />
+              {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
+            </div>
+            {accountType === 'artist' && <div className="form-input"><input
               type='text'
               name='displayName'
               id='displayName'
@@ -267,8 +278,8 @@ class EditProfile extends Component {
               onFocus={ this.onFocus }
               onChange={ this.handleChange }
               defaultValue={ this.state.displayName }
-            />}
-            {errors.displayName && (<div className="invalid-feedback">{errors.displayName}</div>)}
+            />
+            {errors.displayName && (<div className="invalid-feedback">{errors.displayName}</div>)}</div>}
             <h2>Connect Social Media</h2>
             <label>YouTube</label>
             <input
@@ -337,12 +348,13 @@ class EditProfile extends Component {
               </ul>
               </React.Fragment>
             )}
-            {this.state.flagErrors && (<div className="invalid-feedback">See errors above</div>)}
+            {this.state.flagErrors && (<div className="form-input"><div className="invalid-feedback">See errors above</div></div>)}
             <div className="button-container">
               <Button type="submit">Save Profile</Button>
             </div>
           </form>
         </MyLayout>
+        {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>Profile Successfully updated</Banner>}
       </React.Fragment>
     )
   }
@@ -356,6 +368,7 @@ const mapStateToProps = state => ({
   username: state.profile.username,
   displayName: state.profile.displayName,
   profileImageUrl: state.profile.profileImageUrl,
+  profileImagePublicId: state.profile.profileImagePublicId,
   youtube: state.profile.youtube,
   instagram: state.profile.instagram,
   twitter: state.profile.twitter,

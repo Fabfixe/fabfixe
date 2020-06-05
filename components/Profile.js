@@ -96,7 +96,8 @@ class Profile extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      profile: this.props.profile,
+      loading: true,
+      profile: {},
       showModal: false,
       duration: "30 min",
       attachment: '',
@@ -114,13 +115,25 @@ class Profile extends Component {
     this.getImageUrl = this.getImageUrl.bind(this)
   }
 
+  componentDidMount() {
+    axios.post('/api/profile/username', { username: this.props.username })
+      .then((res) => {
+        const profile = res.data
+        if(profile) {
+          this.setState({ loading: false, profile })
+        } else {
+          this.setState({ loading: false })
+        }
+      })
+  }
+
   handleModal() {
     this.setState({
       showModal: !this.state.showModal
     })
   }
 
-  getImageUrl(url) {
+  getImageUrl({url}) {
     this.setState({ attachment: url })
   }
 
@@ -181,7 +194,11 @@ class Profile extends Component {
 
     return (
       <div className="profile">
-          <h1>{this.props.username}</h1>
+      {this.state.loading && <p>Loading</p>}
+      {!this.state.loading && !this.state.profile.username && <p>No profile found</p>}
+        {!this.state.loading && this.state.profile.username &&
+          <>
+            <h1>{this.props.username}</h1>
             <ul>
               {profileImageUrl && <li className="artist-image" style={{
                 borderRadius: '50%',
@@ -194,16 +211,18 @@ class Profile extends Component {
               {hourlyRate && <li>{`Hourly Rate: $${hourlyRate}`}</li>}
               {expertise && expertise.hair.length > 0 && <li>{`Hair Skills: ${expertise.hair.join(', ')}`}</li>}
               {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
-              <li style={{ marginTop: '30px'}}>
-                {isArtist && <div className="button-container">
-                  <Button onClick={ this.handleModal }>REQUEST A SESSION</Button>
-                </div>}
-              </li>
-            </ul>
+                <li style={{ marginTop: '30px'}}>
+                  {isArtist && <div className="button-container">
+                    <Button onClick={ this.handleModal }>REQUEST A SESSION</Button>
+                  </div>}
+                </li>
+              </ul>
+            </>}
             {this.state.showModal &&
             <Modal closeModal={this.handleModal}>
                 <div className="center-modal">
                   <ModalContent
+                    isAuthenticated={isAuthenticated}
                     username={username}
                     hourlyRate={hourlyRate}
                     date={this.state.date}
@@ -217,8 +236,7 @@ class Profile extends Component {
                     getImageUrl={this.getImageUrl}
                   />
                 </div>
-              </Modal>
-            }
+              </Modal>}
         </div>
     )
   }

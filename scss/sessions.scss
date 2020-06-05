@@ -3,8 +3,8 @@
   position: relative;
 
   h2 {
-    font-weight: bold;
-    margin: 20px 0;
+    @include underline-header;
+    margin: 40px 0px;
   }
 
   ul {
@@ -14,12 +14,26 @@
 
   li {
     margin-bottom: 30px;
+    position: relative;
+    background-color: transparentize($moss, 0.75);
+    padding: 20px;
+
+    &:before {
+      // position: absolute;
+      // content: '';
+      // width: calc(100% + 20px);
+      // height: calc(100% + 20px);
+      // left: -10px;
+      // top: -10px;
+      // border: solid 1px transparentize($plum, 0.8);
+
+    }
   }
 
   .username {
     @include nunito-bold;
     font-size: 1.15rem;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 
     & + p {
       margin-bottom: 15px;
@@ -27,7 +41,7 @@
   }
 
   .soon {
-    border: solid 1px red;
+    background-color: transparentize($moss, 0.5);
   }
 
   .small-button:first-of-type {
@@ -48,7 +62,15 @@
 
 .view-session  {
    h4 + p {
-    margin: 10px 0 20px !important;
+    margin: 20px 0 !important;
+  }
+
+  p {
+    width: 100%;
+  }
+
+  h4 {
+    @include underline-header;
   }
 
   .small-button {

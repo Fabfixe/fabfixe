@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Button from '../components/Button'
 import Router from 'next/router'
+import Link from 'next/link'
 import { connect } from 'react-redux'
 import { loginUser } from '../actions/authentication'
-import { API_URL } from '../config'
 
 class Login extends Component {
   constructor(props) {
@@ -44,7 +44,6 @@ class Login extends Component {
 
   componentDidUpdate() {
     if(this.props.auth.isAuthenticated) {
-      console.log('auth')
       window.location = this.state.redirect
     }
   }
@@ -54,22 +53,29 @@ class Login extends Component {
 
     return (
       <form id="login" onSubmit={ this.handleSubmit }>
-        <input
-          type='text'
-          name='email'
-          id='email'
-          placeholder='EMAIL ADDRESS'
-          onChange={ this.handleInputChange }
-          value={ this.state.email }
-        />
-        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-        <input type='password'
-          name='password'
-          placeholder='PASSWORD'
-          onChange={ this.handleInputChange }
-          value={ this.state.password }
-        />
-        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
+        <div className="form-input">
+          <input
+            type='text'
+            name='email'
+            id='email'
+            placeholder='EMAIL ADDRESS'
+            onChange={ this.handleInputChange }
+            value={ this.state.email }
+
+          />
+          {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
+        </div>
+        <div className="form-input">
+          <input type='password'
+            name='password'
+            placeholder='PASSWORD'
+            onChange={ this.handleInputChange }
+            value={ this.state.password }
+          />
+          {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
+          <Link href='/account/reset-password-request'>Forgot your password?</Link>
+        </div>
+
         <div className="button-container">
           <Button type="submit">Submit</Button>
         </div>

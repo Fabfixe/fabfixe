@@ -78,7 +78,8 @@ class EditSession extends Component {
             this.setState({ errors: {}})
             this.props.showSubmit(newSession)
             setTimeout(() =>  { this.setState({ loading: false, displayBanner: true })}, 2000)
-            axios.post('/api/emails/sessionUpdated')
+            const notify = this.props.isPupil ? this.props.artist : this.props.pupil
+            axios.post('/api/emails/sessionUpdated', { notify })
           } else {
             setTimeout(() =>  { this.setState({ loading: false })}, 2000)
             this.setState({ showSubmitError: true })
