@@ -19,13 +19,17 @@
 
   .modal-content {
     height: 100vh;
-    justify-content: center;
 
     &.default {
       display: flex;
       flex-direction: column;
       padding: 30px;
       align-items: center;
+      margin: 0 auto;
+
+      @include for-desktop-up {
+        max-width: 50%;
+      }
     }
 
     h1 {
@@ -81,9 +85,7 @@
   }
 
   .close {
-    position: absolute;
-    right: 30px;
-    top: 30px;
+    align-self: flex-end;
     z-index: 1;
     cursor: pointer;
   }
@@ -138,6 +140,12 @@
       font-weight: bold;
     }
   }
+}
+
+.loading {
+  display: flex;
+  height: 100%;
+  align-items: center;
 }
 
 .rdt input {
