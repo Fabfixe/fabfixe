@@ -13,7 +13,6 @@ import { withRouter } from 'next/router'
 import moment from 'moment-timezone'
 import validateSessionSubmit from '../validation/sessionSubmit'
 import { currencyFormatted, calcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
-import { addSession } from '../actions/session'
 
 const ModalContent = (props) => (
     <React.Fragment>
@@ -172,7 +171,6 @@ class Profile extends Component {
     if(validation.isValid) {
       axios.post('/api/sessions', session)
         .then((res) => {
-          this.props.addSession(res.data)
           // Email both parties to notify session requested
           axios.post('/api/emails/sessionRequested', session)
           this.setState({ submitted: true })
@@ -244,4 +242,4 @@ class Profile extends Component {
 
 const mapStateToProps = (user) => ({ user })
 
-export default connect(mapStateToProps, { addSession })(Profile)
+export default connect(mapStateToProps)(Profile)

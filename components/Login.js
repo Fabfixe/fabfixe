@@ -14,7 +14,7 @@ class Login extends Component {
       email: '',
       password: '',
       errors: {},
-      redirect: '/'
+      redirectURL: '/index',
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -22,7 +22,14 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if(document.referrer ==! window.location) this.setState({ redirect: document.referrer })
+    const initialPath = sessionStorage.getItem('initialPath')
+    if(initialPath) {
+      if(initialPath !== '/account/login') this.setState({ redirectURL: initialPath })
+    }
+
+    if(this.props.auth.isAuthenticated) {
+      Router.push(this.state.redirectURL)
+    }
   }
 
   handleInputChange(e) {
@@ -44,7 +51,7 @@ class Login extends Component {
 
   componentDidUpdate() {
     if(this.props.auth.isAuthenticated) {
-      window.location = this.state.redirect
+      Router.push(this.state.redirectURL)
     }
   }
 

@@ -39,8 +39,12 @@ class Fabfixe extends App {
   componentDidMount() {
     const { store } = this.props
 
+    // Store pathname of first visited page
+    sessionStorage.setItem('initialPath', Router.pathname)
+
     if(process.browser) {
       if(localStorage.jwtToken) {
+
         setAuthToken(localStorage.jwtToken)
         const decoded = jwt_decode(localStorage.jwtToken)
         store.dispatch(setCurrentUser(decoded))

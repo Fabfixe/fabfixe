@@ -10,7 +10,6 @@ const initialState = {
   facebook: '',
   hourlyRate: 0,
   expertise: { makeup: [], hair: []},
-  sessions: []
 }
 
 export default function(state = initialState, action) {
@@ -26,8 +25,7 @@ export default function(state = initialState, action) {
         twitter: action.payload.twitter,
         facebook: action.payload.facebook,
         hourlyRate: action.payload.hourlyRate,
-        expertise: action.payload.expertise,
-        sessions: action.payload.sessions
+        expertise: action.payload.expertise
       }
 
     default:

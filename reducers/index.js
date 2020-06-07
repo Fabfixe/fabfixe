@@ -9,6 +9,6 @@ export default combineReducers({
   errors: errorReducer,
   auth: authReducer,
   profile: profileReducer,
-  sessions: sessionReducer,
+  session: sessionReducer,
   redirectFromAuth: redirectFromAuthReducer
 })

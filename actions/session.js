@@ -1,10 +1,9 @@
-import { ADD_SESSION } from './types'
-import { GET_SESSIONS } from './types'
+import { SET_SESSION } from './types'
 import axios from 'axios'
 
-export const addSession = (session) => (dispatch) => {
-  dispatch({
-    type: ADD_SESSION,
+export const setSession = (session) => dispatch => {
+   dispatch({
+    type: SET_SESSION,
     payload: session
   })
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Modal from '../components/Modal'
 import EditSession from '../components/EditSession'
-import ViewSession from '../components/ViewSession'
+// import ViewSession from '../components/ViewSession'
 import MessagesModal from '../components/MessagesModal'
 import ConfirmModal from '../components/ConfirmModal'
 import CongratsModal from '../components/CongratsModal'
@@ -11,7 +11,7 @@ import Link from 'next/link'
 import Button from '../components/Button'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
-import { getSessions, cancelSession, deleteSession } from '../actions/session'
+import { getSessions, cancelSession, deleteSession, setSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
 const cn = require('classnames')
 require('dotenv').config()
@@ -140,7 +140,11 @@ class Sessions extends Component {
                       <li key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
-                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <Link
+                          href="/session/view/[id]"
+                          as={`/session/view/${session._id}`}>
+                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                        </Link>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'edit')}}>Edit</button>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
@@ -259,4 +263,4 @@ Sessions.propTypes = {
 
 const mapStateToProps = state => ({ user: state.auth.user, profile: state.profile })
 
-export default connect(mapStateToProps, { getSessions })(Sessions)
+export default connect(mapStateToProps, { getSessions, setSession })(Sessions)

@@ -20,7 +20,6 @@ export const registerUser = (user, history) => dispatch => {
       Router.push(`/account/edit-profile/${user.accountType}`), { shallow: true }
     })
     .catch(err => {
-      console.log('err on catch', err)
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data

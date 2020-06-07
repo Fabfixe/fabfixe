@@ -1,16 +1,153 @@
-import React, { Component } from 'react'
-import Button from '../components/Button'
-import Banner from '../components/Banner'
+import React, { useEffect, useState, Component } from 'react'
+import { useSelector } from 'react-redux'
+import Button from '../../../components/Button'
+import Banner from '../../../components/Banner'
+import MyLayout from '../../../components/MyLayout'
 import Datetime from 'react-datetime'
-import Router from 'next/router'
-import { currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
+import Modal from '../../../components/Modal'
+import Router, { useRouter } from 'next/router'
+import useSWR from 'swr'
+import { currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../../../helpers'
 import { PayPalButton } from "react-paypal-button-v2"
-import validateSessionSubmit from '../validation/sessionSubmit'
-import { deleteSession } from '../actions/session'
-import moment from 'moment'
+import validateSessionSubmit from '../../../validation/sessionSubmit'
+import { deleteSession } from '../../../actions/session'
+import moment from 'moment-timezone'
 import axios from 'axios'
 
-class ViewSession extends Component {
+const ViewSession = () => {
+  const storedSession = useSelector(state => state.session)
+  const auth = useSelector(state => state.auth)
+  const profile = useSelector(state => state.profile)
+  const id = useRouter().query.id
+  const [ session, setSession ] = useState({})
+  const [ isLoading, setLoading ] = useState(true)
+  const [ showSubmitError, setShowSubmitError ] = useState(false)
+  const [ errors, setErrors ] = useState({})
+  const [ displayBanner, setDisplayBanner ] = useState(false)
+  const [ bannerMessage, setBannerMessage] = useState("")
+
+  const showPaymentButton = !profile.isArtist && session.artistApproved && session.status === 'pending'
+
+  const onApprove = () => {
+
+  }
+
+  const deleteSession = () => {
+    if(window.confirm('Are you sure you want to delete this session?')) {
+      deleteSession(session._id, this.props.isPupil)
+      .then((res) => {
+        if(res.status === 200) {
+          Router.push('/account/my-sessions')
+        }
+      })
+    }
+  }
+
+  const confirmApproval = () => {}
+
+  useEffect(() => {
+    if(!auth.isAuthenticated) Router.push('/account/login')
+
+    if(id !== storedSession.id) {
+      axios.post('/api/sessions/bySessionId', { id })
+      .then(({data}) => {
+        console.log(typeof id, data)
+        setSession(data[0])
+      })
+    } else {
+      setSession(storedSession)
+    }
+
+    const timer = setTimeout(() => {
+        setLoading(false)
+      }, 4500)
+      return () => clearTimeout(timer)
+  }, [])
+
+
+
+  return (
+    <Modal layout="default" closeModal={() => Router.push('/account/my-sessions')}>
+      {isLoading && <div className="loading">Loading</div>}
+      {!isLoading && <>
+        <h1>View Session</h1>
+        <div className="view-session">
+          <h4>{!profile.isArtist ? 'Artist' : 'Pupil'}</h4>
+          <p>{ !profile.isArtist ? session.artist.artistDisplayName : session.pupil.username }</p>
+          <h4>Time</h4>
+          <p id="time-display">{formatTime(session.date, session.duration)}</p>
+          <h4>Description</h4>
+          <p>{session.description}</p>
+          {session.attachment && <div style={{
+            backgroundImage: `url(${session.attachment})`,
+            width: '100px',
+            height: '100px',
+            backgroundSize: 'cover',
+            marginBottom: '20px'
+          }} />}
+          <h4>Status</h4>
+          <p style={{ textTransform: 'capitalize' }}>{status}</p>
+          {showPaymentButton && <div className="paypal-container">
+            <p style={{ marginBottom: '0' }}>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
+            <PayPalButton
+              createOrder={(data, actions) => {
+                return actions.order.create({
+                  purchase_units: [{
+                    amount: {
+                      currency_code: "USD",
+                      value: digitCalcTotal(session.duration, session.hourlyRate)
+                     }
+                   }]
+                })
+              }}
+              onApprove={(data, actions) => {
+                // Capture the funds from the transaction
+                 actions.order.capture().then((details) => {
+                  // Show a success message to your buyer
+                   axios.post('/api/emails/paymentComplete', {
+                     artistId: session.artist._id,
+                     pupilId: session.pupil._id,
+                     total: details.purchase_units[0].amount.value,
+                     artistUsername: session.artist.username,
+                     pupilUsername: session.pupil.username,
+                     date: formatTime(session.date, session.duration),
+                     momentDate: session.date,
+                  })
+                  axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: session._id })
+                  .then((result) => {
+                    if(result) console.log(result)
+                    // this.props.changeModal('congrats')
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                    // Add an error message
+                  })
+                })
+              }}
+              options={{ clientId: 'AVm5X6oZjRSvQwccLrBlE6hnioKJJc0DE93SoUIwU2UahsHgtpr9po5O0kDOw8RnXIYLJGuU2H3GHWWt' }}
+              style={{size: 'responsive', layout: 'horizontal', color: 'black', tagline: false }}
+            />
+      </div>}
+      {session.status !== 'cancelled' && session.status !== 'expired' && profile.isArtist && !session.artistApproved && <div className="confirm-approval">
+        <input ref={confirmApproval} id="confirmApproval" type="checkbox" /><label htmlFor="confirmApproval">By agreeing to this session, you have to do it</label>
+      </div>}
+      {errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
+      <div className="button-row">
+        {session.status === 'pending' && profile.isArtist && !artistApproved && <Button class="small-button" onClick={onApprove}>Approve Session</Button>}
+        {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">Edit Session</Button>}
+        {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">View Messages</Button>}
+        {(session.status === 'expired' || session.status === 'cancelled') && <Button class="small-button">Delete Session</Button>}
+      </div>
+    </div>
+    {displayBanner && <Banner
+      style={{ zIndex: 5, minHeight: '100px' }}
+      handleBanner={this.handleBanner}>{bannerMessage}</Banner>}
+      </>}
+      {showSubmitError && <p>Something went wrong, please try again later</p>}
+    </Modal>
+  )
+}
+class ViewSessions extends Component {
   constructor(props) {
     super(props)
     this.textArea = React.createRef()
@@ -236,8 +373,8 @@ class ViewSession extends Component {
           {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
           <div className="button-row">
             {status === 'pending' && !isPupil && !artistApproved && <Button class="small-button" onClick={this.onApprove}>Approve Session</Button>}
-            {(status === 'pending' || status === 'upcoming') && <Button  class="small-button" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</Button>}
-            {(status === 'pending' || status === 'upcoming') && <Button  class="small-button" onClick={() => { this.props.changeModal('messages')}}>View Messages</Button>}
+            {(status === 'pending' || status === 'upcoming') && <Button class="small-button" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</Button>}
+            {(status === 'pending' || status === 'upcoming') && <Button class="small-button" onClick={() => { this.props.changeModal('messages')}}>View Messages</Button>}
             {(status === 'expired' || status === 'cancelled') && <Button class="small-button"  onClick={this.deleteSession}>Delete Session</Button>}
           </div>
         </div>
