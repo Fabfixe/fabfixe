@@ -1,3 +1,4 @@
+require('dotenv').config()
 import dbConnect from '../../../dbconnect'
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')

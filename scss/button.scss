@@ -35,6 +35,10 @@ button.button {
   }
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .small-button {
   @include nunito;
   background-color: $moss;

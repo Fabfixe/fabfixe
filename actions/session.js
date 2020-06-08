@@ -16,6 +16,7 @@ export const cancelSession = (_id, isPupil) => {
   return axios.post('/api/sessions/cancel', { _id, isPupil })
 }
 
-export const deleteSession = (_id, isPupil) => {
-  return axios.post('/api/sessions/delete', { _id, isPupil })
+export const deleteSession = (_id, isArtist) => {
+  console.log(_id, isArtist)
+  return axios.post('/api/sessions/delete', { _id, isArtist })
 }

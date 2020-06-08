@@ -1,3 +1,4 @@
+require('dotenv').config()
 const cloudinary = require('cloudinary')
 
 export default (req, res) => {
@@ -6,7 +7,7 @@ export default (req, res) => {
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET
   })
-  
+
   const path = Object.values(req.files)[0].path
 
   cloudinary.uploader.upload(path)

@@ -1,40 +1,39 @@
-import React, { useEffect, useState, Component } from 'react'
+import React, { useEffect, useState, useRef, Component } from 'react'
 import { useSelector } from 'react-redux'
 import Button from '../../../components/Button'
 import Banner from '../../../components/Banner'
+import CongratsModal from '../../../components/CongratsModal'
 import MyLayout from '../../../components/MyLayout'
 import Datetime from 'react-datetime'
 import Modal from '../../../components/Modal'
 import Router, { useRouter } from 'next/router'
-import useSWR from 'swr'
 import { currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../../../helpers'
 import { PayPalButton } from "react-paypal-button-v2"
 import validateSessionSubmit from '../../../validation/sessionSubmit'
 import { deleteSession } from '../../../actions/session'
 import moment from 'moment-timezone'
 import axios from 'axios'
+require('dotenv').config()
 
-const ViewSession = () => {
-  const storedSession = useSelector(state => state.session)
-  const auth = useSelector(state => state.auth)
+const ViewSession = ({ session }) => {
+  const { isAuthenticated, user } = useSelector(state => state.auth)
   const profile = useSelector(state => state.profile)
   const id = useRouter().query.id
-  const [ session, setSession ] = useState({})
   const [ isLoading, setLoading ] = useState(true)
   const [ showSubmitError, setShowSubmitError ] = useState(false)
   const [ errors, setErrors ] = useState({})
   const [ displayBanner, setDisplayBanner ] = useState(false)
   const [ bannerMessage, setBannerMessage] = useState("")
+  const [ showCongrats, setShowCongrats ] = useState(false)
+  const [ approvalLoading, setApprovalLoading ] = useState(false)
+  const isArtist = user.accountType === 'artist'
+  const showPaymentButton = !isArtist && session.artistApproved && session.status === 'pending'
+  const router = useRouter()
+  const confirmApproval = useRef(null)
 
-  const showPaymentButton = !profile.isArtist && session.artistApproved && session.status === 'pending'
-
-  const onApprove = () => {
-
-  }
-
-  const deleteSession = () => {
+  const deleteWithConfirm = () => {
     if(window.confirm('Are you sure you want to delete this session?')) {
-      deleteSession(session._id, this.props.isPupil)
+      deleteSession(session._id, isArtist)
       .then((res) => {
         if(res.status === 200) {
           Router.push('/account/my-sessions')
@@ -43,20 +42,40 @@ const ViewSession = () => {
     }
   }
 
-  const confirmApproval = () => {}
+  const onApprove = () => {
+    const newSession = {
+      _id: session._id,
+      artistApproved: true
+    }
+
+
+    if(confirmApproval.current.checked) {
+      setApprovalLoading(true)
+      axios.post('/api/sessions/artistApprove', newSession)
+      .then((res) => {
+        if(res.data.n === 1) {
+          setErrors({})
+          setTimeout(() =>  {
+            setApprovalLoading(false)
+            setDisplayBanner(true)
+           }, 2000)
+
+           const notify = session.pupil._id
+           axios.post('/api/emails/sessionUpdated', { notify })
+        } else {
+          setTimeout(() =>  {
+            setApprovalLoading(false)
+            this.setState({ loading: false })
+          }, 2000)
+          setShowSubmitError(true)
+        }})
+    } else {
+      setErrors({ confirm: true })
+    }
+  }
 
   useEffect(() => {
-    if(!auth.isAuthenticated) Router.push('/account/login')
-
-    if(id !== storedSession.id) {
-      axios.post('/api/sessions/bySessionId', { id })
-      .then(({data}) => {
-        console.log(typeof id, data)
-        setSession(data[0])
-      })
-    } else {
-      setSession(storedSession)
-    }
+    if(session.status !== 'pending') setLoading(false)
 
     const timer = setTimeout(() => {
         setLoading(false)
@@ -64,16 +83,19 @@ const ViewSession = () => {
       return () => clearTimeout(timer)
   }, [])
 
-
+  useEffect(() => {
+    // come back to this later
+    // if(!auth.isAuthenticated) Router.push('/account/login')
+  }, [isAuthenticated])
 
   return (
     <Modal layout="default" closeModal={() => Router.push('/account/my-sessions')}>
       {isLoading && <div className="loading">Loading</div>}
-      {!isLoading && <>
+      {!isLoading && !showCongrats && <>
         <h1>View Session</h1>
         <div className="view-session">
-          <h4>{!profile.isArtist ? 'Artist' : 'Pupil'}</h4>
-          <p>{ !profile.isArtist ? session.artist.artistDisplayName : session.pupil.username }</p>
+          <h4>{!isArtist ? 'Artist' : 'Pupil'}</h4>
+          <p>{ !isArtist ? session.artist.displayName : session.pupil.username }</p>
           <h4>Time</h4>
           <p id="time-display">{formatTime(session.date, session.duration)}</p>
           <h4>Description</h4>
@@ -86,16 +108,16 @@ const ViewSession = () => {
             marginBottom: '20px'
           }} />}
           <h4>Status</h4>
-          <p style={{ textTransform: 'capitalize' }}>{status}</p>
+          <p style={{ textTransform: 'capitalize' }}>{session.status}</p>
           {showPaymentButton && <div className="paypal-container">
-            <p style={{ marginBottom: '0' }}>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
+            <p style={{ marginBottom: '0' }}>{`Total: $${digitCalcTotal(session.duration, session.artist.hourlyRate)}`}</p>
             <PayPalButton
               createOrder={(data, actions) => {
                 return actions.order.create({
                   purchase_units: [{
                     amount: {
                       currency_code: "USD",
-                      value: digitCalcTotal(session.duration, session.hourlyRate)
+                      value: digitCalcTotal(session.duration, session.artist.hourlyRate)
                      }
                    }]
                 })
@@ -115,8 +137,7 @@ const ViewSession = () => {
                   })
                   axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: session._id })
                   .then((result) => {
-                    if(result) console.log(result)
-                    // this.props.changeModal('congrats')
+                    if(result) setShowCongrats(true)
                   })
                   .catch((err) => {
                     console.log(err)
@@ -128,263 +149,35 @@ const ViewSession = () => {
               style={{size: 'responsive', layout: 'horizontal', color: 'black', tagline: false }}
             />
       </div>}
-      {session.status !== 'cancelled' && session.status !== 'expired' && profile.isArtist && !session.artistApproved && <div className="confirm-approval">
+      {session.status !== 'cancelled' && session.status !== 'expired' && isArtist && !session.artistApproved && <div className="confirm-approval">
         <input ref={confirmApproval} id="confirmApproval" type="checkbox" /><label htmlFor="confirmApproval">By agreeing to this session, you have to do it</label>
       </div>}
       {errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
       <div className="button-row">
-        {session.status === 'pending' && profile.isArtist && !artistApproved && <Button class="small-button" onClick={onApprove}>Approve Session</Button>}
+        {session.status === 'pending' && isArtist && !session.artistApproved && <Button
+          disabled={approvalLoading}
+          class="small-button"
+          onClick={onApprove}>{
+          approvalLoading ? 'Sending...' : 'Approve Session'}</Button>}
         {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">Edit Session</Button>}
         {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">View Messages</Button>}
-        {(session.status === 'expired' || session.status === 'cancelled') && <Button class="small-button">Delete Session</Button>}
+        {(session.status === 'expired' || session.status === 'cancelled') && <Button onClick={deleteWithConfirm} class="small-button">Delete Session</Button>}
       </div>
     </div>
     {displayBanner && <Banner
       style={{ zIndex: 5, minHeight: '100px' }}
-      handleBanner={this.handleBanner}>{bannerMessage}</Banner>}
+      handleBanner={() => (Router.push('/account/my-sessions'))}>Your update has been sent</Banner>}
       </>}
+      {showCongrats && <CongratsModal {...session} />}
       {showSubmitError && <p>Something went wrong, please try again later</p>}
     </Modal>
   )
 }
-class ViewSessions extends Component {
-  constructor(props) {
-    super(props)
-    this.textArea = React.createRef()
-    this.confirmApproval = React.createRef()
 
-    this.state = {
-      date: this.props.date,
-      duration: this.props.duration,
-      message: '',
-      showSubmitError: false,
-      errors: {},
-      submitReady: false,
-      displayBanner: false,
-      bannerMessage: 'Your update has been sent',
-      showSummary: true,
-      isLoading: true,
-    }
-
-    this.handleScheduler = this.handleScheduler.bind(this)
-    this.handleBanner = this.handleBanner.bind(this)
-    this.onSelect = this.onSelect.bind(this)
-    this.onChange = this.onChange.bind(this)
-    this.cancelSession = this.cancelSession.bind(this)
-    this.deleteSession = this.deleteSession.bind(this)
-    this.onTextChange = this.onTextChange.bind(this)
-    this.onApprove = this.onApprove.bind(this)
-  }
-
-  componentDidMount() {
-    // Delay load for pupils due to problems with paypal button
-    if(this.props.isPupil && this.props.artistApproved && this.props.status === 'pending') {
-      this.timer = setTimeout(
-        () => this.setState({ isLoading: false }),
-        4000,
-      )
-    } else {
-      this.setState({ isLoading: false })
-    }
-  }
-
-  componentWillUnmount() {
-    if(this.props.isPupil) {
-      clearTimeout(this.timer)
-    }
-  }
-
-  handleScheduler() {
-    this.setState({
-      schedulerOpen: !this.state.schedulerOpen,
-    })
-  }
-
-  onChange(date) {
-    if(!moment(date).isSame(this.props.date)) {
-      this.setState({ date, submitReady: true })
-    } else {
-      if(this.state.duration === this.props.duration && this.state.message === null) this.setState({ submitReady: false })
-    }
-  }
-
-  onApprove() {
-    const newSession = {
-      _id: this.props._id,
-      artistApproved: true
-    }
-    this.setState({ loading: true })
-
-    if(this.confirmApproval.current.checked) {
-      axios.post('/api/sessions/artistApprove', newSession)
-      .then((res) => {
-        if(res.data.n === 1) {
-          this.props.showSubmit(newSession)
-          this.setState({ errors: {}})
-          setTimeout(() =>  { this.setState({ loading: false, displayBanner: true })}, 2000)
-          // send an email update axios.post('/api/emails/sessionUpdated')
-        } else {
-          setTimeout(() =>  { this.setState({ loading: false })}, 2000)
-          this.setState({ showSubmitError: true })
-        }})
-    } else {
-      this.setState({
-        errors: { confirm: true }
-      })
-    }
-  }
-
-  handleBanner() {
-    this.setState({ displayBanner: !this.state.displayBanner })
-    Router.push('/account/my-sessions')
-  }
-
-  cancelSession() {
-    if(window.confirm('Are you sure you want to cancel?')) {
-      cancelSession(this.props._id, this.props.isPupil)
-      .then((res) => {
-        if(res.status === 200) {
-          Router.push('/account/my-sessions')
-        }
-      })
-    }
-  }
-
-  deleteSession() {
-    if(window.confirm('Are you sure you want to delete this session?')) {
-      deleteSession(this.props._id, this.props.isPupil)
-      .then((res) => {
-        if(res.status === 200) {
-          Router.push('/account/my-sessions')
-        }
-      })
-    }
-  }
-
-  onTextChange(e) {
-    const newMessage = e.target.value
-
-    this.setState({
-      message: e.target.value
-    })
-
-    if(moment(this.state.date).isSame(this.props.date) && this.props.duration === this.state.duration)this.setState({ submitReady: false })
-  }
-
-  onSelect(e) {
-    e.preventDefault()
-    this.setState({ duration: e.target.value})
-
-    if(e.target.value !== this.props.duration) {
-      this.setState({ submitReady: true })
-    } else {
-      if(moment(this.state.date).isSame(this.props.date) && this.state.message === null) this.setState({ submitReady: false })
-    }
-  }
-
-  render() {
-    const {
-      _id,
-      artistId,
-      pupilId,
-      artist,
-      artistDisplayName,
-      pupil,
-      isPupil,
-      date,
-      category,
-      duration,
-      description,
-      messages,
-      attachment,
-      hourlyRate,
-      schedulerOpen,
-      onChange,
-      status,
-      artistApproved,
-    } = this.props
-    const showPaymentButton = isPupil && artistApproved && status === 'pending'
-
-    return (
-      <React.Fragment>
-        {this.state.isLoading && <p>Loading</p>}
-        {this.state.showSubmitError && <div>Something went wrong, try again later</div>}
-        {!this.state.isLoading && <React.Fragment>
-        <h1>View Session</h1>
-        <div className="view-session">
-          <h4>{isPupil ? 'Artist' : 'Pupil'}</h4>
-          <p>{ isPupil ? artistDisplayName : pupil }</p>
-          <h4>Time</h4>
-          <p id="time-display">{formatTime(date, duration)}</p>
-          <h4>Description</h4>
-          <p>{description}</p>
-          {attachment && <div style={{
-            backgroundImage: `url(${attachment})`,
-            width: '100px',
-            height: '100px',
-            backgroundSize: 'cover',
-            marginBottom: '20px'
-          }} />}
-          <h4>Status</h4>
-          <p style={{ textTransform: 'capitalize' }}>{status}</p>
-          {showPaymentButton && <div className="paypal-container">
-            <p style={{ marginBottom: '0' }}>{`Total: $${digitCalcTotal(duration, hourlyRate)}`}</p>
-            <PayPalButton
-              createOrder={(data, actions) => {
-                return actions.order.create({
-                  purchase_units: [{
-                    amount: {
-                      currency_code: "USD",
-                      value: digitCalcTotal(duration, hourlyRate)
-                     }
-                   }]
-                })
-              }}
-              onApprove={(data, actions) => {
-                // Capture the funds from the transaction
-                 actions.order.capture().then((details) => {
-                  // Show a success message to your buyer
-                   axios.post('/api/emails/paymentComplete', {
-                     artistId,
-                     pupilId,
-                     total: details.purchase_units[0].amount.value,
-                     artistUsername: artist,
-                     pupilUsername: pupil,
-                     date: formatTime(date, duration),
-                     momentDate: date,
-                  })
-                  axios.post('/api/sessions/paymentComplete', { orderID: details.id, sessionID: _id })
-                  .then((result) => {
-                    if(result) console.log(result)
-                    this.props.changeModal('congrats')
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                    // Add an error message
-                  })
-                })
-              }}
-              options={{ clientId: 'AVm5X6oZjRSvQwccLrBlE6hnioKJJc0DE93SoUIwU2UahsHgtpr9po5O0kDOw8RnXIYLJGuU2H3GHWWt' }}
-              style={{size: 'responsive', layout: 'horizontal', color: 'black', tagline: false }}/>
-            </div>}
-          {status !== 'cancelled' && status !== 'expired' && !isPupil && !artistApproved && <div className="confirm-approval">
-            <input ref={this.confirmApproval} id="confirmApproval" type="checkbox" /><label htmlFor="confirmApproval">By agreeing to this session, you have to do it</label>
-          </div>}
-          {this.state.errors.confirm && (<div className="invalid-feedback">You must confirm first</div>)}
-          <div className="button-row">
-            {status === 'pending' && !isPupil && !artistApproved && <Button class="small-button" onClick={this.onApprove}>Approve Session</Button>}
-            {(status === 'pending' || status === 'upcoming') && <Button class="small-button" onClick= {() => { this.props.changeModal('edit')}}>Edit Session</Button>}
-            {(status === 'pending' || status === 'upcoming') && <Button class="small-button" onClick={() => { this.props.changeModal('messages')}}>View Messages</Button>}
-            {(status === 'expired' || status === 'cancelled') && <Button class="small-button"  onClick={this.deleteSession}>Delete Session</Button>}
-          </div>
-        </div>
-        {this.state.displayBanner && <Banner
-          style={{ zIndex: 5, minHeight: '100px' }}
-          handleBanner={this.handleBanner}>{this.state.bannerMessage}</Banner>}
-      </React.Fragment>}
-      </React.Fragment>
-    )
-  }
+export const getServerSideProps = async ({ params: {id} }) => {
+  const res = await axios.post('/api/sessions/bySessionId', { id }, { baseURL: process.env.API_URL })
+  const session = res.data[0]
+  return {props: { session }}
 }
 
 export default ViewSession

@@ -1,3 +1,5 @@
+const cn = require('classnames')
+require('dotenv').config()
 import React, { Component } from 'react'
 import Modal from '../components/Modal'
 import EditSession from '../components/EditSession'
@@ -13,8 +15,7 @@ import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import { getSessions, cancelSession, deleteSession, setSession } from '../actions/session'
 import { currencyFormatted, calcTotal, timeMap, formatTime } from '../helpers'
-const cn = require('classnames')
-require('dotenv').config()
+
 
 class Sessions extends Component {
   constructor(props) {
@@ -166,7 +167,11 @@ class Sessions extends Component {
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                         {(notProd || withinThirty) && <button className="small-button" onClick={() => { Router.push(`/session/${session._id}`)}}>Join</button>}
-                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <Link
+                          href="/session/view/[id]"
+                          as={`/session/view/${session._id}`}>
+                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                        </Link>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
                     )
@@ -182,7 +187,11 @@ class Sessions extends Component {
                       <li key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
-                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'view')}}>View</button>
+                        <Link
+                          href="/session/view/[id]"
+                          as={`/session/view/${session._id}`}>
+                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                        </Link>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
                     )
@@ -195,9 +204,14 @@ class Sessions extends Component {
                 <ul>
                   {cancelledSessions.map((session, id) => {
                     return (
-                      <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
+                      <li key={id}>
                         <p className="username">{isPupil ? session.artist.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
+                        <Link
+                          href="/session/view/[id]"
+                          as={`/session/view/${session._id}`}>
+                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                        </Link>
                       </li>
                     )
                   })}
@@ -209,9 +223,14 @@ class Sessions extends Component {
                 <ul>
                   {expiredSessions.map((session, id) => {
                     return (
-                      <li onClick={() => {this.handleModal(session._id, 'view')}} key={id}>
+                      <li key={id}>
                         <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
+                        <Link
+                          href="/session/view/[id]"
+                          as={`/session/view/${session._id}`}>
+                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                        </Link>
                       </li>
                     )
                   })}

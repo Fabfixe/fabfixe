@@ -2,7 +2,6 @@ import React from 'react'
 import { createStore, compose, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import App from 'next/app'
-import Router from 'next/router'
 import withRedux from 'next-redux-wrapper'
 import setAuthToken from '../setAuthToken'
 import jwt_decode from 'jwt-decode'
@@ -33,14 +32,23 @@ class Fabfixe extends App {
 
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-    return { pageProps }
+
+    if (Object.keys(pageProps).length > 0) {
+        return { pageProps }
+      } else {
+        return {}
+    }
   }
 
   componentDidMount() {
     const { store } = this.props
 
     // Store pathname of first visited page
-    sessionStorage.setItem('initialPath', Router.pathname)
+    try {
+      sessionStorage.setItem('initialPath', window.location.pathname)
+    } catch(e) {
+
+    }
 
     if(process.browser) {
       if(localStorage.jwtToken) {
