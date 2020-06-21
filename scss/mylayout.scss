@@ -25,6 +25,15 @@
     }
   }
 
+  &.calendar {
+    height: calc(100vh - (64px + 80px));
+    min-height: auto;
+
+    @include for-desktop-up {
+      max-width: 60%;
+    }
+  }
+
   .center-module {
     margin: 0 auto;
     padding: 30px;
