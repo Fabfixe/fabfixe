@@ -8,7 +8,7 @@ class ConfirmModal extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div className='confirm-modal'>
         <div className="confirm-text">
           <p>{this.props.copy}</p>
         </div>
@@ -16,7 +16,7 @@ class ConfirmModal extends Component {
           <Button onClick={() => {this.props.onConfirm()}}>Yes</Button>
           <Button onClick={() => {this.props.onCancel()}}>Go Back</Button>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

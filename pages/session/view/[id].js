@@ -7,6 +7,7 @@ import MyLayout from '../../../components/MyLayout'
 import Datetime from 'react-datetime'
 import Modal from '../../../components/Modal'
 import Router, { useRouter } from 'next/router'
+import Link from 'next/link'
 import { currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../../../helpers'
 import { PayPalButton } from "react-paypal-button-v2"
 import validateSessionSubmit from '../../../validation/sessionSubmit'
@@ -75,7 +76,7 @@ const ViewSession = ({ session }) => {
   }
 
   useEffect(() => {
-    if(session.status !== 'pending') setLoading(false)
+    if(session.status !== 'pending' || isArtist) setLoading(false)
 
     const timer = setTimeout(() => {
         setLoading(false)
@@ -159,7 +160,8 @@ const ViewSession = ({ session }) => {
           class="small-button"
           onClick={onApprove}>{
           approvalLoading ? 'Sending...' : 'Approve Session'}</Button>}
-        {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">Edit Session</Button>}
+        {(session.status === 'pending' || session.status === 'upcoming') && <Link href="/session/edit/[id]" as={`/session/edit/${session._id}`}>
+          <button className="small-button">Edit</button></Link>}
         {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">View Messages</Button>}
         {(session.status === 'expired' || session.status === 'cancelled') && <Button onClick={deleteWithConfirm} class="small-button">Delete Session</Button>}
       </div>

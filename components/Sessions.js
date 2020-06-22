@@ -3,7 +3,6 @@ require('dotenv').config()
 import React, { Component } from 'react'
 import Modal from '../components/Modal'
 import EditSession from '../components/EditSession'
-// import ViewSession from '../components/ViewSession'
 import MessagesModal from '../components/MessagesModal'
 import ConfirmModal from '../components/ConfirmModal'
 import CongratsModal from '../components/CongratsModal'
@@ -146,7 +145,11 @@ class Sessions extends Component {
                           as={`/session/view/${session._id}`}>
                           <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
                         </Link>
-                        <button className="small-button" onClick={() => { this.handleModal(session._id, 'edit')}}>Edit</button>
+                        <Link
+                          href="/session/edit/[id]"
+                          as={`/session/edit/${session._id}`}>
+                          <button className="small-button">Edit</button>
+                        </Link>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
                     )
@@ -190,7 +193,7 @@ class Sessions extends Component {
                         <Link
                           href="/session/view/[id]"
                           as={`/session/view/${session._id}`}>
-                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                          <button className="small-button">View</button>
                         </Link>
                         <button className="small-button" onClick={() => { this.handleModal(session._id, 'messages')}}>Messages</button>
                       </li>
@@ -205,12 +208,12 @@ class Sessions extends Component {
                   {cancelledSessions.map((session, id) => {
                     return (
                       <li key={id}>
-                        <p className="username">{isPupil ? session.artist.artistDisplayName : session.pupil}</p>
+                        <p className="username">{isPupil ? session.artistDisplayName : session.pupil}</p>
                         <p>{formatTime(session.date, session.duration)}</p>
                         <Link
                           href="/session/view/[id]"
                           as={`/session/view/${session._id}`}>
-                          <button onClick={() => { this.props.setSession(session) }} className="small-button">View</button>
+                          <button className="small-button">View</button>
                         </Link>
                       </li>
                     )
