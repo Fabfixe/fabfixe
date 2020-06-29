@@ -16,7 +16,7 @@ export default (req, res) => {
       from: 'admin@fabfixe.com',
       subject: 'Your session has been updated',
       text: 'Your session has been updated',
-      html: `Hi <strong>${firstName}</strong>, your session has been updated. Click <a href='www.fabfixe.com/account/my-sessions'>here</a> to see the change.`,
+      html: `Hi <strong>${firstName}</strong>, your session has been updated. Click <a href='${process.env.API_URL}/session/view/${req.body._id}/'>here</a> to see the change.`,
     }
 
     sgMail.send(msg)

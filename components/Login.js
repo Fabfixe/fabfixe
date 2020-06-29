@@ -80,7 +80,7 @@ class Login extends Component {
             value={ this.state.password }
           />
           {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-          <Link href='/account/reset-password-request'>Forgot your password?</Link>
+          <Link href='/account/reset-password-request'><a>Forgot your password?</a></Link>
         </div>
 
         <div className="button-container">

@@ -1,19 +1,20 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react'
+import { useSelector } from 'react-redux'
 import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import loadable from '@loadable/component'
-
 import Head from 'next/head'
 import PropTypes from 'prop-types'
-import Login from '../../components/Login'
 import MyLayout from '../../components/MyLayout'
 import Hero from '../../components/Hero'
 import { Dropdown } from '../../components/Dropdown'
+import ConfirmModal from '../../components/ConfirmModal'
 import Footer from '../../components/Footer'
 import Sessions from '../../components/Sessions'
 import Router from 'next/router'
 import dynamic from 'next/dynamic'
 import moment from 'moment'
+import axios from 'axios'
 
 const importedEvents = [
   {
@@ -42,34 +43,131 @@ const importedEvents = [
 ]
 
 const MyCalendar = (props) => {
+  const { isAuthenticated, user } = useSelector(state => state.auth)
   const [ plugin, setPlugin ] = useState(null)
   const [ openStart, setOpenStart ] = useState('09:00 AM')
   const [ openEnd, setOpenEnd ] = useState('6:00 PM')
-  const [ events, setEvents ] = useState(importedEvents)
+  const [ events, setEvents ] = useState([])
+  const [ sessions, setSessions ] = useState([])
+  const [ blocks, setBlocks ] = useState([])
+  const [ showConfirm, setShowConfirm ] = useState(false)
+  const [ deletionBlock, setDeletionBlock ] = useState(null)
+  const [ customPlugin, setCustomPlugin ] = useState(null)
+  const calRef = useRef(null)
+  const dropdownRef = useRef(null)
+  let foobar = null
   const tz = moment.tz.guess()
-  const calRef = React.createRef()
-  const dropdownRef = useRef()
 
+  const sessionToEvent = (session) => {
+    return {
+      title: `Session with ${session.pupil.username}`,
+      start: session.date,
+      end: moment(session.date).add(session.duration, 'minutes').format(),
+      textColor: '#000',
+      backgroundColor: '#FFF',
+      borderColor: '#FFF',
+      url: `/session/view/${session._id}`,
+      extendedProps: {
+        status: session.status
+      }
+    }
+  }
+
+  class BusinessHours extends React.Component {
+    constructor(props) {
+      super(props)
+    }
+
+    render() {
+
+      return (
+        <>
+          <div className='view-title'>
+          Testing purposes
+          </div>
+        </>
+      )
+    }
+  }
+
+  const handleRender = () => {
+    console.log('calRef', calRef.current)
+  }
   const FullCalendar = loadable(() => import('@fullcalendar/react'), { ssr: false })
 
+  useEffect(() => {
+    console.log('intiial')
+    dynamicallyImportPackage()
+    if(!isAuthenticated) Router.push('/account/login')
+
+    // Fetch them events
+    const fetchSessions = async () => {
+      const { _id } = user
+
+      const { data } = await axios.post('/api/sessions/byId', { accountType: 'artist', _id })
+      setSessions(data.map(sessionToEvent))
+    }
+
+    fetchSessions()
+    fetchBlocks(user._id)
+  }, [])
 
   useEffect(() => {
-    // if(!props.auth.isAuthenticated) Router.push('/account/login')
-    dynamicallyImportPackage()
-  })
+    setEvents(sessions.concat(blocks))
+  }, [blocks])
+
+  useEffect(() => {
+    if(sessions.length) {
+      setEvents(blocks.concat(sessions))
+    }
+  }, [sessions])
 
   const dynamicallyImportPackage = async () => {
     const timeGridPlugin = await import('@fullcalendar/timegrid')
     setPlugin(timeGridPlugin.default)
   }
 
-  const openBlockDropdown = (_this) => {
-    _this.append(<Dropdown />)
+  const fetchBlocks = async (_id) => {
+    const { data } = await axios.get('/api/calendar', { params: { userId: _id }})
+    setBlocks(data.blocks)
   }
 
-  const onSubmit = (blockTime) => {
-    console.log(blockTime)
-    setEvents(events.concat([blockTime]))
+  const onSubmit = (block) => {
+    // Persist block time
+    const duplicateBlock = blocks.find((b) => {
+      return b.startTime === block.startTime && b.endTime === block.endTime && b.daysOfWeek === block.daysOfWeek
+    })
+
+    if(!duplicateBlock) {
+        axios.post('/api/calendar', { block, _id: user._id })
+      .then(({data}) => {
+        setBlocks(blocks.concat([block]))
+        setEvents(events.concat([block]))
+      })
+    }
+  }
+
+  const deleteBlock = (event) => {
+    setDeletionBlock(event)
+    setShowConfirm(!showConfirm)
+  }
+
+  const onConfirm = () => {
+    const { _id } = user
+    const block = {
+      startTime: moment(deletionBlock.start).format('H:mm'),
+      endTime: moment(deletionBlock.end).format('H:mm'),
+      daysOfWeek: moment(deletionBlock.start).day()
+    }
+
+    // send this joker to the api
+    axios.post('/api/calendar/deleteBlock', { block, userId: _id  })
+    .then(({data}) => {
+      if(data > 0) {
+        fetchBlocks(_id)
+        setShowConfirm(!showConfirm)
+      }
+    })
   }
 
   const eventRender = ({ el, event }) => {
@@ -77,7 +175,8 @@ const MyCalendar = (props) => {
       // Add a title element
       const span = document.createElement("span")
       const link = document.createElement("a")
-      link.textContent = 'Remove'
+      link.textContent = 'Delete'
+      link.onclick = () => (deleteBlock(event))
       const start = moment(event.start).format("h:mm A")
       const end = moment(event.end).format("h:mm A")
 
@@ -87,12 +186,14 @@ const MyCalendar = (props) => {
       el.append(link)
       return
     }
+
     const span = document.createElement("span")
     span.setAttribute('class', 'fc-status')
     span.innerHTML = event.extendedProps.status
     const title = el.getElementsByClassName('fc-title')[0]
     title.append(span)
   }
+
 
 
   return (
@@ -103,7 +204,7 @@ const MyCalendar = (props) => {
       <MyLayout alignment="center calendar">
         <h1 alignment="center">My Calendar</h1>
         <div className="calendar-container">
-        {plugin && <FullCalendar
+        {plugin && <><div className="calendar-toolbar__extension"></div><FullCalendar
           ref={calRef}
           events={events}
           plugins={[plugin]}
@@ -115,12 +216,12 @@ const MyCalendar = (props) => {
           allDaySlot={false}
           columnHeaderFormat={{ weekday: 'long' }}
           eventRender={eventRender}
+          headerToolbar={console.log(calRef.current)}
           customButtons={{
             blockButton: {
               text: 'Block',
               click: function(e) {
-                // if(document.querySelector('.dropdown-container')) return
-
+                if(document.querySelector('.dropdown-container')) return
                 const currentDay = calRef.current.getApi().getDate().getDay()
                 const getStarts = (openStart, openEnd) => {
                  const hourDiff = moment(openEnd, 'h:mm A').diff(moment(openStart, 'h:mm A'), 'hours')
@@ -134,7 +235,6 @@ const MyCalendar = (props) => {
                  }
 
                  return times
-
                }
 
                 const startOptions = getStarts(openStart, openEnd)
@@ -153,18 +253,32 @@ const MyCalendar = (props) => {
                   endOptions={endOptions}
                   onSubmit={onSubmit}/>, node)
               }
+            },
+            hoursButton: {
+              text: 'Availability',
+              click: function() {
+                const toolbar = document.querySelector('.fc-toolbar')
+                const node = document.createElement('div')
+                node.setAttribute('class', 'dropdown-container')
+                toolbar.append(node)
+
+                ReactDOM.render(<BusinessHours />, node)
+              }
             }
           }}
-          header={{ right: 'blockButton today prev,next' }}
-         />}
+
+          header={{ right: 'hoursButton, blockButton today prev,next' }}
+         /></>}
         </div>
+        {showConfirm && ReactDOM.createPortal(
+          <ConfirmModal
+            copy="Are you sure you want to delete this block?"
+            onCancel={() => (setShowConfirm(!showConfirm))}
+            onConfirm={onConfirm}/>, document.body
+        )}
       </MyLayout>
     </React.Fragment>
   )
 }
 
-const mapStateToProps = state => ({
-  auth: state.auth,
-})
-
-export default connect(mapStateToProps)(MyCalendar)
+export default MyCalendar

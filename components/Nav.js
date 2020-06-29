@@ -68,30 +68,26 @@ class NavLinks extends Component {
 
     return (
       this.props.auth.isAuthenticated ? (
-          <React.Fragment>
+          <>
             <Link href={`/account/edit-profile/${this.props.auth.user.accountType}`}>
               <a>Edit Profile</a>
             </Link>
             <Link href="/account/my-sessions">
               <a>My Sessions</a>
             </Link>
-            <Link href="/account/my-calendar">
+            {this.props.auth.user.accountType === 'artist' && <Link href="/account/my-calendar">
               <a>My Calendar</a>
-            </Link>
-            <Link href="/browse/artists">
-              <a>Browse Artists</a>
-            </Link>
-            {this.props.auth.user.accountType === "pupil" || <Link href="/about/artists">
-              <a>For Artists</a>
             </Link>}
-            <Link href="">
-              <a
-              onClick={this.onLogout.bind(this)}
-              >Log Out</a>
+            {this.props.auth.user.accountType === 'pupil' && <Link href="/browse/artists">
+              <a>Browse Artists</a>
+            </Link>}
+            <Link href="/about/artists">
+              <a>For Artists</a>
             </Link>
-          </React.Fragment>
+            <a onClick={this.onLogout.bind(this)}>Log Out</a>
+          </>
         ) : (
-        <React.Fragment>
+        <>
           <Link href="/account/joining-as">
             <a>Join</a>
           </Link>
@@ -104,10 +100,10 @@ class NavLinks extends Component {
           <Link href="/browse/artists">
             <a>Browse Artists</a>
           </Link>
-          { this.props.userType === "client" || <Link href="/about/artists">
+          <Link href="/about/artists">
             <a>For Artists</a>
-          </Link> }
-        </React.Fragment>
+          </Link>
+        </>
       )
     )
   }

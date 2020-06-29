@@ -62,7 +62,8 @@ const ViewSession = ({ session }) => {
            }, 2000)
 
            const notify = session.pupil._id
-           axios.post('/api/emails/sessionUpdated', { notify })
+           const { _id } = session
+           axios.post('/api/emails/sessionUpdated', { notify, _id })
         } else {
           setTimeout(() =>  {
             setApprovalLoading(false)
@@ -162,7 +163,6 @@ const ViewSession = ({ session }) => {
           approvalLoading ? 'Sending...' : 'Approve Session'}</Button>}
         {(session.status === 'pending' || session.status === 'upcoming') && <Link href="/session/edit/[id]" as={`/session/edit/${session._id}`}>
           <button className="small-button">Edit</button></Link>}
-        {(session.status === 'pending' || session.status === 'upcoming') && <Button class="small-button">View Messages</Button>}
         {(session.status === 'expired' || session.status === 'cancelled') && <Button onClick={deleteWithConfirm} class="small-button">Delete Session</Button>}
       </div>
     </div>

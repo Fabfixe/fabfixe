@@ -17,7 +17,6 @@ async function handler(req, res) {
  form.parse(req, async function(err, fields, files) {
     const values = await Object.values(files)
     const promises = await values.map((image) => {
-      console.log('image', image[0].path)
       return cloudinary.uploader.upload(image[0].path)
     })
 

@@ -2,7 +2,6 @@ const cn = require('classnames')
 require('dotenv').config()
 import React, { Component } from 'react'
 import Modal from '../components/Modal'
-import EditSession from '../components/EditSession'
 import MessagesModal from '../components/MessagesModal'
 import ConfirmModal from '../components/ConfirmModal'
 import CongratsModal from '../components/CongratsModal'

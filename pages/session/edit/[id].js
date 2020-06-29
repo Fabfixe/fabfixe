@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import ReactDOM from 'react-dom'
 import { useSelector } from 'react-redux'
 import Button from '../../../components/Button'
 import Banner from '../../../components/Banner'
@@ -109,7 +110,8 @@ const EditSession = ({ session }) => {
               }, 2000)
 
               const notify = isArtist ? session.artist._id : session.pupil._id
-              axios.post('/api/emails/sessionUpdated', { notify })
+              const { _id } = session
+              axios.post('/api/emails/sessionUpdated', { notify, _id })
           } else {
             setTimeout(() => { setLoading(false) }, 2000)
             setShowSubmitError(true)
@@ -134,11 +136,13 @@ const EditSession = ({ session }) => {
     <Modal layout="default" closeModal={() => Router.push('/account/my-sessions')}>
       <div className="edit-session-modal">
         {showSubmitError && <div>Something went wrong, try again later</div>}
-        {showConfirm && <ConfirmModal
-          copy={session.status === 'pending' ? "Are you sure you want to cancel this session?" : "Are you sure you want to cancel this session? You will lose coin if you cancel within eight hours of the session time"}
+        {showConfirm && ReactDOM.createPortal(<ConfirmModal
+          copy={session.status === 'pending' ?
+            "Are you sure you want to cancel this session?" :
+            "Are you sure you want to cancel this session? You will lose coin if you cancel within eight hours of the session time"}
           onCancel={() => (setShowConfirm(false))}
           onConfirm={onConfirm}
-          />}
+          />, document.body)}
         {!showConfirm && !showSubmitError && <>
           <h1>Edit Session</h1>
           <p>{isArtist ? `Artist: ${session.artist.displayName}` : `Pupil: ${session.pupil.username}`}</p>
