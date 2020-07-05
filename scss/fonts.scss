@@ -61,10 +61,6 @@ $letter-spacing-l: 8px;
   &:after {
     position: absolute;
     width: calc(100% - #{$letter-spacing-xs});
-    // bottom: -2px;
-    // left: 0;
-    // content: '';
-    // border-bottom: solid 3px $linen;
     bottom: 0;
     left: 5px;
     content: '';

@@ -7,8 +7,9 @@ import Head from 'next/head'
 import PropTypes from 'prop-types'
 import MyLayout from '../../components/MyLayout'
 import Hero from '../../components/Hero'
-import { Dropdown } from '../../components/Dropdown'
+import { Dropdown, BusinessHours, BusinessHoursPanel } from '../../components/Dropdown'
 import ConfirmModal from '../../components/ConfirmModal'
+import Modal from '../../components/Modal'
 import Footer from '../../components/Footer'
 import Sessions from '../../components/Sessions'
 import Router from 'next/router'
@@ -32,20 +33,26 @@ const importedEvents = [
 
   {
     title: 'Block',
-    start: Date.now() - (1*60*60*1000),
-    end: Date.now()  + (1*60*60*1000),
+    start: '2020-07-04T14:00:00Z',
+    end: '2020-07-04T14:30:00Z',
     url: '',
     rendering: 'background',
     extendedProps: {
       status: 'Pending'
     }
+  },
+  {
+    start: "2020-07-05T20:30:00Z",
+    recurring: false,
+    rendering: "background",
+    end: "2020-07-05T19:30:00Z"
   }
 ]
 
 const MyCalendar = (props) => {
   const { isAuthenticated, user } = useSelector(state => state.auth)
   const [ plugin, setPlugin ] = useState(null)
-  const [ openStart, setOpenStart ] = useState('09:00 AM')
+  const [ openStart, setOpenStart ] = useState('9:00 AM')
   const [ openEnd, setOpenEnd ] = useState('6:00 PM')
   const [ events, setEvents ] = useState([])
   const [ sessions, setSessions ] = useState([])
@@ -53,9 +60,17 @@ const MyCalendar = (props) => {
   const [ showConfirm, setShowConfirm ] = useState(false)
   const [ deletionBlock, setDeletionBlock ] = useState(null)
   const [ customPlugin, setCustomPlugin ] = useState(null)
+  const [ showBlockModal, setShowBlockModal ] = useState(false)
+  const [ showHoursModal, setShowHoursModal ] = useState(false)
+  const [ currentDay, setCurrentDay ] = useState(null)
+  const [ currentYear, setCurrentYear ] = useState(null)
+  const [ startOptions, setStartOptions ] = useState(null)
+  const [ endOptions, setEndOptions ] = useState(null)
+  const [ savedTimezone, setSavedTimezone ] = useState(null)
   const calRef = useRef(null)
+  const calContainer = useRef(null)
   const dropdownRef = useRef(null)
-  let foobar = null
+  const [ currentDate, setCurrentDate ] = useState(null)
   const tz = moment.tz.guess()
 
   const sessionToEvent = (session) => {
@@ -73,30 +88,9 @@ const MyCalendar = (props) => {
     }
   }
 
-  class BusinessHours extends React.Component {
-    constructor(props) {
-      super(props)
-    }
-
-    render() {
-
-      return (
-        <>
-          <div className='view-title'>
-          Testing purposes
-          </div>
-        </>
-      )
-    }
-  }
-
-  const handleRender = () => {
-    console.log('calRef', calRef.current)
-  }
   const FullCalendar = loadable(() => import('@fullcalendar/react'), { ssr: false })
 
   useEffect(() => {
-    console.log('intiial')
     dynamicallyImportPackage()
     if(!isAuthenticated) Router.push('/account/login')
 
@@ -127,9 +121,27 @@ const MyCalendar = (props) => {
     setPlugin(timeGridPlugin.default)
   }
 
+  const fetchSavedTimezone = async (_id) => {
+    const { data } = await axios.get('/api/calendar', { params: { userId: _id }})
+  }
+
   const fetchBlocks = async (_id) => {
     const { data } = await axios.get('/api/calendar', { params: { userId: _id }})
-    setBlocks(data.blocks)
+
+    if(data.blocks) {
+      data.blocks.forEach((block) => {
+        // Format depends on recurring or not
+        block['start'] = block.startTime
+        block['end'] = block.endTime
+
+        if(block.recurring) {
+          block.startTime = moment.tz(block.startTime, 'H:mm', `${block.timezone}`).tz(tz).format('H:mm')
+          block.endTime = moment.tz(block.endTime, 'H:mm', `${block.timezone}`).tz(tz).format('H:mm')
+        }
+      })
+    }
+
+    setBlocks(data.blocks || [])
   }
 
   const onSubmit = (block) => {
@@ -141,8 +153,18 @@ const MyCalendar = (props) => {
     if(!duplicateBlock) {
         axios.post('/api/calendar', { block, _id: user._id })
       .then(({data}) => {
+        // Format depends on recurring or not
+        block['start'] = block.startTime
+        block['end'] = block.endTime
+
+        if(block.recurring) {
+          block.startTime = moment.tz(block.startTime, 'HH:mm', `${block.timezone}`).tz(tz).format('HH:mm')
+          block.endTime = moment.tz(block.endTime, 'HH:mm', `${block.timezone}`).tz(tz).format('HH:mm')
+        }
+
         setBlocks(blocks.concat([block]))
         setEvents(events.concat([block]))
+        setShowBlockModal(!showBlockModal)
       })
     }
   }
@@ -154,13 +176,19 @@ const MyCalendar = (props) => {
 
   const onConfirm = () => {
     const { _id } = user
-    const block = {
-      startTime: moment(deletionBlock.start).format('H:mm'),
-      endTime: moment(deletionBlock.end).format('H:mm'),
-      daysOfWeek: moment(deletionBlock.start).day()
-    }
-
     // send this joker to the api
+    const block = deletionBlock.extendedProps.recurring ?
+      { daysOfWeek: deletionBlock._def.recurringDef.typeData.daysOfWeek,
+        startTime: deletionBlock.extendedProps.start,
+        endTime: deletionBlock.extendedProps.end,
+        recurring: deletionBlock.extendedProps.recurring
+      } : {
+        startTime: deletionBlock.extendedProps.startTime,
+        endTime: deletionBlock.extendedProps.endTime,
+        recurring: deletionBlock.extendedProps.recurring
+      }
+
+
     axios.post('/api/calendar/deleteBlock', { block, userId: _id  })
     .then(({data}) => {
       if(data > 0) {
@@ -194,8 +222,6 @@ const MyCalendar = (props) => {
     title.append(span)
   }
 
-
-
   return (
     <React.Fragment>
       <Head>
@@ -203,8 +229,17 @@ const MyCalendar = (props) => {
       </Head>
       <MyLayout alignment="center calendar">
         <h1 alignment="center">My Calendar</h1>
-        <div className="calendar-container">
-        {plugin && <><div className="calendar-toolbar__extension"></div><FullCalendar
+        <div ref={calContainer} className="calendar-container">
+        {plugin && <>
+          <div className="fc-toolbar__extension">
+            <BusinessHoursPanel
+              localTimezone={tz}
+              openTime={'9:00 AM'}
+              closingTime={'6:00 PM'}
+              handleClick={() => setShowHoursModal(!showHoursModal)}
+            />
+          </div>
+          <FullCalendar
           ref={calRef}
           events={events}
           plugins={[plugin]}
@@ -214,15 +249,13 @@ const MyCalendar = (props) => {
           height="parent"
           nowIndicator={true}
           allDaySlot={false}
-          columnHeaderFormat={{ weekday: 'long' }}
           eventRender={eventRender}
-          headerToolbar={console.log(calRef.current)}
+          titleFormat={{weekday: 'long', day: 'numeric', month: 'long'}}
           customButtons={{
             blockButton: {
               text: 'Block',
               click: function(e) {
-                if(document.querySelector('.dropdown-container')) return
-                const currentDay = calRef.current.getApi().getDate().getDay()
+                setCurrentDate(calRef.current.getApi().getDate())
                 const getStarts = (openStart, openEnd) => {
                  const hourDiff = moment(openEnd, 'h:mm A').diff(moment(openStart, 'h:mm A'), 'hours')
                  const increments = hourDiff * 2
@@ -237,37 +270,18 @@ const MyCalendar = (props) => {
                  return times
                }
 
-                const startOptions = getStarts(openStart, openEnd)
-                const endOptions = getStarts(openStart, moment(openEnd, 'h:mm A').add(1, 'hour'))
-                endOptions.pop()
-                endOptions.shift()
+                const allStartOptions = getStarts(openStart, openEnd)
+                const allEndOptions = getStarts(openStart, moment(openEnd, 'h:mm A').add(1, 'hour'))
+                allEndOptions.pop()
+                allEndOptions.shift()
 
-                const toolbar = document.querySelector('.fc-toolbar')
-                const node = document.createElement('div')
-                node.setAttribute('class', 'dropdown-container')
-                toolbar.append(node)
-
-                ReactDOM.render(<Dropdown
-                  currentDay={currentDay}
-                  startOptions={startOptions}
-                  endOptions={endOptions}
-                  onSubmit={onSubmit}/>, node)
-              }
-            },
-            hoursButton: {
-              text: 'Availability',
-              click: function() {
-                const toolbar = document.querySelector('.fc-toolbar')
-                const node = document.createElement('div')
-                node.setAttribute('class', 'dropdown-container')
-                toolbar.append(node)
-
-                ReactDOM.render(<BusinessHours />, node)
+                setStartOptions(allStartOptions)
+                setEndOptions(allEndOptions)
+                setShowBlockModal(!showBlockModal)
               }
             }
           }}
-
-          header={{ right: 'hoursButton, blockButton today prev,next' }}
+          header={{ right: 'blockButton today prev,next' }}
          /></>}
         </div>
         {showConfirm && ReactDOM.createPortal(
@@ -276,6 +290,25 @@ const MyCalendar = (props) => {
             onCancel={() => (setShowConfirm(!showConfirm))}
             onConfirm={onConfirm}/>, document.body
         )}
+        {showBlockModal && <Modal
+          closeModal={() => setShowBlockModal(!showBlockModal)}
+          containerClassName='calendar'>
+          <Dropdown
+            currentDate={currentDate}
+            currentYear={currentYear}
+            startOptions={startOptions}
+            endOptions={endOptions}
+            tz={tz}
+            onSubmit={onSubmit}/>
+        </Modal>}
+        {showHoursModal && <Modal
+          closeModal={() => setShowHoursModal(!showHoursModal)}
+          containerClassName='calendar'>
+          <BusinessHours
+            openTime={openStart}
+            closingTime={openEnd}
+            onSubmit={onSubmit}/>
+        </Modal>}
       </MyLayout>
     </React.Fragment>
   )

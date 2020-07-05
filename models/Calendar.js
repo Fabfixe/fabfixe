@@ -8,16 +8,23 @@ const CalendarSchema = new Schema({
       type: String,
       required: true
     },
+    timezone: {
+      type: String,
+      default: 'America/New_York',
+      required: false
+    },
     blocks: {
       type: Array,
       required: false
     },
     open: {
       type: String,
+      default: '9:00 AM',
       required: false
     },
     close: {
       type: String,
+      default: '6:00 PM',
       required: false
     }
 })

@@ -2,7 +2,7 @@ import { createPortal } from 'react-dom'
 import { useRef, useEffect, useState } from 'react'
 const cn = require('classnames')
 
-const Modal = (props) => {
+const Modal = ({layout, containerClassName, closeModal, children}) => {
   const [ mounted, setMounted ] = useState(false)
 
   useEffect(() => {
@@ -10,10 +10,10 @@ const Modal = (props) => {
   }, [])
 
   return mounted ? createPortal(
-    <div className='modal'>
-      <div className={cn('modal-content', props.layout)}>
-        <div onClick={ props.closeModal } className="close">✕</div>
-        {props.children}
+    <div className={cn('modal', containerClassName)}>
+      <div className={cn('modal-content', layout)}>
+        <div onClick={ closeModal } className="close">✕</div>
+        {children}
       </div>
     </div>, document.body
   ) : null

@@ -11,6 +11,7 @@ import { updateProfile } from '../../../actions/profile'
 import validateUsernameInput from '../../../validation/username'
 import validateProfileSubmit from '../../../validation/profileSubmit'
 import axios from 'axios'
+import moment from 'moment-timezone'
 
 const classnames = require('classnames')
 
@@ -158,6 +159,7 @@ class EditProfile extends Component {
 
   handleSubmit(e) {
     e.preventDefault()
+    const tz = moment.tz.guess()
 
     const accountType = this.state.accountType
     const profile = {
@@ -173,7 +175,8 @@ class EditProfile extends Component {
         facebook: this.state.facebook,
         hourlyRate: this.state.hourlyRate,
         expertise: this.state.selectedExpertise,
-        sessions: this.state.sessions
+        sessions: this.state.sessions,
+        timezone: tz
       },
 
       pupil: {

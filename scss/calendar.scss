@@ -1,6 +1,12 @@
+$toolbar-extension-height: 40px;
+$toolbar-mobile-height: 55px;
+$toolbar-mobile-top-margin: 50px;
+$toolbar-tablet-height: 30px;
+
 .calendar-container {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .fc-button-primary {
@@ -10,6 +16,16 @@
   &:hover {
     background: transparent;
   }
+
+  &:active {
+    color: initial !important;
+    background-color: initial !important;
+    border-color: initial !important;
+  }
+}
+
+.fc-button:focus {
+  box-shadow: none;
 }
 
 .fc-time-grid .fc-slats td {
@@ -83,11 +99,16 @@ th.fc-day-header.fc-widget-header {
 }
 
 .fc-today-button {
-  background: $blush !important;
+  background: initial !important;
   border: 0;
   border-radius: 0;
   padding-top: 8px;
-  color: #FFF;
+  color: $blush;
+
+  &:disabled, &:hover, &:active, &:focus {
+    color: $blush;
+    outline: 0;
+  }
 }
 
 fc-axis fc-widget-header {
@@ -117,10 +138,11 @@ fc-axis fc-widget-header {
   }
 }
 
-.fc-toolbar {
+.fc-toolbar.fc-header-toolbar {
   position: relative;
   display: flex;
   flex-direction: column;
+  margin-bottom: $toolbar-extension-height;
 
   .fc-left {
     margin-bottom: 10px;
@@ -132,6 +154,63 @@ fc-axis fc-widget-header {
 
   @include for-tablet-up {
     flex-direction: row;
+  }
+}
+
+.fc-toolbar__extension {
+  height: $toolbar-extension-height;
+  position: absolute;
+  width: 100%;
+  top: $toolbar-mobile-height + $toolbar-mobile-top-margin;
+
+  .extension-container {
+    padding: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+    cursor: pointer;
+
+    span + span {
+      margin-left: 6px;
+    }
+  }
+
+  & * {
+    font-size: 13px;
+  }
+
+  label {
+    margin-right: 5px;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-xs;
+    font-weight: 900;
+  }
+
+  select {
+    border: 0;
+    font-weight: 400;
+  }
+
+  button {
+    visibility: hidden;
+  }
+
+  @media (max-width: 350px) {
+    & * {
+      font-size: 10px;
+    }
+  }
+
+  @include for-tablet-up {
+    top: $toolbar-tablet-height + $toolbar-mobile-top-margin;
+
+    .extension-container {
+      justify-content: flex-end;
+
+      & > div {
+        margin-left: 10px;
+      }
+    }
   }
 }
 
@@ -156,38 +235,28 @@ fc-axis fc-widget-header {
 .dropdown {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-evenly;
+  flex-direction: column;
   padding: 20px 15px;
   z-index: 2;
+  width: 100%;
   background: #FFF;
 
-  @include for-tablet-up {
-    flex-direction: row;
-  }
-
   label {
-    width: 100%;
     display: block;
+    text-align: left;
     margin: 10px 0;
     text-transform: uppercase;
     font-size: 10px;
-    letter-spacing: $letter-spacing-xxs;
+    letter-spacing: 0.5px;
 
     @include for-tablet-up {
       margin: 20px 0 10px;
     }
   }
 
-  p {
-    height: 22px;
-  }
-
   button {
-    width: 75%;
-    padding: 5px 0;
-    margin: 20px auto;
+    padding: 5px 10px;
+    margin: 20px 0;
     display: block;
     text-transform: uppercase;
     letter-spacing: $letter-spacing-xs;
@@ -195,21 +264,65 @@ fc-axis fc-widget-header {
     font-size: 12px;
     cursor: pointer;
   }
-}
 
-.dropdown-button__container {
-  width: 100%;
+  select {
+    width: auto;
+    border: 0;
+
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  input[type='checkbox'] {
+    margin: 0;
+    width: 22px;
+    float: left;
+  }
+
+  input + label {
+    width: auto;
+    margin: 0 0 0 10px;
+    font-size: 12px;
+    float: left;
+    height: 22px;
+    line-height: 22px;
+    text-transform: none;
+  }
 }
 
 .dropdown-select__container {
-  text-align: center;
-
   &:first-child {
-    width: 100%;
+    margin-bottom: 10px;
   }
 
   @include for-tablet-up {
     text-align: left;
+  }
+}
+
+.dropdown-set {
+  display: flex;
+
+  .button {
+    margin: 0;
+    height: 32px;
+  }
+}
+
+.dropdown-select__container + .dropdown-select__container {
+  margin-left: 15px;
+}
+
+.dropdown .select-container {
+  display: inline-flex;
+  align-items: center;
+  border: solid 1px black;
+  width: auto;
+
+  p {
+    position: initial !important;
+    margin: 0px 5px !important;
   }
 }
 

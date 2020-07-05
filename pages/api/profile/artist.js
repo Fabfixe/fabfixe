@@ -1,5 +1,6 @@
 import dbConnect from '../../../dbconnect'
 const ArtistProfile = require('../../../models/ArtistProfile')
+const Calendar = require('../../../models/Calendar')
 
 dbConnect()
 
@@ -18,6 +19,15 @@ export default (req, res) => {
       sessions: req.body.sessions,
       isArtist: true,
     }
+
+    Calendar.findOneAndUpdate(
+      { userId: req.body._id },
+      { timezone: req.body.timezone },
+      { upsert: true, returnOriginal: false })
+    .then(() => {})
+    .catch((e) => {
+      console.log('error updating timezone:', e)
+    })
 
     ArtistProfile.findOne({
       _id: req.body._id

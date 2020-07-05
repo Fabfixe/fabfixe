@@ -1,5 +1,6 @@
 .modal {
   position: fixed;
+  display: flex;
   width: 100vw;
   min-height: 100vh;
   align-items: center;
@@ -12,6 +13,10 @@
   z-index: 10;
   overflow: scroll;
 
+  &.calendar {
+    background: transparent;
+  }
+
   nav > & {
     background: orange;
   }
@@ -19,35 +24,6 @@
   h2 {
     font-size: 1rem;
     margin: 20px 0;
-  }
-
-  .modal-content {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-    align-items: center;
-    margin: 0 auto;
-
-    @include for-desktop-up {
-      max-width: 900px;
-    }
-
-    &.default {
-      @include for-desktop-up {
-        max-width: 50%;
-      }
-    }
-
-    h1 {
-      margin: 0 0 50px;
-    }
-
-    .confirm-approval input {
-      width: auto;
-      margin: 0 10px 10px 0;
-    }
   }
 
   .center-modal {
@@ -147,6 +123,44 @@
     b {
       font-weight: bold;
     }
+  }
+}
+
+.modal-content {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  align-items: center;
+  margin: 0 auto;
+
+  .calendar & {
+    height: auto;
+    background: white;
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.2);
+    align-items: flex-start;
+    width: calc(100% - 50px);
+    max-width: 400px;
+  }
+
+  @include for-desktop-up {
+    max-width: 900px;
+  }
+
+  &.default {
+    @include for-desktop-up {
+      max-width: 50%;
+    }
+  }
+
+  h1 {
+    margin: 0 0 50px;
+  }
+
+  .confirm-approval input {
+    width: auto;
+    margin: 0 10px 10px 0;
   }
 }
 

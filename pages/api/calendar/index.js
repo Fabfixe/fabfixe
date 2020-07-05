@@ -12,12 +12,11 @@ export default (req, res) => {
       { $push: { blocks: block }},
       { upsert: true, returnOriginal: false })
     .then((doc) => {
-      console.log('sending doc', doc)
       res.send(doc)
     })
   }
 
-  if(req.method === 'GET') {
+  if(req.method === 'GET') { 
     const { userId } = req.query
 
     Calendar.findOne({ userId })

@@ -1,19 +1,20 @@
-export default props =>
-  props.images.map(({url}, i) => {
+export default (props) => {
+  return props.images.map(({profileImageUrl}, i) => {
     let imageStyle = {
       width: '168px',
       height: '168px',
       margin: '0 auto',
-      backgroundImage: `url(${url})`,
+      backgroundImage: `url(${profileImageUrl})`,
       backgroundSize: 'cover',
       backgroundPosition: '50%',
     }
 
     return (
       <div  key={i} className='fade-in' style={imageStyle}>
-        {url !== '' && <div onClick={() => props.removeImage()} className='delete'>
-          <p>✕</p>
+        {profileImageUrl !== '' && <div onClick={() => props.removeImage()} className='delete'>
+          <p style={{ cursor: 'pointer' }}>✕</p>
         </div>}
       </div>
     )
   })
+}
