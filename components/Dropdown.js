@@ -115,8 +115,6 @@ export const BusinessHoursPanel = ({ openTime, closingTime, localTimezone, handl
   const [ showSave, setShowSave ] = useState(false)
   const openRef = useRef(null)
   const closeRef = useRef(null)
-  const openTimes = getHours('12:00 AM', '11:00 PM', true)
-  const closingTimes = getHours('1:00 AM', '11:00 PM', false)
 
   return (
     <div className="extension-container" onClick={handleClick}>
@@ -139,7 +137,7 @@ export const BusinessHoursPanel = ({ openTime, closingTime, localTimezone, handl
   )
 }
 
-export const BusinessHours = ({ openTime, closingTime }) => {
+export const BusinessHours = ({ openTime, closingTime, onSave, tz }) => {
 
   const [ showSave, setShowSave ] = useState(false)
   const openRef = useRef(null)
@@ -154,6 +152,16 @@ export const BusinessHours = ({ openTime, closingTime }) => {
   const handleEndChange = (e) => {
     if(e.target.value === '12:00 AM') return
     onEndSelectChange(openRef, closeRef, 1, 'hour')
+  }
+
+  const formatHours = () => {
+    const hours = {
+      open: openRef.current.value,
+      close: closeRef.current.value,
+      timezone: tz
+    }
+
+    return hours
   }
 
   useEffect(() => {
@@ -194,7 +202,7 @@ export const BusinessHours = ({ openTime, closingTime }) => {
             <p>▾</p>
           </div>
         </div>
-        <button className="button">Save</button>
+        <button onClick={() => onSave(formatHours())} className="button">Save</button>
       </div>
     </div>
   )

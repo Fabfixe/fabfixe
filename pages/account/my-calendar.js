@@ -53,20 +53,18 @@ const MyCalendar = (props) => {
   const { isAuthenticated, user } = useSelector(state => state.auth)
   const [ plugin, setPlugin ] = useState(null)
   const [ openStart, setOpenStart ] = useState('9:00 AM')
-  const [ openEnd, setOpenEnd ] = useState('6:00 PM')
+  const [ openEnd, setOpenEnd ] = useState('5:00 PM')
   const [ events, setEvents ] = useState([])
   const [ sessions, setSessions ] = useState([])
   const [ blocks, setBlocks ] = useState([])
   const [ showConfirm, setShowConfirm ] = useState(false)
   const [ deletionBlock, setDeletionBlock ] = useState(null)
-  const [ customPlugin, setCustomPlugin ] = useState(null)
   const [ showBlockModal, setShowBlockModal ] = useState(false)
   const [ showHoursModal, setShowHoursModal ] = useState(false)
   const [ currentDay, setCurrentDay ] = useState(null)
   const [ currentYear, setCurrentYear ] = useState(null)
   const [ startOptions, setStartOptions ] = useState(null)
   const [ endOptions, setEndOptions ] = useState(null)
-  const [ savedTimezone, setSavedTimezone ] = useState(null)
   const calRef = useRef(null)
   const calContainer = useRef(null)
   const dropdownRef = useRef(null)
@@ -89,7 +87,10 @@ const MyCalendar = (props) => {
   }
 
   const FullCalendar = loadable(() => import('@fullcalendar/react'), { ssr: false })
-
+  const dynamicallyImportPackage = async () => {
+    const timeGridPlugin = await import('@fullcalendar/timegrid')
+    setPlugin(timeGridPlugin.default)
+  }
   useEffect(() => {
     dynamicallyImportPackage()
     if(!isAuthenticated) Router.push('/account/login')
@@ -99,12 +100,17 @@ const MyCalendar = (props) => {
       const { _id } = user
 
       const { data } = await axios.post('/api/sessions/byId', { accountType: 'artist', _id })
+      // order sessions in time order
       setSessions(data.map(sessionToEvent))
     }
 
     fetchSessions()
     fetchBlocks(user._id)
   }, [])
+
+  useEffect(() => {
+    console.log(calRef.current)
+  }, [calRef])
 
   useEffect(() => {
     setEvents(sessions.concat(blocks))
@@ -116,17 +122,19 @@ const MyCalendar = (props) => {
     }
   }, [sessions])
 
-  const dynamicallyImportPackage = async () => {
-    const timeGridPlugin = await import('@fullcalendar/timegrid')
-    setPlugin(timeGridPlugin.default)
-  }
-
-  const fetchSavedTimezone = async (_id) => {
-    const { data } = await axios.get('/api/calendar', { params: { userId: _id }})
-  }
-
   const fetchBlocks = async (_id) => {
     const { data } = await axios.get('/api/calendar', { params: { userId: _id }})
+
+    if(data.hours) {
+      if(data.hours.timezone !== tz) { // change this
+        // Display hours in current timezone
+        data.hours.open = moment(data.hours.open, 'h:mm A').tz(tz).format('h:mm A')
+        data.hours.close = moment(data.hours.close, 'h:mm A').tz(tz).format('h:mm A')
+      }
+
+      setOpenStart(data.hours.open)
+      setOpenEnd(data.hours.close)
+    }
 
     if(data.blocks) {
       data.blocks.forEach((block) => {
@@ -169,6 +177,15 @@ const MyCalendar = (props) => {
     }
   }
 
+  const onSave = (hours) => {
+    axios.post('/api/calendar/businessHours', { hours, userId: user._id })
+    .then(({data: { hours: {open, close }}}) => {
+      setOpenStart(open)
+      setOpenEnd(close)
+      setShowHoursModal(false)
+    })
+  }
+
   const deleteBlock = (event) => {
     setDeletionBlock(event)
     setShowConfirm(!showConfirm)
@@ -176,7 +193,6 @@ const MyCalendar = (props) => {
 
   const onConfirm = () => {
     const { _id } = user
-    // send this joker to the api
     const block = deletionBlock.extendedProps.recurring ?
       { daysOfWeek: deletionBlock._def.recurringDef.typeData.daysOfWeek,
         startTime: deletionBlock.extendedProps.start,
@@ -222,10 +238,52 @@ const MyCalendar = (props) => {
     title.append(span)
   }
 
+  const getMinTime = () => {
+    const sortSessions = () => {
+      // Order sessions from earliest to latest
+      const sortedSessions = sessions.sort((a, b) => {
+        return moment(a.start).isBefore(moment(b.start))
+      })
+
+      return sortedSessions
+    }
+
+    // is open time
+
+  }
+
+  const viewRender = ({ date, el, view }) => {
+    // Filter sessions that match the current day
+    try {
+
+      calRef.current.calendar.props['minTime'] = openStart
+    } catch(e) {
+
+    }
+    const sessionsInDate = sessions.filter((session) => {
+      return moment(session.start).isSame(date, 'day')
+    })
+
+    const sortedSessions = sessionsInDate.sort((a, b) => {
+      return moment(a.start).isBefore(moment(b.start))
+    })
+
+    // try {
+    //   if(moment(sortedSessions[0].start).isBefore(openStart)) view.setTime(sortedSessions[0].start)
+    //   view.setTime(openStart)
+    // } catch(e) {
+    //   view.setStart(openStart)
+    // }
+    // Sort those filtered sessions by time Order
+    // compare open time to first index of filtered sessions
+  }
+
+
   return (
     <React.Fragment>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:wght@400;900&display=swap" rel="stylesheet" />
       </Head>
       <MyLayout alignment="center calendar">
         <h1 alignment="center">My Calendar</h1>
@@ -234,16 +292,18 @@ const MyCalendar = (props) => {
           <div className="fc-toolbar__extension">
             <BusinessHoursPanel
               localTimezone={tz}
-              openTime={'9:00 AM'}
-              closingTime={'6:00 PM'}
+              openTime={openStart}
+              closingTime={openEnd}
               handleClick={() => setShowHoursModal(!showHoursModal)}
             />
           </div>
           <FullCalendar
-          ref={calRef}
-          events={events}
+          rerenderDelay={1000}
+          ref={(el) => { calRef.current = el}}
+          events={sessions.concat(blocks)}
           plugins={[plugin]}
           defaultView="timeGridDay"
+          dayRender={(view) => viewRender(view)}
           // minTime={moment(openStart, 'h:mm A').subtract(1, 'hour').format('h:mm').toString()}
           // maxTime={moment(openEnd, 'h:mm').toString()} // this should be business hours or earliest event
           height="parent"
@@ -307,7 +367,8 @@ const MyCalendar = (props) => {
           <BusinessHours
             openTime={openStart}
             closingTime={openEnd}
-            onSubmit={onSubmit}/>
+            onSave={onSave}
+            tz={tz} />
         </Modal>}
       </MyLayout>
     </React.Fragment>

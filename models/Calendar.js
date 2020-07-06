@@ -17,14 +17,8 @@ const CalendarSchema = new Schema({
       type: Array,
       required: false
     },
-    open: {
-      type: String,
-      default: '9:00 AM',
-      required: false
-    },
-    close: {
-      type: String,
-      default: '6:00 PM',
+    hours: {
+      type: Object,
       required: false
     }
 })
