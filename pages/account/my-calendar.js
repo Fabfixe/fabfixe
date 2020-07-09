@@ -13,6 +13,7 @@ import Modal from '../../components/Modal'
 import Footer from '../../components/Footer'
 import Sessions from '../../components/Sessions'
 import Router from 'next/router'
+
 import dynamic from 'next/dynamic'
 import moment from 'moment'
 import axios from 'axios'
@@ -65,6 +66,8 @@ const MyCalendar = (props) => {
   const [ currentYear, setCurrentYear ] = useState(null)
   const [ startOptions, setStartOptions ] = useState(null)
   const [ endOptions, setEndOptions ] = useState(null)
+  const [ Calendar, setCalendar ] = useState(null)
+  const [ minTime, setMinTime ] = useState('00:00:00')
   const calRef = useRef(null)
   const calContainer = useRef(null)
   const dropdownRef = useRef(null)
@@ -87,8 +90,11 @@ const MyCalendar = (props) => {
   }
 
   const FullCalendar = loadable(() => import('@fullcalendar/react'), { ssr: false })
+
   const dynamicallyImportPackage = async () => {
     const timeGridPlugin = await import('@fullcalendar/timegrid')
+    // const calendar = await import('@fullcalendar/core')
+    // setCalendar(calendar)
     setPlugin(timeGridPlugin.default)
   }
   useEffect(() => {
@@ -108,11 +114,9 @@ const MyCalendar = (props) => {
     fetchBlocks(user._id)
   }, [])
 
-  useEffect(() => {
-    console.log(calRef.current)
-  }, [calRef])
 
   useEffect(() => {
+    // format the blocks
     setEvents(sessions.concat(blocks))
   }, [blocks])
 
@@ -216,6 +220,27 @@ const MyCalendar = (props) => {
 
   const eventRender = ({ el, event }) => {
     if(event.rendering === 'background') {
+      // Check if overlaps with any other events
+      const overlaps = blocks.filter((block) => {
+        if(moment(block.start).isSame(moment(event.start))) {
+          return !moment(block.end).isSame(moment(event.end))
+        }
+
+        if(moment(block.end).isSame(event.end)) {
+          return !moment(block.start).isSame(moment(event.start))
+        }
+      })
+
+      if(overlaps.length) {
+        const duration = moment(event.end).diff(moment(event.start))
+        const longerEvent = overlaps.find((block) => {
+          return moment(block.end).diff(moment(block.start)) >= duration
+        })
+
+        if(longerEvent) {
+          el.style = 'display: none;'
+        }
+      }
       // Add a title element
       const span = document.createElement("span")
       const link = document.createElement("a")
@@ -226,6 +251,7 @@ const MyCalendar = (props) => {
 
       span.setAttribute('class', 'fc-bg-title')
       span.textContent = `BLOCK: ${start} - ${end}`
+      el.classList.add('block')
       el.append(span)
       el.append(link)
       return
@@ -252,33 +278,6 @@ const MyCalendar = (props) => {
 
   }
 
-  const viewRender = ({ date, el, view }) => {
-    // Filter sessions that match the current day
-    try {
-
-      calRef.current.calendar.props['minTime'] = openStart
-    } catch(e) {
-
-    }
-    const sessionsInDate = sessions.filter((session) => {
-      return moment(session.start).isSame(date, 'day')
-    })
-
-    const sortedSessions = sessionsInDate.sort((a, b) => {
-      return moment(a.start).isBefore(moment(b.start))
-    })
-
-    // try {
-    //   if(moment(sortedSessions[0].start).isBefore(openStart)) view.setTime(sortedSessions[0].start)
-    //   view.setTime(openStart)
-    // } catch(e) {
-    //   view.setStart(openStart)
-    // }
-    // Sort those filtered sessions by time Order
-    // compare open time to first index of filtered sessions
-  }
-
-
   return (
     <React.Fragment>
       <Head>
@@ -298,14 +297,15 @@ const MyCalendar = (props) => {
             />
           </div>
           <FullCalendar
-          rerenderDelay={1000}
           ref={(el) => { calRef.current = el}}
           events={sessions.concat(blocks)}
           plugins={[plugin]}
           defaultView="timeGridDay"
-          dayRender={(view) => viewRender(view)}
-          // minTime={moment(openStart, 'h:mm A').subtract(1, 'hour').format('h:mm').toString()}
-          // maxTime={moment(openEnd, 'h:mm').toString()} // this should be business hours or earliest event
+          businessHours={{
+            daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
+            startTime: moment(openStart, 'h:mm A').format('HH:mm'),
+            endTime: moment(openEnd, 'h:mm A').format('HH:mm')
+          }}
           height="parent"
           nowIndicator={true}
           allDaySlot={false}

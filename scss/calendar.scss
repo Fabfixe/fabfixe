@@ -37,7 +37,6 @@ td.fc-axis.fc-time.fc-widget-content {
   border: 0;
 
   & span {
-    font-weight: 900;
     text-transform: uppercase;
     font-size: 12px;
     position: absolute;
@@ -61,8 +60,23 @@ td.fc-axis.fc-time.fc-widget-content {
   display: none !important;
 }
 
-.fc-scroller tr:first-child .fc-time-grid-event span {
-  display: block !important;
+.fc-time-grid-event {
+  max-width: 400px;
+  
+  span {
+    display: block;
+  }
+
+  &.block  {
+
+    span {
+      display: inline;
+    }
+
+    a {
+      margin-left: 10px;
+    }
+  }
 }
 
 .fc-unthemed td.fc-today {
@@ -122,6 +136,17 @@ fc-axis fc-widget-header {
   top: 0;
 }
 
+.block .fc-time {
+  display: none;
+}
+
+.block {
+  border: 0 !important;
+  background: transparentize($eggplant, 0.75);
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .fc-bgevent {
   background: transparentize($eggplant, 0.75);
   opacity: 1;
@@ -136,6 +161,11 @@ fc-axis fc-widget-header {
     text-decoration: underline;
     cursor: pointer;
   }
+
+  // &:not(.fc-nonbusiness) {
+  //   border-radius: 5px;
+  //   position: relative;
+  // }
 }
 
 .fc-toolbar.fc-header-toolbar {

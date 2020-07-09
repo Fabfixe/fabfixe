@@ -10,7 +10,7 @@ export default () => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
-    <MyLayout>
+    <MyLayout home='home'>
       <Hero headline={<p>Hi, meet <br/>Fabfixe</p>} subheadline="Bridging the gap between the tutorial and your slay" />
       <HowItWorks actionLink="/account/joining-as" />
       <JoinHome />
