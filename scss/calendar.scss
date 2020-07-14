@@ -62,7 +62,7 @@ td.fc-axis.fc-time.fc-widget-content {
 
 .fc-time-grid-event {
   max-width: 400px;
-  
+
   span {
     display: block;
   }
@@ -94,7 +94,7 @@ th.fc-day-header.fc-widget-header {
 .fc-time-grid-event {
   box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.2);
   padding: 2px 3px;
-  border-left: solid 3px #73626E !important;
+  border-left: solid 3px $peach !important;
   cursor: pointer;
 }
 
@@ -142,13 +142,13 @@ fc-axis fc-widget-header {
 
 .block {
   border: 0 !important;
-  background: transparentize($eggplant, 0.75);
+  background: transparentize($moss, 0.75);
   border-radius: 0;
   box-shadow: none;
 }
 
 .fc-bgevent {
-  background: transparentize($eggplant, 0.75);
+  background: transparentize($moss, 0.75);
   opacity: 1;
   padding: 10px;
   font-size: 12px;
@@ -161,11 +161,6 @@ fc-axis fc-widget-header {
     text-decoration: underline;
     cursor: pointer;
   }
-
-  // &:not(.fc-nonbusiness) {
-  //   border-radius: 5px;
-  //   position: relative;
-  // }
 }
 
 .fc-toolbar.fc-header-toolbar {

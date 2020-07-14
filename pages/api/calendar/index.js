@@ -16,7 +16,7 @@ export default (req, res) => {
     })
   }
 
-  if(req.method === 'GET') { 
+  if(req.method === 'GET') {
     const { userId } = req.query
 
     Calendar.findOne({ userId })

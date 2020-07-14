@@ -211,7 +211,9 @@ class Profile extends Component {
               {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
                 <li style={{ marginTop: '30px'}}>
                   {isArtist && <div className="button-container">
-                    <Button onClick={ this.handleModal }>REQUEST A SESSION</Button>
+                    <Link href="/request/[id]/[step]" as={`/request/${this.state.profile._id}/one`}>
+                      <Button>REQUEST A SESSION</Button>
+                    </Link>
                   </div>}
                 </li>
               </ul>

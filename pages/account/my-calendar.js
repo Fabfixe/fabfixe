@@ -62,7 +62,6 @@ const MyCalendar = (props) => {
   const [ deletionBlock, setDeletionBlock ] = useState(null)
   const [ showBlockModal, setShowBlockModal ] = useState(false)
   const [ showHoursModal, setShowHoursModal ] = useState(false)
-  const [ currentDay, setCurrentDay ] = useState(null)
   const [ currentYear, setCurrentYear ] = useState(null)
   const [ startOptions, setStartOptions ] = useState(null)
   const [ endOptions, setEndOptions ] = useState(null)
@@ -71,7 +70,7 @@ const MyCalendar = (props) => {
   const calRef = useRef(null)
   const calContainer = useRef(null)
   const dropdownRef = useRef(null)
-  const [ currentDate, setCurrentDate ] = useState(null)
+  const [ currentDate, setCurrentDate ] = useState(Date.now())
   const tz = moment.tz.guess()
 
   const sessionToEvent = (session) => {
@@ -179,6 +178,7 @@ const MyCalendar = (props) => {
         setShowBlockModal(!showBlockModal)
       })
     }
+
   }
 
   const onSave = (hours) => {
@@ -282,7 +282,7 @@ const MyCalendar = (props) => {
     <React.Fragment>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link href="https://fonts.googleapis.com/css?family=Nunito:wght@400;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Abhaya+Libre:wght@400;700&display=swap" />
       </Head>
       <MyLayout alignment="center calendar">
         <h1 alignment="center">My Calendar</h1>
@@ -298,6 +298,7 @@ const MyCalendar = (props) => {
           </div>
           <FullCalendar
           ref={(el) => { calRef.current = el}}
+          defaultDate={currentDate}
           events={sessions.concat(blocks)}
           plugins={[plugin]}
           defaultView="timeGridDay"

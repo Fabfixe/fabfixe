@@ -22,7 +22,7 @@ nav {
     background-repeat: no-repeat;
   }
 
-  & + div:not(.home) {
+  & + div:not(.home):not(.wide) {
     margin-top: 64px !important;
   }
 }
