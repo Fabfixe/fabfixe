@@ -96,6 +96,7 @@ const MyCalendar = (props) => {
     // setCalendar(calendar)
     setPlugin(timeGridPlugin.default)
   }
+
   useEffect(() => {
     dynamicallyImportPackage()
     if(!isAuthenticated) Router.push('/account/login')
@@ -141,13 +142,14 @@ const MyCalendar = (props) => {
 
     if(data.blocks) {
       data.blocks.forEach((block) => {
+        if(!block) return
         // Format depends on recurring or not
-        block['start'] = block.startTime
-        block['end'] = block.endTime
-
         if(block.recurring) {
           block.startTime = moment.tz(block.startTime, 'H:mm', `${block.timezone}`).tz(tz).format('H:mm')
           block.endTime = moment.tz(block.endTime, 'H:mm', `${block.timezone}`).tz(tz).format('H:mm')
+        } else {
+          block['start'] = block.startTime
+          block['end'] = block.endTime
         }
       })
     }

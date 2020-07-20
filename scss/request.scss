@@ -1,4 +1,8 @@
 .request {
+  select, textarea, input {
+    border-color: lighten($moss, 10%);
+  }
+
   .request-nav {
     width: 100%;
     height: 50px;
@@ -6,6 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
 
     p {
       width: 90%;
@@ -29,11 +34,13 @@
   }
 
   .request-headline {
-    height: 175px;
+    height: 125px;
+    padding: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: transparentize($linen, 0.6);
+    text-align: center;
 
     p {
       font-family: $bebas-bold;
@@ -41,7 +48,76 @@
     }
   }
 
-  .request-time {
+  .request-main {
     padding: 30px;
+    text-align: center;
+    height: 100vh;
+
+    label {
+      margin: 20px 0;
+      display: inline-block;
+    }
+
+    .Dropdown-root {
+      margin-top: 10px;
+      width: 250px;
+      margin: 0 auto;
+    }
+
+    .fade-in p {
+      text-align: left;
+    }
+
+    input#single {
+      background-color: lighten($blush, 20%);
+    }
+  }
+
+  textarea {
+    @include nunito;
+    display: block;
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border-radius: 0 !important;
+    -webkit-appearance: none;
+    line-height: 1.5;
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    & + p {
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: right;
+      color: lighten($plum, 25%);
+    }
+  }
+}
+
+.unavailable, .loading {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.request-bottom {
+  width: 100%;
+  background: #FFF;
+  display: block;
+  background: lighten($moss, 6%);
+  // box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.2);
+  padding: 20px;
+
+  .request-bottom__total {
+    display: flex;
+    width: 100%;
+    font-weight: 700;
+    justify-content: space-between;
+    font-size: 20px;
+    margin-bottom: 15px;
   }
 }

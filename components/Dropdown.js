@@ -88,7 +88,8 @@ export const Dropdown = ({ currentDate, openStart, openEnd, startOptions, endOpt
         <div className="dropdown-select__container">
           <label>Start Time</label>
           <div className="select-container">
-            <select ref={startRef} onChange={() => onStartSelectChange(startRef, endRef, 30, 'minutes')}>{startOptions.map((time) => <option value={time} name={time} key={`key-${time}`}>{time} ▾</option>)}</select>
+            <select ref={startRef} onChange={() => onStartSelectChange(startRef, endRef, 30, 'minutes')}>{startOptions.map((time) => <option value={time} name={time} key={`key-${time}`}>{time}</option>)}</select>
+            <p>▾</p>
           </div>
         </div>
         <div className="dropdown-select__container">
