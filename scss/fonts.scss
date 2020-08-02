@@ -35,7 +35,6 @@ $letter-spacing-l: 8px;
 @mixin nunito {
   font-family: $nunito;
   font-weight: 400;
-  font-display: auto;
 }
 
 @mixin nunito-bold {

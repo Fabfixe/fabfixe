@@ -14,83 +14,6 @@ import moment from 'moment-timezone'
 import validateSessionSubmit from '../validation/sessionSubmit'
 import { currencyFormatted, calcTotal, timeMap, formatTime, validDateSelection } from '../helpers'
 
-const ModalContent = (props) => (
-    <React.Fragment>
-    {props.pupilUsername ? (
-    <React.Fragment>
-      <h1 alignment="center">Request a Session</h1>
-      <form onSubmit={ props.handleSubmit }>
-        <Datetime
-          isValidDate={validDateSelection}
-          inputProps={{ placeholder: 'CLICK TO CHOOSE A DATE AND A START TIME' }}
-          onChange={ props.onChange }
-        />
-        {props.errors.date && (<div className="invalid-feedback">{props.errors.date}</div>)}
-        <h2>SESSION DURATION*</h2>
-        <div className="select-container">
-        <select
-          onChange={ props.onSelect }
-          name="duration"
-          value={props.duration}
-        >
-          <option value="30 min">{`30 min: $${calcTotal("30 min", props.hourlyRate)}`}</option>
-          <option value="1 hour">{`1 hour: $${calcTotal("1 hour", props.hourlyRate)}`}</option>
-          <option value="1 hour 30 min">{`1 hour 30 min: $${calcTotal("1 hour 30 min", props.hourlyRate)}`}</option>
-          <option value="2 hours">{`2 hours: $${calcTotal("2 hours", props.hourlyRate)}`}</option>
-        </select>
-        <p>▾</p>
-        </div>
-        <h2>CATEGORY</h2>
-        <div className="select-container">
-          <select
-            onChange={ props.onSelect }
-            name="expertise"
-          >
-            <option value="Eyes">Eyes</option>
-            <option value="Lips">Lips</option>
-            <option value="Foundation/Face">Foundation/Face</option>
-            <option value="Nails">Nails</option>
-            <option value="Styling">Styling</option>
-            <option value="Braiding">Braiding</option>
-            <option value="Natural Hair">Natural Hair</option>
-            <option value="Wigs/Extensions">Wigs/Extensions</option>
-          </select>
-          <p>▾</p>
-        </div>
-        <div className="session-attachments">
-          <label className="attachment">📎 Add Attachment</label>
-          <AttachmentImageUploader onUpload={(url) => { props.getImageUrl(url) }}/>
-        </div>
-        <h2>LOOK DESCRIPTION*</h2>
-        <textarea
-          maxLength="250"
-          onChange={props.onSelect}
-          name="description"
-        ></textarea>
-        {props.errors.description && (<div className="invalid-feedback">{props.errors.description}</div>)}
-        <div className="button-container">
-          <Button type="submit">Send Request</Button>
-        </div>
-      </form>
-      {props.submitted && <Banner
-        style={{ height: '160px', zIndex:  1, padding: '30px' }}
-        handleBanner={ () => ( window.location.reload() )}
-        >
-        <p>Congrats! Your session request with <b>{props.username}</b> has been sent</p>
-        <p>{`Time: ${formatTime(props.date, props.duration)}`}</p>
-        <p>{`Total: $${calcTotal(props.duration, props.hourlyRate)}`}</p>
-      </Banner>}
-    </React.Fragment>) : (
-      <React.Fragment>
-        {props.isAuthenticated ?
-         (<Link href='/account/edit-profile/pupil'><a>Complete your profile to schedule a session</a></Link>) :
-         (<Link href='/join/pupil'><a>Sign up to schedule a session</a></Link>)}
-      </React.Fragment>
-    )}
-    </React.Fragment>
-  )
-
-
 class Profile extends Component {
   constructor(props) {
     super(props)
@@ -211,32 +134,15 @@ class Profile extends Component {
               {expertise && expertise.makeup.length > 0 && <li>{`Makeup Skills: ${expertise.makeup.join(', ')}`}</li>}
                 <li style={{ marginTop: '30px'}}>
                   {isArtist && <div className="button-container">
-                    <Link href="/request/[id]/[step]" as={`/request/${this.state.profile._id}/one`}>
+                    {this.props.user.auth.user.accountType === 'pupil'? <Link href="/request/[id]/[step]" as={`/request/${this.state.profile._id}/one`}>
                       <Button>REQUEST A SESSION</Button>
-                    </Link>
+                    </Link> : <Link href="/account/joining-as">
+                      <Button>REGISTER TO REQUEST</Button>
+                    </Link>}
                   </div>}
                 </li>
               </ul>
             </>}
-            {this.state.showModal &&
-            <Modal closeModal={this.handleModal}>
-                <div className="center-modal">
-                  <ModalContent
-                    isAuthenticated={isAuthenticated}
-                    username={username}
-                    hourlyRate={hourlyRate}
-                    date={this.state.date}
-                    submitted={this.state.submitted}
-                    errors={this.state.errors}
-                    duration={this.state.duration}
-                    pupilUsername={pupilUsername}
-                    onSelect={this.onSelect}
-                    onChange={this.onChange}
-                    handleSubmit={this.handleSubmit}
-                    getImageUrl={this.getImageUrl}
-                  />
-                </div>
-              </Modal>}
         </div>
     )
   }

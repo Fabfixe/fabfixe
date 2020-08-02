@@ -37,7 +37,7 @@ export const formatTime = (time, duration) => {
 	const tz = moment.tz.guess()
   duration = timeMap[duration] || parseInt(duration)
   if(moment(time).isMoment) return `${time.format("MM/DD/YYYY h:mma")} - ${time.add(duration, 'm').format("MM/DD/YYYY h:mma")}`
-  return `${moment(time).tz(tz).format("MM/DD/YYYY h:mma") + ' ' + moment.tz(tz).zoneAbbr()} - ${moment(time).add(duration, 'm').format("MM/DD/YYYY h:mma") + ' ' + moment.tz(tz).zoneAbbr()}`
+  return `${moment(time).tz(tz).format("MM/DD/YYYY h:mmA")} - ${moment(time).add(duration, 'm').format("h:mmA") + ' ' + moment.tz(tz).zoneAbbr()}`
 }
 
 export const validDateSelection = (current) => {
@@ -46,6 +46,18 @@ export const validDateSelection = (current) => {
 
 export const getAvailability = (calendar, duration, day) => {
 		// Assuming calendar.hours
+	if(!calendar.hours ) {
+		calendar = {
+			sessions: calendar.sessions,
+			blocks: [],
+			hours: {
+				open: '9:00 AM',
+				close: '5:00 PM',
+				timezone: 'America/New_York'
+			}
+		}
+	}
+
 	const { hours, blocks } = calendar
 	const d = moment(day).get('date')
 	const m = moment(day).get('month')
@@ -53,13 +65,17 @@ export const getAvailability = (calendar, duration, day) => {
 	const fullOpen = moment(hours.open, 'h:mm A').tz(hours.timezone).set('date', d).set('month', m).set('year', y)
 	const fullClose = moment(hours.close, 'h:mm A').tz(hours.timezone).set('date', d).set('month', m).set('year', y)
 
+
 	// Normalize sessions
+	calendar.sessions = calendar.sessions.filter((session) => {
+		return session.status !== 'expired'
+	})
+
 	calendar.sessions = calendar.sessions.map((session) => {
 		// TODO: if the session is not cancelled or expired
 		session['startTime'] = moment(session.date)
 		session['endTime'] = moment(session.date).add(session.duration, 'minutes')
-
-		return session
+		if(session.status !== 'expired') return session
 	})
 
 	// Get array of hours from open to close
@@ -74,27 +90,32 @@ export const getAvailability = (calendar, duration, day) => {
 
 
 	// filter exclude dates
-	const excludeTimes = hourBlocks.filter((hb) => {
+	let excludeTimes = hourBlocks.filter((hb) => {
 		const matchingBlock = blocks.find((block) => {
 			if(block.daysOfWeek == moment(day).get('day')) {
 				const formattedStart = moment(block.startTime, 'HH:mm').tz(block.timezone).set('date', d).set('month', m).set('year', y)
 				const formattedEnd = moment(block.endTime, 'HH:mm').tz(block.timezone).set('date', d).set('month', m).set('year', y)
 
-				return hb.isBetween(formattedStart, formattedEnd, undefined, '[)')
+				return hb.isBetween(formattedStart, formattedEnd, undefined, '[]')
 			} else if(!block.recurring) {
-				 return hb.isBetween(block.startTime, block.endTime, undefined, '[')
+				 return hb.isBetween(block.startTime, block.endTime, undefined, '[]')
 			}
 		})
 
 		return matchingBlock
 	})
 
-	// filter sessions
-	excludeTimes.concat(hourBlocks.filter((hb) => {
-		const matchingBlock = calendar.sessions.find((session) => {
-			return hb.isBetween(session.startTime, session.endTime, undefined, '[')
+	const sessionConflicts = hourBlocks.filter((hb) => {
+		const matchingBlocks = calendar.sessions.find((session) => {
+			const between = hb.isBetween(session.startTime, session.endTime, undefined, '[]')
+			return between
 		})
-	}))
+
+		return matchingBlocks
+	})
+
+	// filter sessions
+	excludeTimes = excludeTimes.concat(sessionConflicts)
 
 	let noAvailability = excludeTimes.length === hourBlocks.length
 	let firstSlot = null

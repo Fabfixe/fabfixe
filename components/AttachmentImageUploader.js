@@ -29,10 +29,10 @@ const AttachmentImageUploader = ({ onUpload }) => {
 
     // Modify files here
     files.forEach((file, i) => {
-      console.log(file.size)
+      console.log('file', file)
       if (types.every(type => file.type !== type)) {
           setError('File must be a .png, .jpg or .gif')
-      } else if(file.size > 150000) {
+      } else if(file.size > 1500000) {
         setError('File size must be under 150MB')
       }
 
@@ -42,20 +42,14 @@ const AttachmentImageUploader = ({ onUpload }) => {
     if(error === '') {
       axios.post('/api/image-upload-single', formData, { headers: { 'content-type': 'multipart/form-data' }})
       .then(res => {
-
         if (res.status != 200) {
           throw res
         }
 
-        return res.data
-      })
-      .then(images => {
-        console.log(images)
-        images = images.map(({url, public_id}) => ({ url, public_id }))
+        const images = res.data.map(({url, public_id}) => ({ url, public_id }))
         setUploading(false)
         setImages(images)
         onUpload(images[0])
-        // localStorage.setItem('imageUploads')
       })
       .catch(err => {
         console.log(err)

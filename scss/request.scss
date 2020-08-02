@@ -1,6 +1,23 @@
 .request {
+  display: flex;
+  flex-direction: column;
+
+  @include for-desktop-up {
+    flex-direction: row;
+  }
+
   select, textarea, input {
     border-color: lighten($moss, 10%);
+  }
+
+  .request-top {
+    @include for-desktop-up {
+      width: 400px;
+    }
+  }
+
+  .request-top__list {
+
   }
 
   .request-nav {
@@ -33,18 +50,35 @@
     }
   }
 
-  .request-headline {
+  .request-top__headers {
     height: 125px;
     padding: 30px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: transparentize($linen, 0.6);
     text-align: center;
 
-    p {
+    @include for-desktop-up {
+      height: calc(100vh - 140px);
+    }
+
+    .request-top__headline {
       font-family: $bebas-bold;
       font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .request-top__subhead {
+      color: $eggplant;
+      display: none;
+      padding: 20px;
+      line-height: 1.75;
+
+      @include for-desktop-up {
+        display: block;
+      }
     }
   }
 
@@ -52,10 +86,25 @@
     padding: 30px;
     text-align: center;
     height: 100vh;
+    flex-grow: 1;
+
+    @include for-desktop-up {
+      height: calc(100vh - 90px);
+      padding-top: 50px;
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      align-content: center;
+      margin: 0 auto;
+    }
 
     label {
       margin: 20px 0;
       display: inline-block;
+
+      & + p {
+        margin-bottom: 30px;
+      }
     }
 
     .Dropdown-root {
@@ -85,7 +134,7 @@
     resize: none;
 
     &:focus {
-      outline: none;
+      outline-color: $peach;
     }
 
     & + p {
@@ -102,15 +151,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 30px;
+
+  nav + div & {
+    height: calc(100vh - 64px);
+  }
+
+  p {
+    padding: 30px;
+    text-align: center;
+    background: $linen;
+  }
 }
 
 .request-bottom {
   width: 100%;
+  height: 90px;
   background: #FFF;
   display: block;
-  background: lighten($moss, 6%);
-  // box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.2);
+  background: lighten($moss, 10%);
   padding: 20px;
+  // box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.2);
 
   .request-bottom__total {
     display: flex;
@@ -119,5 +180,53 @@
     justify-content: space-between;
     font-size: 20px;
     margin-bottom: 15px;
+
+    p + p {
+      margin-left: 10px;
+    }
   }
+
+  @include for-desktop-up {
+    .request-bottom__wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 900px;
+      margin: 0 auto;
+
+
+      button {
+        width: 300px;
+      }
+    }
+
+    .request-bottom__total {
+      width: auto;
+      justify-content: flex-start;
+      margin: 0;
+    }
+
+    .request-bottom__total + div {
+      width: auto;
+    }
+  }
+}
+
+.request-confirmation {
+  @extend #join-home;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+
+  & > div {
+    z-index: 1;
+  }
+}
+
+h2 {
+  font-weight: 700;
+  line-height: 1.5;
 }

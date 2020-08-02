@@ -119,7 +119,8 @@ form {
   }
 
   label {
-    font-family: $bebas-bold;
+    font-family: $nunito;
+    color: $eggplant;
     width: $form-item-width;
     display: block;
     margin: 15px auto;
@@ -166,17 +167,19 @@ p.hour-suffix {
   display: flex;
   width: $form-item-width;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 
   li {
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
+    font-weight: bold;
     margin: 0 5px 10px;
     padding: 10px;
     border-radius: 3px;
     color: lighten($eggplant, 30%);
     border: solid 1px lighten($eggplant, 30%);
     transition: background-color 0.5s ease;
-    letter-spacing: $letter-spacing-xs;
+    letter-spacing: $letter-spacing-s;
 
     &:hover {
       border-color: $eggplant;

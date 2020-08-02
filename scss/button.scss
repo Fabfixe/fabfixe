@@ -116,7 +116,24 @@ button[type='submit'] {
   margin: 10px 10px 10px 0;
 }
 
-.request {
+.request-bottom button {
   @extend .button;
   width: 100%;
+  justify-content: space-between;
+
+    &.submit {
+      justify-content: center;
+    }
+
+    span {
+      color: #FFF;
+    }
+
+    div {
+      width: 20px;
+      height: 20px;
+      background-image: url('/img/long-arrow.svg');
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
 }

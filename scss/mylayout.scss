@@ -3,11 +3,9 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  position: relative;
   padding: 80px 30px 50px;
   min-height: 100vh;
-  margin: 0 auto;
-  top: 64px;
+  margin: 64px auto 0;
 
   &.column {
     @include for-tablet-up {

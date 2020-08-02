@@ -3,22 +3,22 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const CalendarSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     userId: {
       type: String,
       required: true
     },
-    timezone: {
-      type: String,
-      default: 'America/New_York',
-      required: false
-    },
     blocks: {
       type: Array,
-      required: false
+      required: false,
+      default: []
     },
     hours: {
       type: Object,
+      default: {
+        open: '9:00 AM',
+        close: '5:00 PM',
+        timezone: 'America/New_York'
+      },
       required: false
     }
 })

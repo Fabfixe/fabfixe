@@ -53,7 +53,7 @@ const importedEvents = [
 const MyCalendar = (props) => {
   const { isAuthenticated, user } = useSelector(state => state.auth)
   const [ plugin, setPlugin ] = useState(null)
-  const [ openStart, setOpenStart ] = useState('9:00 AM')
+  const [ openStart, setOpenStart ] = useState('9:00 AM') // get from db
   const [ openEnd, setOpenEnd ] = useState('5:00 PM')
   const [ events, setEvents ] = useState([])
   const [ sessions, setSessions ] = useState([])
@@ -128,7 +128,7 @@ const MyCalendar = (props) => {
 
   const fetchBlocks = async (_id) => {
     const { data } = await axios.get('/api/calendar', { params: { userId: _id }})
-
+    console.log(data)
     if(data.hours) {
       if(data.hours.timezone !== tz) { // change this
         // Display hours in current timezone

@@ -41,7 +41,8 @@ import Link from 'next/link'
        {!isLoading ? <ul>
          {artists.length ? artists.map((artist) => {
            const imageStyle = artist.profileImageUrl ?
-            { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: '#F7E4BE' }
+            { backgroundImage: `url(${artist.profileImageUrl})`} : {
+              backgroundSize: '60%', backgroundColor: '#F7E4BE', backgroundImage: 'url("/img/avatar.svg")' }
 
            return (
              <Link key={`key-${artist.username}`} href={`/${artist.username}`}>

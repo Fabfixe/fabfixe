@@ -5,35 +5,53 @@ import { useRouter } from 'next/router'
 import { FixedBottom } from 'react-fixed-bottom'
 import DatePicker from "react-datepicker"
 import Dropdown from 'react-dropdown'
+import MyLayout from '../../../components/MyLayout'
 import moment from 'moment-timezone'
 import axios from 'axios'
 import Button from '../../../components/Button'
 import AttachmentImageUploader from '../../../components/AttachmentImageUploader'
-
+import { getAvailability, currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../../../helpers'
+import Link from 'next/link'
+require('dotenv').config()
 const cn = require('classnames')
 
-import { getAvailability, currencyFormatted, calcTotal, digitCalcTotal, timeMap, formatTime, validDateSelection } from '../../../helpers'
-require('dotenv').config()
-
-const RequestModule = ({ navText, headline, step, children, forward, back }) => {
-
+const RequestModule = ({ navText, headline, subhead, step, children, forward, back, buttonText, submit, total }) => {
   return (
     <div className='request'>
-      <div className='request-nav'>
-        <div className='request-arrow back' onClick={back} />
-        <p>{navText}</p>
-        {step !== 'four' && <div className='request-arrow forward' onClick={forward}/>}
+      <div className="request-top">
+        <div className='request-nav'>
+          <div className='request-arrow back' onClick={back} />
+          <p>{navText}</p>
+          {step !== 'four' && <div className='request-arrow forward' onClick={forward}/>}
+        </div>
+        <div className='request-top__headers'>
+          <p className='request-top__headline'>{headline}</p>
+          <p className='request-top__subhead'>{subhead || 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.'}</p>
+        </div>
       </div>
-      <div className='request-headline'>
-        <p>{headline}</p>
+      <div className="request-main">
+        <div className="request-main__wrapper">
+          {children}
+        </div>
       </div>
-      {children}
+      <FixedBottom>
+        <div className='request-bottom'>
+          <div className='request-bottom__wrapper'>
+            <div className='request-bottom__total'>
+              <p>Total </p>
+              <p>{`$${total}`}</p>
+            </div>
+            {!submit ? <Button onClick={forward}><span>{buttonText}</span><div/></Button> : <Button onClick={submit} class="submit">{buttonText}</Button>}
+          </div>
+        </div>
+      </FixedBottom>
     </div>
   )
 }
 
 const RequestSession = ({ calendar, profile }) => {
   const { isAuthenticated, user } = useSelector(state => state.auth)
+  const userProfile = useSelector(state => state.profile)
   const router = useRouter()
   const id = router.query.id
   const [loading, setLoading] = useState(true)
@@ -43,10 +61,11 @@ const RequestSession = ({ calendar, profile }) => {
   const [firstAvailableDate, setFirstAvailableDate] = useState(null)
   const [duration, setDuration] = useState({value: 30, label: '30 min'})
   const [category, setCategory] = useState({ value: "Eyes", label: 'Eyes' })
-  const [description, setDescription] = useState(null)
+  const [description, setDescription] = useState('')
   const [finalDate, setFinalDate] = useState(null)
   const [showBooked, setShowBooked] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
+  const textRef = useRef()
 
   const proceed = (step) => {
     if(step === 'home') {
@@ -56,13 +75,15 @@ const RequestSession = ({ calendar, profile }) => {
     router.push(`/request/[id]/[step]`, `/request/${id}/${step}`, { shallow: true })
   }
 
-  let monthIncrement = 1
+  let monthIncrement = 0
+  let fd = null
 
   const initSchedule = (date, keepStart = false) => {
-    const endOfMonth = moment(date).endOf('month').subtract(1, 'day')
+    const endOfMonth = moment(date).endOf('month')
+
     const monthSchedule = []
 
-    while(moment(date).isBefore(endOfMonth)) {
+    while(moment(date).isSameOrBefore(endOfMonth)) {
       const { excludeTimes, noAvailability, firstSlot, lastSlot } = getAvailability(calendar, duration.value, date)
 
       monthSchedule.push(
@@ -78,38 +99,32 @@ const RequestSession = ({ calendar, profile }) => {
       date = moment(date).add(1, 'day')
     }
 
-    const firstAvailableDate = monthSchedule.find((d) => {
+    fd = monthSchedule.find((d) => {
       return d.noAvailability === false
     })
 
 // deal with keepStart
   // if keepStart and the current start has availability, dont change start date, include firstAvailable date in analysis
-    if(firstAvailableDate) {
+    if(fd) {
       setMonthSchedule(monthSchedule)
-      setStartDate(firstAvailableDate)
-      setFirstAvailableDate(firstAvailableDate)
-      setFinalDate(Date.parse(firstAvailableDate.firstSlot.format()))
+      setStartDate(fd)
+      setFirstAvailableDate(fd)
+      setFinalDate(Date.parse(fd.firstSlot.format()))
       setLoading(false)
       return
     } else {
       // Check the next twelve months
-
-      while(monthIncrement <= 12) {
-        date = moment(date).add(1, 'month').startOf('month')
+      while(monthIncrement <= 11 && !fd) {
+        date = moment(date).add(monthIncrement, 'month').startOf('month')
         monthIncrement++
         initSchedule(date)
       }
 
-      setLoading(false)
-      setShowBooked(true)
+      if(!fd) {
+        setLoading(false)
+        setShowBooked(true)
+      }
     }
-
-
-    // Get the object for every remaining day in month
-    // if all days have no noAvailability, check for a whole year
-    // if there still isn't availability, show a message
-    // console.log(excludeTimes[0].format('h'))
-    // console.log(noAvailability)
   }
 
   const filterDate = (date) => {
@@ -141,11 +156,44 @@ const RequestSession = ({ calendar, profile }) => {
     return Date.parse(formattedOpen)
   }
 
+  const onSubmit = () => {
+    if(!isAuthenticated) router.push('/account/login')
+    if(!userProfile.username && isAuthenticated) proceed('complete-profile')
+
+    const session = {
+      date: finalDate,
+      category: category.value,
+      attachment: imageUrl.url,
+      description,
+      duration: duration.value,
+      artist: profile._id,
+      artistDisplayName: profile.displayName,
+      artistUsername: profile.username,
+      pupilUsername: userProfile.username,
+      pupil: user._id,
+      status: 'pending',
+      artistApproved: false,
+      messages: [],
+    }
+
+    axios.post('/api/sessions', session)
+      .then((res) => {
+        // Email both parties to notify session requested
+        axios.post('/api/emails/sessionRequested', session)
+        proceed('confirmation')
+      })
+      .catch((e) => {
+        console.log('error with session submission:', e)
+        proceed('request-error')
+      })
+  }
+
   const onMonthChange = (date) => {
     initSchedule(moment(date).startOf('month'))
   }
 
   useEffect(() => {
+    if(!userProfile.username && isAuthenticated) proceed('complete-profile')
     initSchedule(moment())
   }, [])
 
@@ -155,9 +203,8 @@ const RequestSession = ({ calendar, profile }) => {
 
   useEffect(() => {
     if(startDate) {
-      const sd = { ...startDate }
       // setStartDate(null)
-      initSchedule(moment(sd.date).startOf('month'))
+      initSchedule(moment(startDate.date).startOf('month'))
       // initSchedule(sd.date, true)
     }
   }, [duration])
@@ -167,24 +214,40 @@ const RequestSession = ({ calendar, profile }) => {
   }
 
   if(showBooked) {
-    return <div className="unavailable">This artist currently has no availability</div> // TODO: Add email me when available option
+    return <div className="unavailable">This artist currently has no availability</div>
+  }
+
+  if(step === 'complete-profile') {
+    return <MyLayout><div className="loading">
+      <p>To request a session, you need to create a username first. Click <Link href="/account/edit-profile/pupil"><a>here</a></Link> to complete your profile</p>
+    </div></MyLayout>
+  }
+
+  if(step === 'request-error') {
+    return <MyLayout>
+    <div className="loading">
+      <p>Sorry, something went wrong. Please try again later.</p>
+    </div></MyLayout>
   }
 
   if(!step || step === 'one') {
     const options = [
       { value: 30, label: '30 min' },
       { value: 60, label: '1 hour' },
-      { value: 90, label: '1 hour 30 min' },
+      // { value: 120, label: '1 hour 30 min' }, // TODO: Add when react-datpicker bug is addressed
       { value: 120, label: '2 hours' }
     ]
 
     return <RequestModule
-      navText='Step 1: Schedule A Time'
+      navText='Step 1 of 4: Schedule A Time'
       headline='Choose a time for your session'
+      subhead='At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.'
       step={step}
+      buttonText="Add Details"
+      total={digitCalcTotal(profile.hourlyRate, duration.value)}
       back={() => proceed('home')}
       forward={() => proceed('two')}>
-      <div className={cn('request-time', 'request-main')}>
+      <>
         <label>Duration</label>
         <Dropdown
           value={duration}
@@ -221,16 +284,7 @@ const RequestSession = ({ calendar, profile }) => {
          onChange={date => setFinalDate(date)}
          withPortal
        />
-      </div>
-      <FixedBottom>
-        <div className='request-bottom'>
-          <div className='request-bottom__total'>
-          <p>Total</p>
-          <p>{`$${digitCalcTotal(profile.hourlyRate, duration.value)}`}</p>
-          </div>
-          <Button onClick={() => proceed('two')} class="request">Session Details ></Button>
-        </div>
-      </FixedBottom>
+      </>
       </RequestModule>
   }
 
@@ -247,12 +301,20 @@ const RequestSession = ({ calendar, profile }) => {
     ]
 
     return (<RequestModule
-    navText="Step 2: Session Details"
+    navText="Step 2 of 4: Session Details"
     headline="Tell us about your session"
+    buttonText="Add Photo"
     back={() => proceed('one')}
     step={step}
-    forward={() => proceed('three')}>
-    <div className="request-main">
+    total={digitCalcTotal(profile.hourlyRate, duration.value)}
+    forward={() => {
+      if(description !== '') {
+        proceed('three')
+      } else {
+        textRef.current.focus()
+      }
+    }}>
+    <>
       <label>Category</label>
       <Dropdown
         value={category}
@@ -261,29 +323,24 @@ const RequestSession = ({ calendar, profile }) => {
       />
       <label>Description*</label>
       <textarea
+        ref={textRef}
+        value={description}
         maxLength="250"
         onChange={(e) => setDescription(e.target.value)}
         name="description"
       ></textarea>
       <p>Limit 250 characters</p>
-    </div>
-    <FixedBottom>
-      <div className='request-bottom'>
-        <div className='request-bottom__total'>
-        <p>Total</p>
-        <p>{`$${digitCalcTotal(profile.hourlyRate, duration.value)}`}</p>
-        </div>
-        <Button onClick={() => proceed('three')} class="request">Add Photo ></Button>
-      </div>
-    </FixedBottom>
+    </>
     </RequestModule>)
   }
 
   if(step === 'three') {
     return (<RequestModule
-    navText="Step 3: Look Photo"
+    navText="Step 3 of 4: Look Photo"
     headline="Show us a photo of your look"
+    total={digitCalcTotal(profile.hourlyRate, duration.value)}
     back={() => proceed('two')}
+    buttonText="Confirm Session"
     forward={() => proceed('four')}
     step={step}
     forward={() => proceed('four')}>
@@ -291,39 +348,39 @@ const RequestSession = ({ calendar, profile }) => {
       <label>Upload Photo (Recommended)</label>
       <AttachmentImageUploader onUpload={(url) => setImageUrl(url)}/>
     </div>
-    <FixedBottom>
-      <div className='request-bottom'>
-        <div className='request-bottom__total'>
-          <p>Total</p>
-          <p>{`$${digitCalcTotal(profile.hourlyRate, duration.value)}`}</p>
-        </div>
-        <Button onClick={() => proceed('four')} class="request">Confirm Session ></Button>
-      </div>
-    </FixedBottom>
     </RequestModule>)
   }
 
   if(step === 'four') {
+    if(description === '') proceed('two')
+
     return (<RequestModule
-    navText="Step 4: Confirm and Submit"
-    headline="Confirmation"
-    back={() => proceed('three')}
-    step={step}
-    forward={() => proceed('four')}>
-    <div className="request-main">
-      <label>Upload Photo (Recommended)</label>
-      <AttachmentImageUploader onUpload={(url) => setImageUrl(url)}/>
-    </div>
-    <FixedBottom>
-      <div className='request-bottom'>
-        <div className='request-bottom__total'>
-          <p>Total</p>
-          <p>{`$${digitCalcTotal(profile.hourlyRate, duration.value)}`}</p>
-        </div>
-        <Button onClick={() => proceed('four')} class="request">Submit</Button>
+      navText="Step 4 of 4: Confirm and Submit"
+      headline="Confirmation"
+      total={digitCalcTotal(profile.hourlyRate, duration.value)}
+      submit={onSubmit}
+      buttonText="Submit"
+      back={() => proceed('three')}
+      step={step}>
+      <>
+        <label>Time</label>
+        <p>{formatTime(finalDate, duration.value)}</p>
+        <label>Artist</label>
+        <p>{profile.displayName}</p>
+        <label>Description</label>
+        <p>{description}</p>
+      </>
+      </RequestModule>)
+    }
+
+  if(step === 'confirmation') {
+    if(description === '') proceed('two')
+    return (<MyLayout><div className='request-confirmation'>
+      <div>
+        <h2>{`Congrats! You've just booked a session with ${profile.displayName}`}</h2>
+        <p>{`You'll receive an email is ${profile.displayName} confirms your request`}</p>
       </div>
-    </FixedBottom>
-    </RequestModule>)
+    </div></MyLayout>)
   }
 }
 
@@ -339,8 +396,8 @@ export const getServerSideProps = async ({ params: {id, step} }) => {
 
   let initialProps = { props: { profile: profileRes.data, step }}
 
-  if(calRes.data === '') {
-    initialProps.props['calendar'] = sessionsRes.data
+  if(!calRes.data) {
+    initialProps.props['calendar'] = { sessions: sessionsRes.data }
   } else {
     initialProps.props['calendar'] = { sessions: sessionsRes.data, ...calRes.data }
   }
