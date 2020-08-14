@@ -1,5 +1,5 @@
-export default props =>
-  props.images.map(({url}, i) => {
+export default (props) => {
+  return props.images.map(({url}, i) => {
     let imageStyle = {
       width: '168px',
       height: '168px',
@@ -12,8 +12,9 @@ export default props =>
     return (
       <div  key={i} className='fade-in' style={imageStyle}>
         {url !== '' && <div onClick={() => props.removeImage()} className='delete'>
-          <p>✕</p>
+          <p style={{ cursor: 'pointer' }}>✕</p>
         </div>}
       </div>
     )
   })
+}

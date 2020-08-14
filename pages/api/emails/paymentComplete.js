@@ -1,7 +1,8 @@
+require('dotenv').config()
 import dbConnect from '../../../dbconnect'
 import moment from 'moment'
 const sgMail = require('@sendgrid/mail')
-
+const CronJob = require('cron').CronJob
 const User = require('../../../models/User')
 
 dbConnect()

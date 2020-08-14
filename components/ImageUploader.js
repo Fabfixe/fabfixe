@@ -25,7 +25,6 @@ const AddButton = (props) => {
 class ImageUploader extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       uploading: false,
       images: [this.props.images],
@@ -34,9 +33,11 @@ class ImageUploader extends Component {
 
     this.removeImage = this.removeImage.bind(this)
   }
-
   componentDidUpdate(prevProps) {
+    console.log(this.state, this.props)
+
     if(prevProps.images.length === 0 && this.props.images.length > 0) {
+      console.log('used to have images, now have more than one')
       this.setState({ images: [this.props.images] })
     }
   }

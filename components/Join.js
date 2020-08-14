@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { registerUser } from '../actions/authentication'
+import moment from 'moment'
 
 class JoinForm extends Component {
   constructor(props) {
@@ -43,19 +44,11 @@ class JoinForm extends Component {
       email: this.state.email,
       password: this.state.password,
       password_confirm: this.state.password_confirm,
-      accountType: this.state.accountType
+      accountType: this.state.accountType,
     }
 
     this.props.registerUser(user)
   }
-
-  // componentDidUpdate(prevProps) {
-  //   if(Object.keys(this.props.errors)) {
-  //     this.setState({
-  //       errors: this.props.errors
-  //     })
-  //   }
-  // }
 
   handleClick() {
     this.setState(state => ({

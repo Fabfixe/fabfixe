@@ -11,10 +11,10 @@ export default (req, res) => {
   }
 
   if(req.body.contractChange) {
-    if(!req.body.isPupil) {
+    if(req.body.isArtist) {
         updatedSession['artistApproved'] = true
     } else {
-      updatedSession['artistApproved'] = false
+      updatedSession['pupilApproved'] = false
     }
   }
 

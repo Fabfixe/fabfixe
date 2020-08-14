@@ -55,7 +55,6 @@
       font-size: 34px;
       letter-spacing: $letter-spacing-xxs;
       color: $plum;
-      font-weight: 700;
 
       @include for-tablet-portrait-up {
         font-size: 58px;
@@ -91,6 +90,11 @@
     color: #FFF;
     background-color: $blush;
     letter-spacing: $letter-spacing-m;
+
+    &:hover {
+      background-color: darken($blush, 10%);
+      opacity: 1;
+    }
 
     @include for-desktop-up {
       position: relative;

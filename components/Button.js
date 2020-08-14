@@ -14,14 +14,14 @@ class Button extends Component {
   handleClick() {
     this.setState(state => ({
       isSelected: !state.isSelected
-    }));
+    }))
   }
 
   render() {
     const buttonClasses = cn(this.props.class || 'button', { "select": this.props.isSelect, "isSelected": this.state.isSelected })
     return (
       <div className={this.props.containerStyle} onClick={ this.handleClick }>
-      <button 
+      <button
         disabled={this.props.disabled}
         type={ this.props.type }
         form={ this.props.form }

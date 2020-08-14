@@ -1,5 +1,6 @@
 body * {
   color: $plum;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1 {
@@ -15,6 +16,7 @@ h1 {
 h2 {
   font-size: 19px;
   width: 100%;
+  line-height: 1.1 !important;
 }
 
 h3 {

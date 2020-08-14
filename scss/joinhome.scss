@@ -52,10 +52,10 @@
 }
 
 p.join-link {
-    font-family: $bebas-bold;
-    text-transform: none;
-    letter-spacing: $letter-spacing-xxs;
-    font-size: 30px;
+    font-family: $nunito;
+    text-transform: uppercase;
+    letter-spacing: $letter-spacing-s;
+    font-size: 18px;
     background-color: transparentize($moss, 0.25);
     height: 100px;
 
@@ -66,4 +66,9 @@ p.join-link {
      &:hover {
        background-color: transparentize($moss, 0.1);
      }
+}
+
+.join-note {
+  font-size: 12px;
+  margin-top: 10px;
 }
