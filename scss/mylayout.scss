@@ -1,11 +1,15 @@
 .center {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  padding: 80px 30px 50px;
+  padding: 0px 30px 50px;
   min-height: 100vh;
   margin: 64px auto 0;
+
+  > h1 {
+    margin-top: 80px;
+  }
 
   &.column {
     @include for-tablet-up {
