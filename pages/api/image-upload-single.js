@@ -13,11 +13,13 @@ export const config = {
   },
 }
 
-async function handler(req, res) {
+function handler(req, res) {
  form.parse(req, async function(err, fields, files) {
+   console.log('err', err)
+   console.log('fields', fields)
+   console.log('files', files)
     const values = await Object.values(files)
     const promises = await values.map((image) => {
-      console.log('image', image[0].path)
       return cloudinary.uploader.upload(image[0].path)
     })
 

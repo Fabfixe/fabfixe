@@ -4,12 +4,13 @@ $list-margin-desktop: 15px;
 
 .artist-list {
   min-height: 100vh;
+  margin: 100px auto 30px;
+
 
   ul {
-    display: flex;
+    display: inline-flex;
     align-items: flex-start;
     flex-wrap: wrap;
-    justify-content: center;
   }
 
   li {
@@ -112,10 +113,13 @@ $list-margin-desktop: 15px;
     }
 
     @include for-desktop-up {
+      ul {
+        max-width: 1000px;
+      }
+
       li {
-        max-width: 450px;
         padding: 0;
-        margin: $list-margin-desktop;
+        // margin: $list-margin-desktop;
       }
 
       .artist-image {

@@ -34,24 +34,33 @@ import Link from 'next/link'
      }
    }
 
-   return (
-  <React.Fragment>
-     <div className='artist-list'>
-       <h1>Browse Artists</h1>
-       {!isLoading ? <ul>
-         {artists.length ? artists.map((artist) => {
-           const imageStyle = artist.profileImageUrl ?
-            { backgroundImage: `url(${artist.profileImageUrl})`} : { backgroundColor: '#F7E4BE' }
+   if(isLoading) {
+     return (<div className="loading">Loading</div>)
+   }
 
-           return (
-             <Link key={`key-${artist.username}`} href={`/${artist.username}`}>
-               <li>
+   if(!artists.length) {
+     return (<div className="loading">No artists yet, come back soon!</div>)
+   } else {
+
+
+     return (
+       <div className="artist-list">
+        <h1>Browse Artists</h1>
+        <ul>
+          {artists.map((artist) => {
+            const imageStyle = artist.profileImageUrl ?
+             { backgroundImage: `url(${artist.profileImageUrl})`} : {
+               backgroundSize: '60%', backgroundColor: '#F7E4BE', backgroundImage: 'url("/img/avatar.svg")' }
+
+            return (
+              <Link key={`key-${artist.username}`} href={`/${artist.username}`}>
+                <li>
                   <div
                     className="artist-image"
-                    style={{ ...imageStyle }}
+                    style={imageStyle}
                   />
-                  <div className='artist-metadata'>
-                    <h2 className='display-name'>{artist.displayName}</h2>
+                  <div className="artist-metadata">
+                    <h2 className="display-name">{artist.displayName}</h2>
                     <p className='hourly-rate'>{`$${artist.hourlyRate}/hr`}</p>
                     {Object.keys(artist.expertise).map((key) => {
                       if(artist.expertise[key].length) {
@@ -59,14 +68,14 @@ import Link from 'next/link'
                       }
                     })}
                   </div>
-               </li>
-             </Link>
-           )
-         }) : <li style={{ backgroundColor: '#d2d4cb'}}>No artists yet, come back soon</li>}
-       </ul> : <p>Loading</p>}
-     </div>
-   </React.Fragment>
-  )
+                </li>
+              </Link>
+            )}
+          )}
+        </ul>
+       </div>
+     )
+   }
 }
 
 function getScrollPercent() {

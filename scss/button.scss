@@ -27,12 +27,16 @@ button.button {
   }
 
   @include for-tablet-portrait-up {
-    padding: 15px 25px;
+    padding: 15px 25px 15px 30px;
   }
 
   &:hover {
     opacity: 0.75;
   }
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 .small-button {
@@ -110,4 +114,26 @@ button[type='submit'] {
 
 .row {
   margin: 10px 10px 10px 0;
+}
+
+.request-bottom button {
+  @extend .button;
+  width: 100%;
+  justify-content: space-between;
+
+    &.submit {
+      justify-content: center;
+    }
+
+    span {
+      color: #FFF;
+    }
+
+    div {
+      width: 20px;
+      height: 20px;
+      background-image: url('/img/long-arrow.svg');
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
 }

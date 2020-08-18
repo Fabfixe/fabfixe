@@ -1,3 +1,4 @@
+require('dotenv').config()
 import dbConnect from '../../../dbconnect'
 const sgMail = require('@sendgrid/mail')
 
@@ -6,7 +7,7 @@ const User = require('../../../models/User')
 dbConnect()
 
 export default (req, res) => {
-  const { artistUsername, pupilUsername } = req.body
+  const { artistUsername, pupilUsername, _id } = req.body
   sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
   User.findOne({ _id: req.body.pupil })
@@ -33,7 +34,7 @@ export default (req, res) => {
       from: 'admin@fabfixe.com',
       subject: 'You just received a new video session request',
       text: 'You just received a new video session request',
-      html: `Hi <strong>${artistUsername}</strong>, ${pupilUsername} has requested a session. Click <a href='www.fabfixe.com/account/my-sessions'>here</a> to review the request.`,
+      html: `Hi <strong>${artistUsername}</strong>, ${pupilUsername} has requested a session. Click <a href='${process.env.API_URL}/sessions/view/${_id}'>here</a> to review the request.`,
     }
 
     sgMail.send(msg)

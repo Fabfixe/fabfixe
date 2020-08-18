@@ -8,6 +8,7 @@ import HowItWorks from '../../components/HowItWorks'
 import JoinForm from '../../components/Join'
 import Footer from '../../components/Footer'
 import { registerUser } from '../../actions/authentication'
+import Link from 'next/link'
 
 class JoinRouting extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class JoinRouting extends Component {
         </Head>
         <MyLayout alignment='center'>
           <h1 alignment='center' style={{ width: '100%' }}>Create an Account</h1>
+          <p className="join-note">Already have an account? Login <Link href="/account/login"><a>here</a></Link></p>
           <JoinForm accountType={ this.state.accountType } />
         </MyLayout>
       </div>

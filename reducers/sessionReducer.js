@@ -1,12 +1,10 @@
-import { ADD_SESSION, GET_SESSIONS } from '../actions/types'
+import { SET_SESSION } from '../actions/types'
 
-const initialState = []
+const initialState = {}
 
 export default function(state = initialState, action) {
   switch(action.type) {
-    case ADD_SESSION:
-      return state.concat([action.payload])
-    case GET_SESSIONS:
+    case SET_SESSION:
       return action.payload
     default:
       return state

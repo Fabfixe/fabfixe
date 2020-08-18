@@ -8,15 +8,17 @@ class ConfirmModal extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className="confirm-text">
-          <p>{this.props.copy}</p>
-        </div>
+      <div className='confirm-modal'>
         <div className="confirm-container">
-          <Button onClick={() => {this.props.onConfirm()}}>Yes</Button>
-          <Button onClick={() => {this.props.onCancel()}}>Go Back</Button>
+          <div className="confirm-text">
+            <p>{this.props.copy}</p>
+          </div>
+          <div className="confirm-modal__buttons">
+            <Button onClick={() => {this.props.onConfirm()}}>Yes</Button>
+            <Button onClick={() => {this.props.onCancel()}}>Go Back</Button>
+          </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

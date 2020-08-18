@@ -11,6 +11,7 @@ import { updateProfile } from '../../../actions/profile'
 import validateUsernameInput from '../../../validation/username'
 import validateProfileSubmit from '../../../validation/profileSubmit'
 import axios from 'axios'
+import moment from 'moment-timezone'
 
 const classnames = require('classnames')
 
@@ -71,7 +72,7 @@ class EditProfile extends Component {
   handleBanner() {
     window.location.reload()
   }
-  
+
   handleUsernameBlur(e) {
     if(errors.displayName) {
       return {
@@ -158,6 +159,7 @@ class EditProfile extends Component {
 
   handleSubmit(e) {
     e.preventDefault()
+    const tz = moment.tz.guess()
 
     const accountType = this.state.accountType
     const profile = {
@@ -173,7 +175,8 @@ class EditProfile extends Component {
         facebook: this.state.facebook,
         hourlyRate: this.state.hourlyRate,
         expertise: this.state.selectedExpertise,
-        sessions: this.state.sessions
+        sessions: this.state.sessions,
+        timezone: tz
       },
 
       pupil: {
@@ -255,104 +258,108 @@ class EditProfile extends Component {
         <MyLayout alignment='center' width="column">
           <h1 alignment='center' scroll='no-scroll'>Edit Profile</h1>
           <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
-          <form onSubmit={ this.handleSubmit }>
-            <div className="form-input">
-              <input
+          <div className="edit-profile">
+            <form onSubmit={ this.handleSubmit }>
+              <div className="form-input">
+                <input
+                  type='text'
+                  name='username'
+                  id='username'
+                  placeholder='CHOOSE A USERNAME'
+                  onBlur={ this.handleUsernameBlur }
+                  onFocus={ this.onFocus }
+                  onChange={ this.handleChange }
+                  defaultValue={ this.state.username }
+                />
+                {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
+              </div>
+              {accountType === 'artist' && <div className="form-input"><input
                 type='text'
-                name='username'
-                id='username'
-                placeholder='CHOOSE A USERNAME'
-                onBlur={ this.handleUsernameBlur }
+                name='displayName'
+                id='displayName'
+                placeholder='CHOOSE A DISPLAY NAME'
+                onBlur={ this.handleDisplayNameBlur }
                 onFocus={ this.onFocus }
                 onChange={ this.handleChange }
-                defaultValue={ this.state.username }
+                defaultValue={ this.state.displayName }
               />
-              {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
-            </div>
-            {accountType === 'artist' && <div className="form-input"><input
-              type='text'
-              name='displayName'
-              id='displayName'
-              placeholder='CHOOSE A DISPLAY NAME'
-              onBlur={ this.handleDisplayNameBlur }
-              onFocus={ this.onFocus }
-              onChange={ this.handleChange }
-              defaultValue={ this.state.displayName }
-            />
-            {errors.displayName && (<div className="invalid-feedback">{errors.displayName}</div>)}</div>}
-            <h2>Connect Social Media</h2>
-            <label>YouTube</label>
-            <input
-              type='text'
-              name='youtube'
-              id='youtube-handle'
-              placeholder='ENTER HANDLE'
-              onChange={ this.handleChange }
-              defaultValue={ this.state.youtube }
-            />
-            <label>Instagram</label>
-            <input
-              type='text'
-              name='instagram'
-              id='youtube-handle'
-              placeholder='ENTER HANDLE'
-              onChange={ this.handleChange }
-              defaultValue={ this.state.instagram }
-            />
-            <label>Twitter</label>
-            <input
-              type='text'
-              name='twitter'
-              id='twitter-handle'
-              placeholder='ENTER HANDLE'
-              onChange={ this.handleChange }
-              defaultValue={ this.state.twitter }
-            />
-            <label>Facebook</label>
-            <input
-              type='text'
-              name='facebook'
-              id='facebook-handle'
-              placeholder='ENTER HANDLE'
-              onChange={ this.handleChange }
-              defaultValue={ this.state.facebook }
-            />
-            {accountType === 'artist' && (
-              <React.Fragment>
-              <h2>Set Hourly Rate</h2>
-              <p className='dollar-prefix'>$</p>
+              {errors.displayName && (<div className="invalid-feedback">{errors.displayName}</div>)}</div>}
+              <h2>Connect Social Media</h2>
+              <label>YouTube</label>
               <input
-                type='number'
-                name='hourlyRate'
-                className='digit'
+                type='text'
+                name='youtube'
+                id='youtube-handle'
+                placeholder='ENTER HANDLE'
                 onChange={ this.handleChange }
-                defaultValue={ this.state.hourlyRate }
+                defaultValue={ this.state.youtube }
               />
-              <p className='hour-suffix'> / hr</p>
-              <h2>Add Expertise</h2>
-              <p>Add tags to show the things you slay at. Clients will be able to search based on these things</p>
-              <h3>Makeup</h3>
-              <ul className="expertise-tags">
-                {expertise.makeup.map((exp) => {
-                  let selected = this.state.selectedExpertise.makeup.includes(exp)
+              <label>Instagram</label>
+              <input
+                type='text'
+                name='instagram'
+                id='youtube-handle'
+                placeholder='ENTER HANDLE'
+                onChange={ this.handleChange }
+                defaultValue={ this.state.instagram }
+              />
+              <label>Twitter</label>
+              <input
+                type='text'
+                name='twitter'
+                id='twitter-handle'
+                placeholder='ENTER HANDLE'
+                onChange={ this.handleChange }
+                defaultValue={ this.state.twitter }
+              />
+              <label>Facebook</label>
+              <input
+                type='text'
+                name='facebook'
+                id='facebook-handle'
+                placeholder='ENTER HANDLE'
+                onChange={ this.handleChange }
+                defaultValue={ this.state.facebook }
+              />
+              {accountType === 'artist' && (
+                <React.Fragment>
+                <h2>Set Hourly Rate</h2>
+                <div className="form-rate">
+                  <p className='dollar-prefix'>$</p>
+                  <input
+                    type='number'
+                    name='hourlyRate'
+                    className='digit'
+                    onChange={ this.handleChange }
+                    defaultValue={ this.state.hourlyRate }
+                  />
+                  <p className='hour-suffix'> / hr</p>
+                </div>
+                <h2>Add Expertise</h2>
+                <p>Add tags to show the things you slay at. Clients will be able to search based on these things</p>
+                <h3>Makeup</h3>
+                <ul className="expertise-tags">
+                  {expertise.makeup.map((exp) => {
+                    let selected = this.state.selectedExpertise.makeup.includes(exp)
 
-                  return <li id={exp} onClick={ (e) => { this.updateSkill(e, 'makeup')} } key={exp} className={classnames({ selected })}>{exp}</li>
-                })}
-              </ul>
-              <h3>Hair</h3>
-              <ul className="expertise-tags">
-                {expertise.hair.map((exp) => {
-                  let selected = this.state.selectedExpertise.hair.includes(exp)
-                  return <li category="hair" id={exp} onClick={ (e) => { this.updateSkill(e, 'hair')} } key={exp} className={classnames({ selected })}>{exp}</li>
-                })}
-              </ul>
-              </React.Fragment>
-            )}
-            {this.state.flagErrors && (<div className="form-input"><div className="invalid-feedback">See errors above</div></div>)}
-            <div className="button-container">
-              <Button type="submit">Save Profile</Button>
-            </div>
-          </form>
+                    return <li id={exp} onClick={ (e) => { this.updateSkill(e, 'makeup')} } key={exp} className={classnames({ selected })}>{exp}</li>
+                  })}
+                </ul>
+                <h3>Hair</h3>
+                <ul className="expertise-tags">
+                  {expertise.hair.map((exp) => {
+                    let selected = this.state.selectedExpertise.hair.includes(exp)
+                    return <li category="hair" id={exp} onClick={ (e) => { this.updateSkill(e, 'hair')} } key={exp} className={classnames({ selected })}>{exp}</li>
+                  })}
+                </ul>
+                </React.Fragment>
+              )}
+              {this.state.flagErrors && (<div className="form-input"><div className="invalid-feedback">See errors above</div></div>)}
+              <div className="button-container">
+                <Button type="submit">Save Profile</Button>
+              </div>
+            </form>
+          </div>
         </MyLayout>
         {this.state.displayBanner && <Banner handleBanner={this.handleBanner}>Profile Successfully updated</Banner>}
       </React.Fragment>

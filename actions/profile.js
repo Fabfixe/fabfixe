@@ -2,7 +2,6 @@ import { SET_PROFILE, UPDATE_PROFILE } from './types'
 import axios from 'axios'
 
 export const updateProfile = (accountType, profile) => {
-  console.log('profile in action creator', profile)
   return axios.post(`/api/profile/${accountType}`, profile)
 }
 

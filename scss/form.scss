@@ -67,6 +67,7 @@ input {
 
 select {
   @include nunito;
+  cursor: pointer;
 }
 
 .select-container {
@@ -118,7 +119,8 @@ form {
   }
 
   label {
-    font-family: $bebas-bold;
+    font-family: $nunito;
+    color: $eggplant;
     width: $form-item-width;
     display: block;
     margin: 15px auto;
@@ -153,7 +155,7 @@ form {
 p.dollar-prefix {
   display: flex;
   align-items: center;
-  margin: 0 0 0 $form-padding;
+  margin: 0;
 }
 
 p.hour-suffix {
@@ -164,19 +166,20 @@ p.hour-suffix {
 .expertise-tags {
   display: flex;
   width: $form-item-width;
-  margin: 0 $form-padding;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 
   li {
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
+    font-weight: bold;
     margin: 0 5px 10px;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 3px;
     color: lighten($eggplant, 30%);
     border: solid 1px lighten($eggplant, 30%);
     transition: background-color 0.5s ease;
-    letter-spacing: $letter-spacing-xs;
+    letter-spacing: $letter-spacing-s;
 
     &:hover {
       border-color: $eggplant;
@@ -223,4 +226,20 @@ form {
   min-height: 50vh;
   display: flex;
   align-items: center;
+}
+
+.edit-profile {
+  form h2, form h3, form p {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  form label {
+    margin-left: 0;
+  }
+
+  .form-rate {
+    display: inline-flex;
+    width: 100%;
+  }
 }

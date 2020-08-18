@@ -15,7 +15,7 @@ const ProfileRouting = () => {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <MyLayout alignment="center" justify="top">
+      <MyLayout alignment="center">
         <Profile username={username} />
       </MyLayout>
     </div>
