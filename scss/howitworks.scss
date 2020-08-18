@@ -4,11 +4,11 @@
   align-items: center;
   min-height: 100vh;
   justify-content: center;
-  background-color: $moss-background;
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 150px;
-  padding-bottom: 80px;
+  padding: 80px;
+  position: relative;
 
   .hero-container + & {
     padding-top: 80px;
@@ -18,22 +18,64 @@
     padding-top: 10px;
   }
 
+  li > div {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 20px;
+  }
+
+  .one {
+    background-image: url('/img/how_step_one.svg');
+    background-repeat: no-repeat;
+    background-size: 90%;
+    background-position: center;
+  }
+
+  .two {
+    background-image: url('/img/how_step_two_shot.png'), url('/img/how_step_two.svg') ;
+    background-repeat: no-repeat;
+    background-size: 30%, 50%;
+    background-position:  75%, 35%;
+  }
+
+  .three {
+    background-image: url('/img/how_step_three.png') ;
+  }
+
+  h1 {
+    position: absolute;
+    top: -35px;
+    background: #FFF;
+    padding: 10px 20px;
+  }
+
   .how-list {
     width: 100%;
     display: flex;
     flex-direction: column;
+    border: solid 1px $eggplant;
+    position: relative;
+    margin-bottom: 50px;
 
      li {
        padding: 30px;
        display: flex;
        flex-direction: column;
-       justify-content: center;
+       justify-content: space-between;
        align-items: center;
        text-align: center;
 
+       h2 {
+         font-weight: normal;
+       }
+
        img {
-         width: calc(100% - 60px);
+         width: 100%;
          margin-bottom: 20px;
+
+         @include for-desktop-up {
+           max-width: 200px;
+         }
        }
      }
 
@@ -43,7 +85,7 @@
      }
 
      @include for-desktop-up {
-       padding: 60px 160px;
+       padding: 60px;
      }
   }
 

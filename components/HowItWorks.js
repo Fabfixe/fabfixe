@@ -3,18 +3,18 @@ import Link from 'next/link'
 
 const HowItWorks = (props) => (
   <div id="how-it-works" className="how-container">
-    <h1>{props.heading || "How It Works"}</h1>
     <ul className="how-list">
+      <h1>{props.heading || "How It Works"}</h1>
       <li>
-        <img src="/img/how_step_one.png" />
+        <div className="one" />
         <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
       </li>
       <li>
-        <img src="/img/how_step_two.png" />
+        <div className="two" />
         <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
       </li>
       <li>
-        <img src="/img/how_step_three.png" />
+        <div className="three" />
         <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
       </li>
     </ul>

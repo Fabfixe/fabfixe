@@ -55,6 +55,7 @@
       font-size: 34px;
       letter-spacing: $letter-spacing-xxs;
       color: $plum;
+      line-height: 0.8;
 
       @include for-tablet-portrait-up {
         font-size: 58px;
@@ -72,7 +73,7 @@
       text-align: center;
       margin: 5px 0 15px;
       line-height: 1.25;
-      color: darken($moss, 50%);
+      color: darken($eggplant, 10%);
 
       @include for-desktop-up {
         text-align: left;
