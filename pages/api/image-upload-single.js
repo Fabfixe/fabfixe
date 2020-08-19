@@ -21,14 +21,13 @@ cloudinary.config({
 
 function handler(req, res) {
  form.parse(req, async function(err, fields, files) {
-   console.log('err', err)
-   console.log('fields', fields)
-   console.log('files', files)
     const values = await Object.values(files)
     const promises = await values.map((image) => {
       return cloudinary.uploader.upload(image[0].path)
     })
-
+    console.log('err', err)
+    console.log('fields', fields)
+    console.log('files', files)
     const uploads = await Promise.all(promises)
     res.json(uploads)
   })
