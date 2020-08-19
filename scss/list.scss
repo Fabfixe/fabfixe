@@ -49,6 +49,8 @@ $list-margin-desktop: 15px;
     .artist-metadata {
       align-self: flex-start;
       padding: 10px 15px 10px;
+      height: 100%;
+      background: white;
     }
 
     .artist-expertise {
@@ -114,7 +116,7 @@ $list-margin-desktop: 15px;
 
     @include for-desktop-up {
       ul {
-        max-width: 1000px;
+        width: 1000px;
       }
 
       li {
