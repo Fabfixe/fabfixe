@@ -2,7 +2,7 @@ require('dotenv').config()
 const cloudinary = require('cloudinary')
 let multer = require ('multer')
 var storage = multer.memoryStorage()
-var upload = multer({ dest: 'uploads/' })
+var upload = multer({ dest: '/tmp/uploads/' })
 var multiparty = require('multiparty')
 var form = new multiparty.Form({autoFields: false })
 
