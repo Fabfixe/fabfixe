@@ -10,7 +10,7 @@ export default () => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
-    <MyLayout background="moss-background">
+    <MyLayout>
       <HowItWorks heading="For Pupils" actionLink="/join/pupil" />
       <HowItWorks heading="For Artists" actionLink="/join/artist" />
       <Footer />
