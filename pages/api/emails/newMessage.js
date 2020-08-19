@@ -19,5 +19,5 @@ export default (req, res) => {
     }
 
     sgMail.send(msg)
-  }
+  })
 }
