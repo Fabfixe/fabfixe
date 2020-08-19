@@ -66,7 +66,7 @@ class ImageUploader extends Component {
     })
 
     if(this.state.error == '') {
-      axios.post('/api/image-upload-single', formData)
+      axios.post('/api/image-upload-single', formData, { headers: { 'content-type': 'multipart/form-data' }})
       .then(res => {
 
         if (res.status != 200) {
