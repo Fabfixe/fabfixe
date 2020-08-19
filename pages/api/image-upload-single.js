@@ -13,6 +13,12 @@ export const config = {
   },
 }
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
 function handler(req, res) {
  form.parse(req, async function(err, fields, files) {
    console.log('err', err)
