@@ -24,22 +24,14 @@ const AddButton = (props) => {
 
 class ImageUploader extends Component {
   constructor(props) {
+
     super(props)
     this.state = {
       uploading: false,
-      images: [this.props.images],
       error: '',
     }
 
     this.removeImage = this.removeImage.bind(this)
-  }
-  componentDidUpdate(prevProps) {
-    console.log(this.state, this.props)
-
-    if(prevProps.images.length === 0 && this.props.images.length > 0) {
-      console.log('used to have images, now have more than one')
-      this.setState({ images: [this.props.images] })
-    }
   }
 
   onChange = e => {
@@ -66,7 +58,7 @@ class ImageUploader extends Component {
     })
 
     if(this.state.error == '') {
-      axios.post('/api/image-upload-single', formData)
+      axios.post('/api/image-upload-single', formData, { headers: { 'content-type': 'multipart/form-data' }})
       .then(res => {
 
         if (res.status != 200) {
@@ -80,7 +72,6 @@ class ImageUploader extends Component {
 
         this.setState({
           uploading: false,
-          images,
           error: ''
         })
         this.props.onUpload(images[0])
@@ -94,13 +85,12 @@ class ImageUploader extends Component {
   }
 
   removeImage() {
-    this.setState({ images: []})
+    this.setState({ images: []}) // work on deletion here
   }
 
   render() {
     const { uploading, error } = this.state
-    const { images } = this.state
-
+    const { images } = this.props
     const content = () => {
       switch(true) {
         case uploading:
@@ -112,14 +102,14 @@ class ImageUploader extends Component {
               <p className="error-message">{this.state.error}</p>
             </React.Fragment>
           )
-        case images[0].profileImageUrl !== '' && images.length > 0:
+        case images.length && images[0].profileImageUrl !== '' && images.length > 0:
           return <Images images={images} removeImage={this.removeImage} />
         default:
           return <AddButton onChange={this.onChange} />
       }
     }
 
-    const hasImages = this.state.images[0] && this.state.images[0].length > 0
+    const hasImages = this.props.images[0].profileImageUrl !== ''
 
     return (
       <React.Fragment>
@@ -132,11 +122,4 @@ class ImageUploader extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  images: {
-    profileImageUrl: state.profile.profileImageUrl,
-    profileImagePublicId: state.profileImagePublicId
-  }
-})
-
-export default connect(mapStateToProps)(ImageUploader)
+export default ImageUploader

@@ -257,7 +257,8 @@ class EditProfile extends Component {
         </Head>
         <MyLayout alignment='center' width="column">
           <h1 alignment='center' scroll='no-scroll'>Edit Profile</h1>
-          <ImageUploader onUpload={(url) => { this.getImageUrl(url) }} />
+          <ImageUploader images={[{profileImageUrl: this.state.profileImageUrl,
+                profileImagePublicId: this.state.profileImagePublicId}]} onUpload={(url) => { this.getImageUrl(url) }} />
           <div className="edit-profile">
             <form onSubmit={ this.handleSubmit }>
               <div className="form-input">
