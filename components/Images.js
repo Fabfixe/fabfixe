@@ -1,5 +1,4 @@
 export default (props) => {
-  console.log('final props', props)
   return props.images.map(({profileImageUrl}, i) => {
     let imageStyle = {
       width: '168px',

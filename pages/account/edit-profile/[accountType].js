@@ -66,8 +66,6 @@ class EditProfile extends Component {
       if(prevProps.username === '' && this.props.username !== '') {
         this.setState({ ...this.props })
       }
-
-      console.log(this.state.profileImageUrl)
     }
   }
 
